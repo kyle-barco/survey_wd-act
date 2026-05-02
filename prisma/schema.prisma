@@ -5,7 +5,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -19,13 +18,39 @@ model User {
   role       Role        @default(TEACHER)
   name       String
   classrooms Classroom[]
+  feedbacks  Feedback[]
 }
 
 model Classroom {
-  id        Int    @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
   teacherId Int
-  teacher   User   @relation(fields: [teacherId], references: [id])
+  teacher   User     @relation(fields: [teacherId], references: [id])
+  surveys   Survey[]
+}
+
+model Survey {
+  id        Int        @id @default(autoincrement())
+  title     String
+  createdAt DateTime   @default(now())
+  classId   Int
+  classroom Classroom  @relation(fields: [classId], references: [id])
+  responses Feedback[]
+}
+
+model Feedback {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  mood          String
+  understanding Int
+  pacing        String
+  confusingPart String?
+  favoritePart  String?
+  shoutout      String?
+  survey        Survey   @relation(fields: [surveyId], references: [id])
+  surveyId      Int
+  student       User?    @relation(fields: [studentId], references: [id])
+  studentId     Int?
 }
 
 enum Role {
