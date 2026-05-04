@@ -1,82 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Survey - <%= survey.title %></title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Survey - <%= survey.title %></title>
+  </head>
+  <body>
+    <h1><%= survey.title %></h1>
+    <p>Classroom: <%= survey.classroom.name %></p>
 
-  <h1><%= survey.title %></h1>
-  <p>Classroom: <%= survey.classroom.name %></p>
-
-  <form action="/survey/<%= survey.id %>/respond" method="POST">
-
-    <div>
-      <label>How are you feeling today?</label>
+    <form action="/survey/<%= survey.id %>/respond" method="POST">
       <div>
-        <input type="radio" name="mood" value="great" id="great" required/>
-        <label for="great">😄 Great</label>
+        <label>How are you feeling today?</label>
+        <div>
+          <input type="radio" name="mood" value="great" id="great" required />
+          <label for="great">😄 Great</label>
 
-        <input type="radio" name="mood" value="okay" id="okay"/>
-        <label for="okay">🙂 Okay</label>
+          <input type="radio" name="mood" value="okay" id="okay" />
+          <label for="okay">🙂 Okay</label>
 
-        <input type="radio" name="mood" value="meh" id="meh"/>
-        <label for="meh">😐 Meh</label>
+          <input type="radio" name="mood" value="meh" id="meh" />
+          <label for="meh">😐 Meh</label>
 
-        <input type="radio" name="mood" value="bad" id="bad"/>
-        <label for="bad">😞 Bad</label>
+          <input type="radio" name="mood" value="bad" id="bad" />
+          <label for="bad">😞 Bad</label>
+        </div>
       </div>
-    </div>
 
-    <div>
-      <label for="understanding">How well did you understand the lesson? (1-5)</label>
-      <input 
-        type="range" 
-        name="understanding" 
-        id="understanding" 
-        min="1" 
-        max="5" 
-        step="1"
-        required
-      />
       <div>
-        <span>1 - Not at all</span>
-        <span>5 - Fully understood</span>
+        <label for="understanding"
+          >How well did you understand the lesson? (1-5)</label
+        >
+        <input
+          type="range"
+          name="understanding"
+          id="understanding"
+          min="1"
+          max="5"
+          step="1"
+          required
+        />
+        <div>
+          <span>1 - Not at all</span>
+          <span>5 - Fully understood</span>
+        </div>
       </div>
-    </div>
 
-    <div>
-      <label>How was the pacing of the lesson?</label>
       <div>
-        <input type="radio" name="pacing" value="too_slow" id="too_slow" required/>
-        <label for="too_slow">Too Slow</label>
+        <label>How was the pacing of the lesson?</label>
+        <div>
+          <input
+            type="radio"
+            name="pacing"
+            value="too_slow"
+            id="too_slow"
+            required
+          />
+          <label for="too_slow">Too Slow</label>
 
-        <input type="radio" name="pacing" value="just_right" id="just_right"/>
-        <label for="just_right">Just Right</label>
+          <input
+            type="radio"
+            name="pacing"
+            value="just_right"
+            id="just_right"
+          />
+          <label for="just_right">Just Right</label>
 
-        <input type="radio" name="pacing" value="too_fast" id="too_fast"/>
-        <label for="too_fast">Too Fast</label>
+          <input type="radio" name="pacing" value="too_fast" id="too_fast" />
+          <label for="too_fast">Too Fast</label>
+        </div>
       </div>
-    </div>
 
-    <div>
-      <label for="confusingPart">What part was most confusing? (optional)</label>
-      <textarea name="confusingPart" id="confusingPart" rows="3" placeholder="Leave blank if none"></textarea>
-    </div>
+      <div>
+        <label for="confusingPart"
+          >What part was most confusing? (optional)</label
+        >
+        <textarea
+          name="confusingPart"
+          id="confusingPart"
+          rows="3"
+          placeholder="Leave blank if none"
+        ></textarea>
+      </div>
 
-    <div>
-      <label for="favoritePart">What was your favorite part? (optional)</label>
-      <textarea name="favoritePart" id="favoritePart" rows="3" placeholder="Leave blank if none"></textarea>
-    </div>
+      <div>
+        <label for="favoritePart"
+          >What was your favorite part? (optional)</label
+        >
+        <textarea
+          name="favoritePart"
+          id="favoritePart"
+          rows="3"
+          placeholder="Leave blank if none"
+        ></textarea>
+      </div>
 
-    <div>
-      <label for="shoutout">Give a shoutout to a classmate! (optional)</label>
-      <input type="text" name="shoutout" id="shoutout" placeholder="e.g. Thanks to John for helping me!"/>
-    </div>
+      <div>
+        <label for="shoutout">Give a shoutout to a classmate! (optional)</label>
+        <input
+          type="text"
+          name="shoutout"
+          id="shoutout"
+          placeholder="e.g. Thanks to John for helping me!"
+        />
+      </div>
 
-    <button type="submit">Submit Feedback</button>
-  </form>
-
-</body>
+      <button type="submit">Submit Feedback</button>
+    </form>
+    <button><a href="/">Go Home</a></button>
+  </body>
 </html>
