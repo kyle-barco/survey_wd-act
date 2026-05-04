@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma.js'
+import { prisma } from "../lib/prisma.js";
 
 async function populateWithTestData() {
   const user = await prisma.user.createMany({
@@ -19,20 +19,20 @@ async function populateWithTestData() {
         password: "JisunMalaks",
       },
     ],
-  })
-
-  console.log("Created user: ", user)
-
-  const allUser = await prisma.user.findMany()
-  // const allUser = await prisma.user.deleteMany()
-  console.log("All Users: ", JSON.stringify(allUser, null, 2))
+  });
 }
+
+
+  const allUser = await prisma.user.findMany();
+  // const allUser = await prisma.user.deleteMany()
+  console.log("All Users: ", JSON.stringify(allUser, null, 2));
+
 populateWithTestData()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (err) => {
-    console.error(err)
-    prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(err);
+    prisma.$disconnect();
+    process.exit(1);
+  });

@@ -1,4 +1,5 @@
-require("dotenv").config;
+require('dotenv-flow/config') 
+// require("dotenv").config;
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const expressSession = require("express-session");
@@ -11,7 +12,7 @@ const userQuery = require("./01_models/userQuery.js");
 const indexRouter = require("./routes/indexRouter.js");
 const loginRouter = require("./routes/loginRouter.js");
 const registerRouter = require("./routes/registerRouter.js")
-const classroomSurveyRouter = require("./routes/surveys/classroomRouter.js")
+const surveyRouter = require("./routes/surveys/surveyRouter.js")
 
 const app = express();
 app.set("views", path.join(__dirname, "02_views"));
@@ -86,7 +87,7 @@ app.use("/logout", (req, res, next) => {
     res.redirect("/")
   })
 })
-app.use("/classroom-survey", classroomSurveyRouter)
+app.use("/classroom-survey", surveyRouter)
 
 app.listen(3000, (err) => {
   if (err) throw err;
