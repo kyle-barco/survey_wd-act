@@ -1,5 +1,5 @@
 require('dotenv-flow/config') 
-// require("dotenv").config;
+// require("dotenv").config({ path: '.env.local' });;
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const expressSession = require("express-session");

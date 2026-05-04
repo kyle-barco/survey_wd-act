@@ -24,6 +24,7 @@ exports.userRegister = async({userName, userEmail, password, role}) => {
       name: userName,
       email: userEmail,
       password: password,
+      role: role
     }
   })
     console.log("user Registered: " + user.name)
