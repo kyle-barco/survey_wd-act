@@ -12,11 +12,20 @@
   <h1>Welcome to Feedback</h1>
 
   <% if (user) { %>
-
-    <% } else {%>
-      <button><a href="/register">Register</a></button>
-      <button><a href="/login">Login</a></button>
-      <% } %>
+    <% if (user.role === "TEACHER") { %>
+      <h2>Hello Teacher <%=user.name%></h2>
+      <button><a href="">School Classroom Suvey Feedback</a></button>
+      <button><a href="">Disaster Preparedness Survey</a></button>
+    <% } else { %>
+      <h2>Hello <%=user.name%></h2>
+      <button><a href="/classroom-survey/">School Classroom Suvey Feedback</a></button>
+      <button><a href="/disaster-survey/">Disaster Preparedness Survey</a></button>
+    <% } %> 
+    <button><a href="/logout">Logout</a></button>
+  <% } else {%>
+    <button><a href="/register">Register</a></button>
+    <button><a href="/login">Login</a></button>
+  <% } %>
 
 
 </body>

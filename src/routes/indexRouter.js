@@ -1,9 +1,8 @@
 const { Router } = require("express")
+const { showIndex } = require("../03_controllers/indexController")
 
 const indexRouter = Router()
 
-indexRouter.get("/", async (req, res) => {
-  res.render("index")
-})
+indexRouter.get("/", showIndex)
 
 module.exports = indexRouter

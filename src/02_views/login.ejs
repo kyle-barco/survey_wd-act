@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+  <h1>Login your account</h1>
+    <form action="/login" method="POST">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <%- include("partials/errors.ejs") %>
+        <button type="submit">Log in!</button>
+    </form>
+
+    <button><a href="/">Homepage</a></button>
+    
+</body>
+</html>

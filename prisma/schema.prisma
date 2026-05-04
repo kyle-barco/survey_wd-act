@@ -21,6 +21,14 @@ model User {
   feedbacks  Feedback[]
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+
 model Classroom {
   id        Int      @id @default(autoincrement())
   name      String
