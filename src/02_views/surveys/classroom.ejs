@@ -10,7 +10,7 @@
   <h1><%= survey.title %></h1>
   <p>Classroom: <%= survey.classroom.name %></p>
 
-  <form action="/classroom-survey/<%= survey.id %>/respond" method="POST">
+  <form action="/survey/<%= survey.id %>/respond" method="POST">
 
     <div>
       <label>How are you feeling today?</label>
