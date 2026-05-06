@@ -22,10 +22,9 @@ async function populateWithTestData() {
   });
 }
 
-
-  const allUser = await prisma.user.findMany();
-  // const allUser = await prisma.user.deleteMany()
-  console.log("All Users: ", JSON.stringify(allUser, null, 2));
+const allUser = await prisma.user.findMany();
+// const allUser = await prisma.user.deleteMany()
+console.log("All Users: ", JSON.stringify(allUser, null, 2));
 
 populateWithTestData()
   .then(async () => {
