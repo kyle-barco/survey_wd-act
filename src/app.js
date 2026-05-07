@@ -127,6 +127,10 @@ app.use("/logout", (req, res, next) => {
   })
 })
 app.use("/classroom-survey", surveyRouter)
+
+app.use((req, res, next) => {
+    res.status(404).render('404', { title: '404: File Not Found' });
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
   if (err) throw err;
