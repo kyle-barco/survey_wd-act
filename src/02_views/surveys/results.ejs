@@ -7,30 +7,30 @@
 </head>
 <body>
   <div class="results-page">
-  <h1><%= survey.title %> — Results</h1>
-  <p>Classroom: <%= survey.classroom.name %></p>
-  <p>Total Responses: <%= survey.responses.length %></p>
+    <h1><%= survey.title %> — Results</h1>
+    <p>Classroom: <%= survey.classroom.name %></p>
+    <p>Total Responses: <%= survey.responses.length %></p>
 
-  <% survey.responses.forEach(response => { %>
-    <div>
-      <hr/>
-      <p><strong>Student:</strong> <%= response.student ? response.student.name : "Anonymous" %></p>
-      <p><strong>Mood:</strong> <%= response.mood %></p>
-      <p><strong>Understanding:</strong> <%= response.understanding %>/5</p>
-      <p><strong>Pacing:</strong> <%= response.pacing %></p>
-      <% if (response.confusingPart) { %>
-        <p><strong>Confusing Part:</strong> <%= response.confusingPart %></p>
-      <% } %>
-      <% if (response.favoritePart) { %>
-        <p><strong>Favorite Part:</strong> <%= response.favoritePart %></p>
-      <% } %>
-      <% if (response.shoutout) { %>
-        <p><strong>Shoutout:</strong> <%= response.shoutout %></p>
-      <% } %>
-    </div>
-  <% }) %>
+    <% survey.responses.forEach(response => { %>
+      <div>
+        <hr/>
+        <p><strong>Student:</strong> <%= response.student ? response.student.name : "Anonymous" %></p>
+        <p><strong>Mood:</strong> <%= response.mood %></p>
+        <p><strong>Understanding:</strong> <%= response.understanding %>/5</p>
+        <p><strong>Pacing:</strong> <%= response.pacing %></p>
+        <% if (response.confusingPart) { %>
+          <p><strong>Confusing Part:</strong> <%= response.confusingPart %></p>
+        <% } %>
+        <% if (response.favoritePart) { %>
+          <p><strong>Favorite Part:</strong> <%= response.favoritePart %></p>
+        <% } %>
+        <% if (response.shoutout) { %>
+          <p><strong>Shoutout:</strong> <%= response.shoutout %></p>
+        <% } %>
+      </div>
+    <% }) %>
 
-  <button><a href="/">Go Home</a></button>
+    <button><a href="/">Back</a></button>
 </div>
 </body>
 </html>

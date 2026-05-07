@@ -22,31 +22,6 @@ const manifestPath = path.join(process.cwd(), "dist", ".vite", "manifest.json");
 app.use('/dist', express.static(path.join(__dirname, '../dist'))); 
 app.use('/dist', express.static(path.join(process.cwd(), "dist")));
 
-app.use((req, res, next) => {
-    const isProduction = process.env.NODE_ENV === "production";
-    res.locals.isProduction = isProduction;
-    res.locals.user = req.user || null; 
-    
-    res.locals.jsFile = "";
-    res.locals.cssFile = "";
-
-    if (isProduction) {
-        try {
-            const manifestPath = path.join(__dirname, "../dist/.vite/manifest.json");
-            const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
-
-            const mainEntry = manifest["resources/js/main.js"]; 
-            
-            if (mainEntry) {
-                res.locals.jsFile = mainEntry.file;
-                res.locals.cssFile = mainEntry.css ? mainEntry.css[0] : "";
-            }
-        } catch (err) {
-            console.error("Vite manifest not found. Make sure to run 'pnpm run build' before 'pnpm start'.");
-        }
-    }
-    next();
-});
 
 app.set("views", path.join(__dirname, "02_views"));
 app.set("view engine", "ejs");
@@ -112,6 +87,32 @@ passport.deserializeUser(async (id, done) => {
   } catch (error) {
     done(error);
   }
+});
+
+app.use((req, res, next) => {
+    const isProduction = process.env.NODE_ENV === "production";
+    res.locals.isProduction = isProduction;
+    res.locals.user = req.user || null; 
+    
+    res.locals.jsFile = "";
+    res.locals.cssFile = "";
+
+    if (isProduction) {
+        try {
+            const manifestPath = path.join(__dirname, "../dist/.vite/manifest.json");
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+
+            const mainEntry = manifest["resources/js/main.js"]; 
+            
+            if (mainEntry) {
+                res.locals.jsFile = mainEntry.file;
+                res.locals.cssFile = mainEntry.css ? mainEntry.css[0] : "";
+            }
+        } catch (err) {
+            console.error("Vite manifest not found. Make sure to run 'pnpm run build' before 'pnpm start'.");
+        }
+    }
+    next();
 });
 
 app.use("/", indexRouter);
