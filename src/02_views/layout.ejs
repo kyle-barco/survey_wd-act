@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <% if (locals.user) { %>
+      <title>Hello <%=user.name%>, Welcome to Feedback!</title>
+    <% } else { %>
+      <title>Hello User, Welcome to Feedback!</title>
+    <% } %> 
+    <title>Survey App</title>
+
+    <% if (!isProduction) { %>
+        <!-- DEVELOPMENT: Pull from Vite Dev Server -->
+        <script type="module" src="http://localhost:5173/@vite/client"></script>
+        <script type="module" src="http://localhost:5173/resources/js/main.js"></script>
+        <!-- If your CSS is imported in main.js, you don't even need the line below -->
+        <link rel="stylesheet" href="http://localhost:5173/resources/css/style.css">
+    <% } else { %>
+        <!-- PRODUCTION: Use the hashed filenames passed from the server -->
+        <script type="module" src="/dist/<%= jsFile %>"></script>
+        <% if (cssFile) { %>
+         <link rel="stylesheet" href="/dist/<%= cssFile %>">
+        <% } %>
+    <% } %>
+</head>
+<body>
+
+    <main>
+        <%- body %>
+    </main>
+
+</body>
+</html>

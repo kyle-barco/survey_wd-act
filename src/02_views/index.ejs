@@ -4,8 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Index Page</title>
-  <link href="css/style.css" rel="stylesheet">
+    <% if (user) { %>
+      <title>Hello <%=user.name%>, Welcome to Feedback!</title>
+    <% } else { %>
+      <title>Hello User, Welcome to Feedback!</title>
+    <% } %> 
+<link href="/css/style.min.css" rel="stylesheet" />
 </head>
 
 <body>

@@ -1,0 +1,638 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== PALETTE ===== */
+:root {
+  --navy-900: #0f1e35;
+  --navy-800: #1a2f4e;
+  --navy-700: #1e3a61;
+  --navy-600: #244576;
+  --navy-400: #3a6494;
+  --navy-200: #a8bee0;
+  --navy-100: #d4e2f0;
+  --navy-50:  #edf3f9;
+
+  --gray-900: #1e1e1e;
+  --gray-700: #3c3c3c;
+  --gray-500: #6b6b6b;
+  --gray-300: #b0b0b0;
+  --gray-200: #d6d6d6;
+  --gray-100: #eeeeee;
+  --gray-50:  #f7f7f7;
+
+  --white: #ffffff;
+}
+
+/* ===== BODY ===== */
+body {
+  font-family: "Archivo", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  background-color: var(--gray-50);
+  color: var(--gray-900);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+/* ===== CARD CONTAINER ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(135deg, var(--navy-50) 0%, var(--gray-50) 60%, var(--navy-100) 100%);
+  z-index: -1;
+}
+
+/* Main wrapper — not in original HTML, so we style body children directly */
+body > * {
+  max-width: 480px;
+  width: 100%;
+}
+
+/* Card shell */
+body {
+  --card-padding: 2.5rem 3rem;
+}
+
+h1 {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--navy-400);
+  margin-bottom: 0.35rem;
+}
+
+h2 {
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--navy-900);
+  line-height: 1.25;
+  margin-bottom: 2rem;
+}
+
+/* ===== LAYOUT WRAPPER (simulate card) ===== */
+/* Since the original has no wrapper div, we target body directly */
+body {
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* We create the card feel by wrapping everything visually */
+h1 {
+  background: var(--white);
+  border-radius: 12px 12px 0 0;
+  border: 1px solid var(--gray-200);
+  border-bottom: none;
+  padding: 2.5rem 3rem 1rem;
+  max-width: 480px;
+  width: 100%;
+}
+
+h2 {
+  background: var(--white);
+  border-left: 1px solid var(--gray-200);
+  border-right: 1px solid var(--gray-200);
+  padding: 0 3rem 1.5rem;
+  max-width: 480px;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* ===== BUTTON GROUP ===== */
+button {
+  display: block;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-top: none;
+  max-width: 480px;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button:last-of-type {
+  border-radius: 0 0 12px 12px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+button:only-of-type {
+  border-radius: 0 0 12px 12px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+button + button {
+  border-top: 1px solid var(--gray-100);
+}
+
+button:hover {
+  background: var(--navy-50);
+}
+
+button:active {
+  background: var(--navy-100);
+}
+
+/* ===== LINKS INSIDE BUTTONS ===== */
+button a {
+  display: block;
+  padding: 1rem 3rem;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: var(--navy-700);
+  transition: color 0.15s ease;
+}
+
+button:hover a {
+  color: var(--navy-900);
+}
+
+/* ===== LOGOUT BUTTON — subtle distinction ===== */
+/* Last button before closing the card */
+button:last-of-type a {
+  color: var(--gray-500);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.8rem 3rem;
+}
+
+button:last-of-type:hover a {
+  color: var(--gray-700);
+}
+
+/* ===== SURVEY BUTTONS — primary action style ===== */
+/* Buttons that link to surveys get a left accent */
+button:not(:last-of-type) {
+  border-left: 3px solid transparent;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+button:not(:last-of-type):hover {
+  border-left-color: var(--navy-400);
+  background: var(--navy-50);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 520px) {
+  h1 { padding: 2rem 1.5rem 0.8rem; }
+  h2 { padding: 0 1.5rem 1.2rem; font-size: 1.35rem; }
+  button a { padding: 0.9rem 1.5rem; }
+  button:last-of-type a { padding: 0.7rem 1.5rem; }
+}
+
+/* ===== REGISTER PAGE ===== */
+form {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 1.5rem 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+}
+
+.input-group {
+  margin-bottom: 1.25rem;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  margin-bottom: 0.4rem;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  background: var(--gray-50);
+  color: var(--navy-900);
+  font-family: "Archivo", sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: var(--navy-400);
+  background: var(--white);
+}
+
+.input-group input::placeholder {
+  color: var(--gray-300);
+}
+
+/* Custom select arrow */
+.input-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b0b0b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.2rem;
+  cursor: pointer;
+}
+
+form button[type="submit"] {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.8rem;
+  border: 1px solid var(--navy-700);
+  border-radius: 6px;
+  background: var(--navy-700);
+  color: var(--white);
+  font-family: "Archivo", sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+form button[type="submit"]:hover {
+  background: var(--navy-900);
+  border-color: var(--navy-900);
+}
+
+form button[type="submit"]:active {
+  background: var(--navy-800);
+}
+
+@media (max-width: 520px) {
+  form { padding: 1.25rem 1.5rem 2rem; }
+}
+/* ===== LOGIN PAGE ===== */
+form {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 1.5rem 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+}
+
+form label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  margin-bottom: 0.4rem;
+  margin-top: 1.25rem;
+}
+
+form label:first-of-type {
+  margin-top: 0;
+}
+
+form input[type="email"],
+form input[type="password"] {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  background: var(--gray-50);
+  color: var(--navy-900);
+  font-family: "Archivo", sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+form input[type="email"]:focus,
+form input[type="password"]:focus {
+  border-color: var(--navy-400);
+  background: var(--white);
+}
+
+form button[type="submit"] {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.8rem;
+  border: 1px solid var(--navy-700);
+  border-radius: 6px;
+  background: var(--navy-700);
+  color: var(--white);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+form button[type="submit"]:hover {
+  background: var(--navy-900);
+  border-color: var(--navy-900);
+}
+
+form button[type="submit"]:active {
+  background: var(--navy-800);
+}
+
+/* ===== ERROR MESSAGES ===== */
+form .error,
+form p.error {
+  font-size: 0.78rem;
+  color: #a03030;
+  margin-top: 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+/* ===== HOMEPAGE BUTTON ===== */
+.homepage-btn {
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 520px) {
+  form { padding: 1.25rem 1.5rem 2rem; }
+}
+
+/* ===== SURVEY PAGE ===== */
+form {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 1.5rem 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+}
+
+/* Section blocks */
+form > div {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+form > div:last-of-type {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Section labels */
+form > div > label {
+  display: block;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--navy-800);
+  margin-bottom: 0.85rem;
+}
+
+/* ===== RADIO GROUPS ===== */
+form > div > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Hide native radio */
+input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Radio labels as pill buttons */
+input[type="radio"] + label {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  color: var(--gray-700);
+  background: var(--gray-50);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+input[type="radio"] + label:hover {
+  border-color: var(--navy-400);
+  color: var(--navy-700);
+  background: var(--navy-50);
+}
+
+input[type="radio"]:checked + label {
+  border-color: var(--navy-700);
+  background: var(--navy-700);
+  color: var(--white);
+}
+
+/* ===== RANGE SLIDER ===== */
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--navy-700);
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+/* Range labels row */
+form > div > div:has(span) {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 0;
+  margin-top: 0.35rem;
+}
+
+form > div > div:has(span) span {
+  font-size: 0.7rem;
+  color: var(--gray-500);
+  letter-spacing: 0.04em;
+}
+
+/* ===== TEXTAREA ===== */
+textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  background: var(--gray-50);
+  color: var(--navy-900);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 0.9rem;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+textarea:focus {
+  border-color: var(--navy-400);
+  background: var(--white);
+}
+
+textarea::placeholder {
+  color: var(--gray-300);
+}
+
+/* ===== TEXT INPUT (shoutout) ===== */
+form input[type="text"] {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  background: var(--gray-50);
+  color: var(--navy-900);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+form input[type="text"]:focus {
+  border-color: var(--navy-400);
+  background: var(--white);
+}
+
+form input[type="text"]::placeholder {
+  color: var(--gray-300);
+}
+
+/* ===== SUBMIT BUTTON ===== */
+form button[type="submit"] {
+  display: block;
+  width: 100%;
+  margin-top: 1.75rem;
+  padding: 0.8rem;
+  border: 1px solid var(--navy-700);
+  border-radius: 6px;
+  background: var(--navy-700);
+  color: var(--white);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+form button[type="submit"]:hover {
+  background: var(--navy-900);
+  border-color: var(--navy-900);
+}
+
+form button[type="submit"]:active {
+  background: var(--navy-800);
+}
+
+/* ===== CLASSROOM SUBTITLE ===== */
+body > p {
+  background: var(--white);
+  border-left: 1px solid var(--gray-200);
+  border-right: 1px solid var(--gray-200);
+  padding: 0 3rem 1.25rem;
+  max-width: 480px;
+  width: 100%;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+
+@media (max-width: 520px) {
+  form { padding: 1.25rem 1.5rem 2rem; }
+  body > p { padding: 0 1.5rem 1rem; }
+}
+
+/* ===== RESULTS PAGE ===== */
+
+/* Classroom + total responses meta info */
+body > p {
+  background: var(--white);
+  border-left: 1px solid var(--gray-200);
+  border-right: 1px solid var(--gray-200);
+  padding: 0 3rem 0.5rem;
+  max-width: 480px;
+  width: 100%;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+
+body > p:last-of-type {
+  padding-bottom: 1.25rem;
+  border-bottom: none;
+}
+
+/* ===== RESPONSE CARDS ===== */
+body > div {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-top: none;
+  max-width: 480px;
+  width: 100%;
+  padding: 1.5rem 3rem;
+}
+
+body > div:last-of-type {
+  border-radius: 0 0 12px 12px;
+  padding-bottom: 2rem;
+}
+
+/* Divider line */
+body > div hr {
+  display: none;
+}
+
+/* Response fields */
+body > div p {
+  font-size: 0.88rem;
+  color: var(--gray-700);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+body > div p:last-of-type {
+  margin-bottom: 0;
+}
+
+body > div p strong {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--navy-400);
+  font-style: normal;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+/* Separator between responses */
+body > div + div {
+  border-top: 1px solid var(--gray-100);
+}
+
+@media (max-width: 520px) {
+  body > div { padding: 1.25rem 1.5rem; }
+  body > p { padding: 0 1.5rem 0.5rem; }
+}

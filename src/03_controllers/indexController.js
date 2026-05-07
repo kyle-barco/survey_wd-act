@@ -1,4 +1,5 @@
 const { prisma } = require("../../lib/prisma");
+const manifest = require('../../public/dist/.vite/manifest.json'); // Path may vary based on Vite version
 
 exports.showIndex = async (req, res, next) => {
   try {
