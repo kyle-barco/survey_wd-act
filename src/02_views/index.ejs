@@ -1,39 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="card-container">
+    <div class="card-header">
+        <h1>Welcome to Feedback</h1>
+    </div>
+    
+    <div class="card-body">
+        <% if (user) { %>
+            <h2>Hello <%= user.role === 'TEACHER' ? 'Teacher ' : '' %><%= user.name %></h2>
+        <% } else { %>
+            <h2>Hello Guest</h2>
+        <% } %>
+    </div>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-    <% if (user) { %>
-      <title>Hello <%=user.name%>, Welcome to Feedback!</title>
-    <% } else { %>
-      <title>Hello User, Welcome to Feedback!</title>
-    <% } %> 
-<link href="/css/style.min.css" rel="stylesheet" />
-</head>
-
-<body>
-  <h1>Welcome to Feedback</h1>
-
-  <% if (user) { %>
-    <% if (user.role === "TEACHER") { %>
-      <h2>Hello Teacher <%=user.name%></h2>
- <% surveys.forEach(survey => { %>
-    <button><a href="/classroom-survey/<%= survey.id %>"><%= survey.title %></a></button>
-  <% }) %>
-<% } else { %>
-  <h2>Hello <%= user.name %></h2>
-  <% surveys.forEach(survey => { %>
-    <button><a href="/classroom-survey/<%= survey.id %>"><%= survey.title %></a></button>
-  <% }) %>
-    <% } %> 
-    <button><a href="/logout">Logout</a></button>
-  <% } else {%>
-    <button><a href="/register">Register</a></button>
-    <button><a href="/login">Login</a></button>
-  <% } %>
-
-
-</body>
-
-</html>
+    <div class="btn-group">
+        <% if (user) { %>
+            <% surveys.forEach(survey => { %>
+                <a class="btn btn-primary" href="/classroom-survey/<%= survey.id %>"><%= survey.title %></a>
+            <% }) %>
+            <a class="btn btn-primary" href="/logout">Logout</a>
+        <% } else { %>
+          <div class="btn-group">
+                <a href="/register" class="btn btn-primary">Register</a>
+                <a href="/login" class="btn btn-ghost">Login</a>
+          </div>
+        <% } %>
+    </div>
+</div>

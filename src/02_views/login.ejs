@@ -1,22 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="css/style.min.css" rel="stylesheet" />
-    <title>Login</title>
-  </head>
-  <body>
-    <h1>Login your account</h1>
-    <form action="/login" method="POST">
+<div class="card-container">
+  <div class="card-header">
+    <h1>Login</h1>
+  </div>
+  <div class="card-body">
+    <h2>Login your account</h2>
+  </div>
+
+  <form action="/login" method="POST" class="form-container">
+    <div class="input-group">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" required />
+    </div>
+
+    <div class="input-group">
       <label for="password">Password</label>
       <input type="password" id="password" name="password" required />
-      <%- include("partials/errors.ejs") %>
-      <button type="submit">Log in!</button>
-    </form>
+    </div>
 
-    <button><a href="/">Homepage</a></button>
-  </body>
-</html>
+    <!-- This partial handles the error messages styled in your CSS -->
+    <%- include("partials/errors.ejs") %>
+
+    <button type="submit">Log in!</button>
+  </form>
+
+  <div class="btn-group">
+    <a class="btn btn-primary" href="/">Back to Home</a>
+  </div>
+</div>

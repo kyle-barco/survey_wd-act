@@ -6,6 +6,7 @@
   <title>Results - <%= survey.title %></title>
 </head>
 <body>
+  <div class="results-page">
   <h1><%= survey.title %> — Results</h1>
   <p>Classroom: <%= survey.classroom.name %></p>
   <p>Total Responses: <%= survey.responses.length %></p>
@@ -30,5 +31,6 @@
   <% }) %>
 
   <button><a href="/">Go Home</a></button>
+</div>
 </body>
 </html>

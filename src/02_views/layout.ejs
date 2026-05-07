@@ -8,28 +8,67 @@
       <title>Hello <%=user.name%>, Welcome to Feedback!</title>
     <% } else { %>
       <title>Hello User, Welcome to Feedback!</title>
-    <% } %> 
-    <title>Survey App</title>
+    <% } %>
 
     <% if (!isProduction) { %>
-        <!-- DEVELOPMENT: Pull from Vite Dev Server -->
         <script type="module" src="http://localhost:5173/@vite/client"></script>
         <script type="module" src="http://localhost:5173/resources/js/main.js"></script>
-        <!-- If your CSS is imported in main.js, you don't even need the line below -->
         <link rel="stylesheet" href="http://localhost:5173/resources/css/style.css">
     <% } else { %>
-        <!-- PRODUCTION: Use the hashed filenames passed from the server -->
-        <script type="module" src="/dist/<%= jsFile %>"></script>
-        <% if (cssFile) { %>
-         <link rel="stylesheet" href="/dist/<%= cssFile %>">
-        <% } %>
+        <script type="module" src="/dist/<%= locals.jsFile %>"></script>
+        <link rel="stylesheet" href="/dist/<%= locals.cssFile %>">
     <% } %>
 </head>
 <body>
 
+    <header>
+        <h1>Feedback</h1>
+        <nav>
+            <% if (locals.user) { %>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/results">Results</a>
+            <% } %>
+        </nav>
+    </header>
+
+    <nav>
+        <% if (locals.user) { %>
+            <span class="nav-section">Surveys</span>
+            <a href="/survey/weekly">Weekly Check-In</a>
+            <a href="/survey/exit">Exit Ticket</a>
+            <a href="/survey/midterm">Midterm Reflection</a>
+            <span class="nav-section">Account</span>
+            <a href="/profile">Profile</a>
+            <a href="/logout" class="logout">Log out</a>
+        <% } else { %>
+            <span class="nav-section">Account</span>
+            <a href="/login">Log in</a>
+            <a href="/register">Register</a>
+        <% } %>
+    </nav>
+
     <main>
         <%- body %>
     </main>
+
+    <aside>
+        <% if (locals.user) { %>
+            <span class="aside-section">Signed in as</span>
+            <div class="aside-item">
+                <span class="aside-label">Name</span>
+                <span class="aside-value"><%= user.name %></span>
+            </div>
+            <div class="aside-item">
+                <span class="aside-label">Role</span>
+                <span class="aside-value"><%= user.role || 'Student' %></span>
+            </div>
+        <% } %>
+    </aside>
+
+    <footer>
+        <span>Feedback &copy; <%= new Date().getFullYear() %></span>
+        <a href="/group7">Group 7</a>
+    </footer>
 
 </body>
 </html>
