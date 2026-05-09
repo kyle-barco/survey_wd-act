@@ -36,9 +36,13 @@
         <% if (locals.user) { %>
             <a href="/dashboard">Dashboard</a>
             <a href="/results">Results</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout" class="logout">Log out</a>
+            <a href="/">Back to Home</a>
             <!-- Add your other links here -->
         <% } else { %>
             <a href="/login">Log in</a>
+            <a href="/register">Register</a>
         <% } %>
     </nav>
 </header>
