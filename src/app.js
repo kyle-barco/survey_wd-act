@@ -18,6 +18,14 @@ const surveyRouter = require("./routes/surveys/surveyRouter.js")
 const app = express();
 const fs = require("node:fs");
 const manifestPath = path.join(process.cwd(), "dist", ".vite", "manifest.json");
+const https = require('https');
+
+// Self-ping every 14 minutes
+setInterval(() => {
+  https.get('https://your-app-name.onrender.com', (res) => {
+    console.log(`Self-ping status: ${res.statusCode}`);
+  });
+}, 14 * 60 * 1000);
 
 app.use('/dist', express.static(path.join(__dirname, '../dist'))); 
 app.use('/dist', express.static(path.join(process.cwd(), "dist")));
@@ -26,7 +34,7 @@ app.use('/dist', express.static(path.join(process.cwd(), "dist")));
 app.set("views", path.join(__dirname, "02_views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")))
-// app.use(express.static('public'));;
+app.use('/resources', express.static('resources'));
 
 app.use(expressLayouts);
 app.set("layout", "layout");

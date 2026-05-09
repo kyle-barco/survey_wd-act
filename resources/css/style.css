@@ -1,7 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap");
 
 /* ===== RESET & BASE ===== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -16,7 +18,7 @@
   --navy-400: #3a6494;
   --navy-200: #a8bee0;
   --navy-100: #d4e2f0;
-  --navy-50:  #edf3f9;
+  --navy-50: #edf3f9;
 
   --gray-900: #1e1e1e;
   --gray-700: #3c3c3c;
@@ -24,7 +26,7 @@
   --gray-300: #b0b0b0;
   --gray-200: #d6d6d6;
   --gray-100: #eeeeee;
-  --gray-50:  #f7f7f7;
+  --gray-50: #f7f7f7;
 
   --white: #ffffff;
 
@@ -32,6 +34,7 @@
   --sidebar-right-width: 180px;
   --header-height: 60px;
   --footer-height: 48px;
+  --primary-blue: #1e3a5f;
 }
 
 /* ===== BODY — Holy Grail shell ===== */
@@ -49,7 +52,9 @@ body {
     "sidebar main    aside"
     "footer  footer  footer";
   grid-template-rows: var(--header-height) 1fr var(--footer-height);
-  grid-template-columns: var(--sidebar-left-width) 1fr var(--sidebar-right-width);
+  grid-template-columns: var(--sidebar-left-width) 1fr var(
+      --sidebar-right-width
+    );
 }
 
 /* ===== HEADER ===== */
@@ -94,7 +99,9 @@ body > header nav a {
   text-decoration: none;
   padding: 0.35rem 0.75rem;
   border-radius: 6px;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 body > header nav a:hover {
@@ -149,6 +156,96 @@ body > nav a.active {
   border-left-color: var(--navy-400);
   background: var(--navy-50);
   font-weight: 500;
+}
+
+/* Header Layout */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  position: relative; /* Crucial for absolute positioning of mobile menu */
+}
+
+/* Desktop Links */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+}
+
+/* Hamburger Icon */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 10;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  transition: 0.3s;
+}
+
+/* Mobile Styles (Max-width 768px) */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+    background-color: var(--navy-700);
+  }
+
+  /* Locate the mobile styles section in your CSS */
+  @media (max-width: 768px) {
+    .nav-links {
+      /* Change this from #444 or #333 to your desired color */
+      background-color: var(--primary-blue);
+
+      /* Optional: Add a slight border to distinguish from the header */
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      padding: 1rem;
+      box-sizing: border-box;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .nav-links a {
+      color: white;
+      padding: 15px 0;
+      /* Matches the dividers to the new background */
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Clean up the last link border */
+    .nav-links a:last-child {
+      border-bottom: none;
+    }
+  }
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links a {
+    padding: 10px 0;
+    border-bottom: 1px solid #555;
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -259,7 +356,9 @@ body > footer a:hover {
   color: var(--navy-700);
   border-left: 3px solid transparent;
   border-bottom: 1px solid var(--gray-100);
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .link-list a:last-child {
@@ -351,7 +450,9 @@ form input[type="text"] {
   font-family: "Archivo", sans-serif;
   font-size: 0.9rem;
   outline: none;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
   appearance: none;
   -webkit-appearance: none;
 }
@@ -454,7 +555,9 @@ textarea {
   font-size: 0.9rem;
   outline: none;
   resize: vertical;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 textarea:focus {
@@ -481,7 +584,9 @@ form button[type="submit"] {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 form button[type="submit"]:hover {
@@ -600,7 +705,10 @@ form p.error {
   border-radius: 6px;
   border: 1px solid var(--navy-700);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
 }
 
 .btn-primary {
