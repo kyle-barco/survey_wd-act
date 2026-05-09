@@ -22,7 +22,7 @@ const https = require('https');
 
 // Self-ping every 14 minutes
 setInterval(() => {
-  https.get('https://your-app-name.onrender.com', (res) => {
+  https.get('https://survey-wd-act.onrender.com', (res) => {
     console.log(`Self-ping status: ${res.statusCode}`);
   });
 }, 14 * 60 * 1000);
