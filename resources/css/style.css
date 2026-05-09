@@ -193,46 +193,54 @@ body > nav a.active {
   transition: 0.3s;
 }
 
+.nav-links .mobile-only {
+  display: none !important; /* Or 'flex' if you are using flexbox for links */
+}
+
 /* Mobile Styles (Max-width 768px) */
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
     background-color: var(--navy-700);
   }
+}
 
-  /* Locate the mobile styles section in your CSS */
-  @media (max-width: 768px) {
-    .nav-links {
-      /* Change this from #444 or #333 to your desired color */
-      background-color: var(--primary-blue);
+/* Locate the mobile styles section in your CSS */
+@media (max-width: 768px) {
+  .nav-links .mobile-only {
+    display: block !important; /* Or 'flex' if you are using flexbox for links */
+  }
 
-      /* Optional: Add a slight border to distinguish from the header */
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+  .nav-links {
+    /* Change this from #444 or #333 to your desired color */
+    background-color: var(--primary-blue);
 
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      padding: 1rem;
-      box-sizing: border-box;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-    }
+    /* Optional: Add a slight border to distinguish from the header */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 
-    .nav-links a {
-      color: white;
-      padding: 15px 0;
-      /* Matches the dividers to the new background */
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
 
-    /* Clean up the last link border */
-    .nav-links a:last-child {
-      border-bottom: none;
-    }
+  .nav-links a {
+    color: white;
+    padding: 15px 0;
+    /* Matches the dividers to the new background */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Clean up the last link border */
+  .nav-links a:last-child {
+    border-bottom: none;
   }
   .nav-links.active {
     display: flex;
