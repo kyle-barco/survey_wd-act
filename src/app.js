@@ -26,8 +26,14 @@ setInterval(() => {
   });
 }, 14 * 60 * 1000);
 
+app.locals.isProduction = process.env.NODE_ENV === 'production';
 app.locals.umamiUrl = process.env.UMAMI_URL;
 app.locals.umamiWebsiteId = process.env.UMAMI_WEBSITE_ID;
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('isProduction:', process.env.NODE_ENV === 'production');
+console.log('Umami URL:', process.env.UMAMI_URL);
+console.log('Umami ID:', process.env.UMAMI_WEBSITE_ID);
+
 
 app.use('/dist', express.static(path.join(__dirname, '../dist'))); 
 app.use('/dist', express.static(path.join(process.cwd(), "dist")));
