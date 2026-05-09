@@ -15,9 +15,12 @@
         <script type="module" src="http://localhost:5173/resources/js/main.js"></script>
         <link rel="stylesheet" href="http://localhost:5173/resources/css/style.css">
     <% } else { %>
+        <script async src="<%= umamiUrl %>" data-website-id="<%= umamiWebsiteId %>">
+</script>
         <script type="module" src="/dist/<%= locals.jsFile %>"></script>
         <link rel="stylesheet" href="/dist/<%= locals.cssFile %>">
     <% } %>
+</link>
 </head>
 <body>
 

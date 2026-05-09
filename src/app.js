@@ -20,12 +20,14 @@ const fs = require("node:fs");
 const manifestPath = path.join(process.cwd(), "dist", ".vite", "manifest.json");
 const https = require('https');
 
-// Self-ping every 14 minutes
 setInterval(() => {
   https.get('https://survey-wd-act.onrender.com', (res) => {
     console.log(`Self-ping status: ${res.statusCode}`);
   });
 }, 14 * 60 * 1000);
+
+app.locals.umamiUrl = process.env.UMAMI_URL;
+app.locals.umamiWebsiteId = process.env.UMAMI_WEBSITE_ID;
 
 app.use('/dist', express.static(path.join(__dirname, '../dist'))); 
 app.use('/dist', express.static(path.join(process.cwd(), "dist")));
