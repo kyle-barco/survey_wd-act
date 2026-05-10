@@ -20,7 +20,10 @@ exports.processRegister = [
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).render("register", { errors: errors.array() });
+      return res.status(400).render("register", {
+        errors: errors.array(),
+        oldData: req.body,
+      });
     }
 
     try {
@@ -34,6 +37,18 @@ exports.processRegister = [
 
       res.redirect("/");
     } catch (error) {
+      console.log("code:", error.code);
+      console.log("meta:", JSON.stringify(error.meta)); // full structure
+
+      const isUniqueEmail =
+        error.code === "P2002" && JSON.stringify(error.meta).includes("email"); // catch any structure
+
+      if (isUniqueEmail) {
+        return res.status(400).render("register", {
+          errors: [{ path: "email", msg: "Email is already taken" }],
+          oldData: req.body,
+        });
+      }
       next(error);
     }
   },

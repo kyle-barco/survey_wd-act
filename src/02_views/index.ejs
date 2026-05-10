@@ -16,7 +16,6 @@
             <% surveys.forEach(survey => { %>
                 <a class="btn btn-primary" href="/classroom-survey/<%= survey.id %>"><%= survey.title %></a>
             <% }) %>
-            <a class="btn btn-primary" href="/logout">Logout</a>
         <% } else { %>
           <div class="btn-group">
                 <a href="/register" class="btn btn-primary">Register</a>
