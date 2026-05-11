@@ -205,8 +205,8 @@ body > nav a.active {
 .btn-password {
   position: absolute;
   right: 0.5rem;
-  top: 40%; /* change this */
-  transform: translateY(20%); /* fine-tune vertical centering */
+  top: 26%;
+  transform: translateY(20%);
   background: none;
   border: none;
   cursor: pointer;
@@ -271,7 +271,6 @@ body > nav a.active {
   .btn-group {
     flex-direction: column;
   }
-
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -460,7 +459,7 @@ form label {
   text-transform: uppercase;
   color: var(--gray-500);
   margin-bottom: 0.4rem;
-  margin-top: 1.25rem;
+  /* margin-top: 1.25rem; */
 }
 
 .input-group label:first-child,
@@ -605,7 +604,7 @@ textarea::placeholder {
 form button[type="submit"] {
   display: block;
   width: 100%;
-  margin-top: 1.75rem;
+  /* margin-top: 1.75rem; */
   padding: 0.8rem;
   border: 1px solid var(--navy-700);
   border-radius: 6px;
@@ -704,7 +703,6 @@ form p.error {
     border-radius: 8px;
     padding: 1.25rem 1rem;
   }
-
 }
 
 @media (max-width: 1024px) and (min-width: 769px) {
@@ -770,4 +768,603 @@ form p.error {
   display: flex;
   gap: 0.75rem;
   align-items: center;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.login-btn {
+  background: none;
+  border: none;
+  color: #1a73e8;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.nav-logo img {
+  height: 50px;
+  width: auto;
+  display: block;
+}
+
+header.navbar h1 {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-size: inherit;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+}
+
+.grid-survey {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 280px));
+  gap: 1em;
+}
+
+.survey-card {
+  width: 290px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* ── Layout ── */
+
+.disaster-container {
+  max-width: 720px;
+  margin: 2em auto;
+  padding: 0 1em;
+  font-family: sans-serif;
+}
+
+.disaster-header {
+  margin-bottom: 1.5em;
+}
+
+.disaster-header h1 {
+  font-size: 1.8em;
+  font-weight: 700;
+  margin: 0 0 0.4em;
+  color: #1a1a2e;
+}
+
+/* ── Badge ── */
+
+.disaster-badge {
+  display: inline-block;
+  padding: 0.3em 0.85em;
+  border-radius: 999px;
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.disaster-badge--household_readiness {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.disaster-badge--emergency_supplies {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.disaster-badge--evacuation_planning {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* ── Section Card ── */
+
+.disaster-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5em;
+  margin-bottom: 1.25em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.disaster-section--general {
+  border-color: #c7d2fe;
+  background: #fafafe;
+}
+
+.disaster-section__title {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 1.25em;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* ── Field ── */
+
+.disaster-field {
+  margin-bottom: 1.25em;
+}
+
+.disaster-field:last-child {
+  margin-bottom: 0;
+}
+
+.disaster-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95em;
+  color: #374151;
+  margin-bottom: 0.45em;
+}
+
+/* ── Input / Select / Textarea ── */
+
+.disaster-input {
+  width: 100%;
+  padding: 0.6em 0.85em;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95em;
+  color: #111827;
+  background: #f9fafb;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.disaster-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  background: #fff;
+}
+
+.disaster-textarea {
+  resize: vertical;
+}
+
+/* ── Radio Group ── */
+
+.disaster-radio-group {
+  display: flex;
+  gap: .75em;
+    align-items: stretch;
+}
+
+.disaster-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.5em 1.1em;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 400;
+  color: #374151;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.disaster-radio-option:has(input:checked) {
+  border-color: #6366f1;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 600;
+}
+
+.disaster-radio-option input[type="radio"] {
+  accent-color: #6366f1;
+}
+
+/* ── Footer ── */
+
+.disaster-footer {
+  display: flex;
+  align-items: center;
+  gap: .75em;
+}
+
+/* ── Buttons ── */
+
+.disaster-btn {
+  display: inline-block;
+  padding: 0.6em 1.4em;
+  border-radius: 8px;
+  font-size: 0.95em;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.disaster-btn--primary {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+.disaster-btn--primary:hover {
+  background: #4f46e5;
+}
+
+.disaster-btn--ghost {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.disaster-btn--ghost:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.disaster-btn {
+  margin: 0;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 600px) {
+  .disaster-header h1 {
+    font-size: 1.4em;
+  }
+
+  .disaster-section {
+    padding: 1em;
+  }
+
+  .disaster-radio-group {
+    flex-direction: column;
+  }
+
+  .disaster-footer {
+    flex-direction: column;
+  }
+
+  .disaster-btn {
+    text-align: center;
+  }
+}
+
+/* ── Layout ── */
+
+.profile-container {
+  max-width: 680px;
+  margin: 2em auto;
+  padding: 0 1em 4em;
+  font-family: sans-serif;
+}
+
+/* ── Header ── */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25em;
+  margin-bottom: 2em;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 2em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+.profile-header__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.profile-name {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+/* ── Role Badge ── */
+
+.profile-role-badge {
+  display: inline-block;
+  padding: 0.25em 0.75em;
+  border-radius: 999px;
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: fit-content;
+}
+
+.profile-role-badge--teacher {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.profile-role-badge--student {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* ── Section Card ── */
+
+.profile-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5em;
+  margin-bottom: 1.25em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-section__title {
+  font-size: 0.78em;
+  font-weight: 700;
+  color: #9ca3af;
+  margin-bottom: 1.25em;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid #f1f5f9;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Fields ── */
+
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75em 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.profile-field:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.profile-field:first-of-type {
+  padding-top: 0;
+}
+
+.profile-field__label {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.profile-field__value {
+  font-size: 0.95em;
+  font-weight: 500;
+  color: #111827;
+}
+
+/* ── Survey List ── */
+
+.profile-survey-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65em;
+}
+
+.profile-survey-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85em 1em;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f9fafb;
+  gap: 1em;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.profile-survey-item:hover {
+  border-color: #c7d2fe;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+}
+
+.profile-survey-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.profile-survey-item__title {
+  font-weight: 600;
+  font-size: 0.95em;
+  color: #1a1a2e;
+}
+
+.profile-survey-item__meta {
+  font-size: 0.8em;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  flex-wrap: wrap;
+}
+
+.profile-survey-item__actions {
+  display: flex;
+  gap: 0.5em;
+  flex-shrink: 0;
+}
+
+/* ── Disaster Badge (reused from disaster.css) ── */
+
+.disaster-badge {
+  display: inline-block;
+  padding: 0.2em 0.6em;
+  border-radius: 999px;
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.disaster-badge--household_readiness {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.disaster-badge--emergency_supplies {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.disaster-badge--evacuation_planning {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* ── Empty State ── */
+
+.profile-empty {
+  font-size: 0.9em;
+  color: #9ca3af;
+  text-align: center;
+  padding: 1.5em 0;
+}
+
+/* ── Buttons ── */
+
+.profile-btn {
+  display: inline-block;
+  padding: 0.6em 1.4em;
+  border-radius: 8px;
+  font-size: 0.95em;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.profile-btn--sm {
+  padding: 0.35em 0.85em;
+  font-size: 0.82em;
+}
+
+.profile-btn--primary {
+  background: #6366f1;
+  color: #fff;
+}
+
+.profile-btn--primary:hover {
+  background: #4f46e5;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.profile-btn--ghost {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.profile-btn--ghost:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.profile-btn--danger {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.profile-btn--danger:hover {
+  background: #fecaca;
+}
+
+/* ── Footer ── */
+
+.profile-footer {
+  margin-top: 1.5em;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+  }
+
+  .profile-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 1.5em;
+  }
+
+  .profile-name {
+    font-size: 1.3em;
+  }
+
+  .profile-section {
+    padding: 1em;
+  }
+
+  .profile-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2em;
+  }
+
+  .profile-survey-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-survey-item__actions {
+    width: 100%;
+  }
+
+  .profile-btn--sm {
+    flex: 1;
+    text-align: center;
+  }
+
+  .profile-footer {
+    justify-content: stretch;
+  }
+
+  .profile-btn--danger {
+    width: 100%;
+    text-align: center;
+  }
 }

@@ -13,12 +13,14 @@ const userQuery = require("./01_models/userQuery.js");
 const indexRouter = require("./routes/indexRouter.js");
 const loginRouter = require("./routes/loginRouter.js");
 const registerRouter = require("./routes/registerRouter.js")
-const surveyRouter = require("./routes/surveys/surveyRouter.js")
 
 const app = express();
 const fs = require("node:fs");
 const manifestPath = path.join(process.cwd(), "dist", ".vite", "manifest.json");
 const https = require('https');
+const classroomsurveyRouter = require("./routes/surveys/classroomSurveyRouter.js");
+const disasterSurveyRouter = require("./routes/surveys/disasterSurveyRouter.js");
+const profileRouter = require("./routes/profileRouter.js");
 
 setInterval(() => {
   https.get('https://survey-wd-act.onrender.com', (res) => {
@@ -142,7 +144,9 @@ app.use("/logout", (req, res, next) => {
     res.redirect("/")
   })
 })
-app.use("/classroom-survey", surveyRouter)
+app.use("/classroom-survey", classroomsurveyRouter)
+app.use("/disaster-survey", disasterSurveyRouter)
+app.use("/profile", profileRouter)
 
 app.use((req, res, next) => {
     res.status(404).render('404', { title: '404: File Not Found' });

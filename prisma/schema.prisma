@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,13 +10,15 @@ datasource db {
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  email      String      @unique
-  password   String
-  role       Role        @default(TEACHER)
-  name       String
-  classrooms Classroom[]
-  feedbacks  Feedback[]
+  id                      Int                      @id @default(autoincrement())
+  email                   String                   @unique
+  password                String
+  role                    Role                     @default(TEACHER)
+  name                    String
+  classrooms              Classroom[]
+  feedbacks               Feedback[]
+  disasterSurveys         DisasterSurvey[]
+  disasterSurveyResponses DisasterSurveyResponse[]
 }
 
 model Session {
@@ -27,7 +27,6 @@ model Session {
   data      String
   expiresAt DateTime
 }
-
 
 model Classroom {
   id        Int      @id @default(autoincrement())
@@ -61,7 +60,62 @@ model Feedback {
   studentId     Int?
 }
 
+// ──────────────────────────────────────────────
+//  Disaster Preparedness Survey
+// ──────────────────────────────────────────────
+
+model DisasterSurvey {
+  id        Int                      @id @default(autoincrement())
+  title     String
+  category  DisasterSurveyCategory
+  createdAt DateTime                 @default(now())
+  adminId   Int
+  admin     User                     @relation(fields: [adminId], references: [id])
+  responses DisasterSurveyResponse[]
+}
+
+model DisasterSurveyResponse {
+  id        Int            @id @default(autoincrement())
+  createdAt DateTime       @default(now())
+
+  // Household Readiness
+  householdSize        Int?
+  hasEmergencyPlan     Boolean?
+  planPracticeFreq     String?   // "never" | "rarely" | "sometimes" | "regularly"
+  awareCommunityAlerts Boolean?
+
+  // Emergency Supplies
+  hasGoBag        Boolean?
+  waterSupplyDays Int?
+  hasFirstAidKit  Boolean?
+  hasFlashlight   Boolean?
+  hasBatteryRadio Boolean?
+  foodSupplyDays  Int?
+
+  // Evacuation Planning
+  knowsEvacuationRoute      Boolean?
+  hasDesignatedMeetingPoint Boolean?
+  practisedEvacuation       Boolean?
+  evacPracticeFreq          String?  // "never" | "once" | "annually" | "biannually"
+  knowsLocalShelter         Boolean?
+
+  // General / open-ended
+  biggestConcern     String?
+  additionalComments String?
+
+  survey       DisasterSurvey @relation(fields: [surveyId], references: [id])
+  surveyId     Int
+  respondent   User?          @relation(fields: [respondentId], references: [id])
+  respondentId Int?
+}
+
 enum Role {
   TEACHER
   STUDENT
+}
+
+enum DisasterSurveyCategory {
+  HOUSEHOLD_READINESS
+  EMERGENCY_SUPPLIES
+  EVACUATION_PLANNING
 }
