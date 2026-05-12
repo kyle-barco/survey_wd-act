@@ -75,11 +75,14 @@
                 </div>
               </div>
 
-              <div class="survey-card-footer">
-                <a class="btn btn-primary" href="/disaster-survey/<%= survey.id %>">
-                  <%= user.role === 'TEACHER' ? 'View Results' : 'Take Survey' %>
+            <div class="survey-card-footer">
+                <a class="btn btn-primary" href="/disaster-survey/<%= survey.id %><%= user.role === 'TEACHER' ? '/results' : '' %>">
+                    <%= user.role === 'TEACHER' ? 'View Results' : 'Take Survey' %>
                 </a>
-              </div>
+                <% if (user.role === 'TEACHER') { %>
+                    <a class="btn btn-ghost" href="/disaster-survey/<%= survey.id %>">Engage</a>
+                <% } %>
+            </div>
             </div>
           <% }) %>
         </div>

@@ -27,7 +27,7 @@ exports.showResults = async (req, res, next) => {
   try {
     const survey = await disasterQuery.getDisasterSurveyResults(req.params.id);
     if (!survey) return res.status(404).render("404");
-    res.render("surveys/disaster-results", { survey });
+    res.render("surveys/dresults", { survey });
   } catch (error) {
     next(error);
   }

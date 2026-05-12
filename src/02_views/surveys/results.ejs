@@ -2,35 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"> 
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Results - <%= survey.title %></title>
+  <link rel="stylesheet" href="/style.css"> <!-- Link your CSS here -->
 </head>
 <body>
-  <div class="results-page">
-    <h1><%= survey.title %> — Results</h1>
-    <p>Classroom: <%= survey.classroom.name %></p>
-    <p>Total Responses: <%= survey.responses.length %></p>
-
-    <% survey.responses.forEach(response => { %>
-      <div>
-        <hr/>
-        <p><strong>Student:</strong> <%= response.student ? response.student.name : "Anonymous" %></p>
-        <p><strong>Mood:</strong> <%= response.mood %></p>
-        <p><strong>Understanding:</strong> <%= response.understanding %>/5</p>
-        <p><strong>Pacing:</strong> <%= response.pacing %></p>
-        <% if (response.confusingPart) { %>
-          <p><strong>Confusing Part:</strong> <%= response.confusingPart %></p>
-        <% } %>
-        <% if (response.favoritePart) { %>
-          <p><strong>Favorite Part:</strong> <%= response.favoritePart %></p>
-        <% } %>
-        <% if (response.shoutout) { %>
-          <p><strong>Shoutout:</strong> <%= response.shoutout %></p>
-        <% } %>
+  <div class="results-container">
+    <header class="results-header">
+      <h1><%= survey.title %> — Results</h1>
+      <div class="meta-info">
+        <p><strong>Classroom:</strong> <%= survey.classroom.name %></p>
+        <p><strong>Total Responses:</strong> <%= survey.responses.length %></p>
       </div>
-    <% }) %>
+    </header>
 
-    <button><a href="/">Back</a></button>
-</div>
+    <div class="table-responsive">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Mood</th>
+            <th>Understanding</th>
+            <th>Pacing</th>
+            <th>Confusing Part</th>
+            <th>Favorite Part</th>
+            <th>Shoutout</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% survey.responses.forEach(response => { %>
+            <tr>
+              <td class="font-bold"><%= response.student ? response.student.name : "Anonymous" %></td>
+              <td><%= response.mood %></td>
+              <td>
+                <span class="score-badge"><%= response.understanding %>/5</span>
+              </td>
+              <td><%= response.pacing %></td>
+              <td class="text-small"><%= response.confusingPart || "—" %></td>
+              <td class="text-small"><%= response.favoritePart || "—" %></td>
+              <td class="text-small"><%= response.shoutout || "—" %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="actions">
+      <a href="/" class="btn-back">Back to Dashboard</a>
+    </div>
+  </div>
 </body>
 </html>

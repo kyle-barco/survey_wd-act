@@ -14,40 +14,49 @@ exports.getAllDisasterSurveys = async () => {
   });
 };
 
+// helper at the top of the file
+const toBoolean = (val) => {
+  if (val === null || val === undefined || val === "") return null;
+  return val === "true";
+};
+
 exports.submitDisasterResponse = async (data) => {
   return await prisma.disasterSurveyResponse.create({
     data: {
       // Household Readiness
-      householdSize:        data.householdSize ? parseInt(data.householdSize) : null,
-      hasEmergencyPlan:     data.hasEmergencyPlan ?? null,
-      planPracticeFreq:     data.planPracticeFreq || null,
-      awareCommunityAlerts: data.awareCommunityAlerts ?? null,
+      householdSize: data.householdSize ? parseInt(data.householdSize) : null,
+      hasEmergencyPlan: toBoolean(data.hasEmergencyPlan),
+      planPracticeFreq: data.planPracticeFreq || null,
+      awareCommunityAlerts: toBoolean(data.awareCommunityAlerts),
 
       // Emergency Supplies
-      hasGoBag:        data.hasGoBag ?? null,
-      waterSupplyDays: data.waterSupplyDays ? parseInt(data.waterSupplyDays) : null,
-      hasFirstAidKit:  data.hasFirstAidKit ?? null,
-      hasFlashlight:   data.hasFlashlight ?? null,
-      hasBatteryRadio: data.hasBatteryRadio ?? null,
-      foodSupplyDays:  data.foodSupplyDays ? parseInt(data.foodSupplyDays) : null,
+      hasGoBag: toBoolean(data.hasGoBag),
+      waterSupplyDays: data.waterSupplyDays
+        ? parseInt(data.waterSupplyDays)
+        : null,
+      hasFirstAidKit: toBoolean(data.hasFirstAidKit),
+      hasFlashlight: toBoolean(data.hasFlashlight),
+      hasBatteryRadio: toBoolean(data.hasBatteryRadio),
+      foodSupplyDays: data.foodSupplyDays
+        ? parseInt(data.foodSupplyDays)
+        : null,
 
       // Evacuation Planning
-      knowsEvacuationRoute:      data.knowsEvacuationRoute ?? null,
-      hasDesignatedMeetingPoint: data.hasDesignatedMeetingPoint ?? null,
-      practisedEvacuation:       data.practisedEvacuation ?? null,
-      evacPracticeFreq:          data.evacPracticeFreq || null,
-      knowsLocalShelter:         data.knowsLocalShelter ?? null,
+      knowsEvacuationRoute: toBoolean(data.knowsEvacuationRoute),
+      hasDesignatedMeetingPoint: toBoolean(data.hasDesignatedMeetingPoint),
+      practisedEvacuation: toBoolean(data.practisedEvacuation),
+      evacPracticeFreq: data.evacPracticeFreq || null,
+      knowsLocalShelter: toBoolean(data.knowsLocalShelter),
 
       // General
-      biggestConcern:     data.biggestConcern || null,
+      biggestConcern: data.biggestConcern || null,
       additionalComments: data.additionalComments || null,
 
-      surveyId:    parseInt(data.surveyId),
+      surveyId: parseInt(data.surveyId),
       respondentId: data.respondentId ? parseInt(data.respondentId) : null,
-    }
+    },
   });
 };
-
 exports.getDisasterSurveyResults = async (id) => {
   return await prisma.disasterSurvey.findUnique({
     where: { id: parseInt(id) },
