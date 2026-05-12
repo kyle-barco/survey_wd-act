@@ -13,12 +13,6 @@
 
   <% if (user) { %>
     <div class="survey-list">
-      <div style="margin-bottom: 2em;" class="create-survey">
-        <div style="font-size: 1.75em; font-weight: bold;">Create</div>
-        <hr>
-        <a href="/survey/new" class="btn btn-primary">Create a Survey</a>
-      </div>
-
       <%# ── Classroom Surveys ── %>
       <div style="font-size: 1.75em; font-weight: bold;">Classroom Surveys</div>
       <hr>
@@ -55,13 +49,6 @@
             </div>
             </div>
           <% }) %>
-        </div>
-      <% } else { %>
-        <div class="empty-state">
-          <p>No classroom surveys available yet.</p>
-          <% if (user.role === 'TEACHER') { %>
-            <a href="/survey/new" class="btn btn-primary">Create a Survey</a>
-          <% } %>
         </div>
       <% } %>
 
