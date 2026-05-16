@@ -35,7 +35,7 @@ exports.processRegister = [
         role: userData.role,
       });
 
-      res.redirect("/");
+      res.redirect("/login");
     } catch (error) {
       console.log("code:", error.code);
       console.log("meta:", JSON.stringify(error.meta)); // full structure

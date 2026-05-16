@@ -9,16 +9,9 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id                      Int                      @id @default(autoincrement())
-  email                   String                   @unique
-  password                String
-  role                    Role                     @default(TEACHER)
-  name                    String
-  classrooms              Classroom[]
-  feedbacks               Feedback[]
-  disasterSurveys         DisasterSurvey[]
-  disasterSurveyResponses DisasterSurveyResponse[]
+enum Role {
+  TEACHER
+  STUDENT
 }
 
 model Session {
@@ -26,6 +19,24 @@ model Session {
   sid       String   @unique
   data      String
   expiresAt DateTime
+}
+
+model User {
+  id                      Int                      @id @default(autoincrement())
+  email                   String                   @unique
+  password                String
+  role                    Role                     @default(TEACHER)
+  name                    String
+  
+  // A Teacher owns Classrooms
+  classrooms              Classroom[]              
+  
+  // A Student provides Feedback
+  feedbacks               Feedback[]               
+  
+  // Existing relations
+  disasterSurveys         DisasterSurvey[]
+  disasterSurveyResponses DisasterSurveyResponse[]
 }
 
 model Classroom {
@@ -46,19 +57,26 @@ model Survey {
 }
 
 model Feedback {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  mood          String
-  understanding Int
-  pacing        String
-  confusingPart String?
-  favoritePart  String?
-  shoutout      String?
-  survey        Survey   @relation(fields: [surveyId], references: [id])
-  surveyId      Int
-  student       User?    @relation(fields: [studentId], references: [id])
-  studentId     Int?
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  
+  // Fields from classroom.ejs
+  grade           String   // Maps to <select name="grade">
+  subject         String   // Maps to <select name="subject">
+  rating          Int      // Maps to <input name="rating"> (1-5)
+  favoriteLesson  String   // Maps to <input name="favoriteLesson">
+  suggestions     String?  // Maps to <textarea name="suggestions">
+  anonymous       Boolean  @default(false) // Maps to <input name="anonymous">
+
+  // Relations
+  survey          Survey   @relation(fields: [surveyId], references: [id])
+  surveyId        Int
+  
+  // Link to the User (Student) who submitted
+  student         User?    @relation(fields: [studentId], references: [id])
+  studentId       Int?
 }
+
 
 // ──────────────────────────────────────────────
 //  Disaster Preparedness Survey
@@ -109,10 +127,6 @@ model DisasterSurveyResponse {
   respondentId Int?
 }
 
-enum Role {
-  TEACHER
-  STUDENT
-}
 
 enum DisasterSurveyCategory {
   HOUSEHOLD_READINESS
