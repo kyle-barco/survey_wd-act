@@ -42,6 +42,26 @@
         --header-height: 64px;
       }
 
+    [data-theme="dark"] {
+      --navy-900: #d4e2f0;
+      --navy-800: #a8bee0;
+      --navy-700: #7aaad4;
+      --navy-600: #5a8cb8;
+      --navy-400: #4a7aaa;
+      --navy-200: #2a4a6e;
+      --navy-100: #1a3050;
+      --navy-50:  #0d1f35;
+
+      --gray-900: #f0f0f0;
+      --gray-700: #c8c8c8;
+      --gray-500: #9a9a9a;
+      --gray-300: #5a5a5a;
+      --gray-200: #3a3a3a;
+      --gray-100: #2a2a2a;
+      --gray-50:  #1e1e1e;
+      --white:    #1a1a2e;
+    }
+
       html,
       body {
         height: 100%;
@@ -50,6 +70,7 @@
         font-family: "Archivo", sans-serif;
         font-optical-sizing: auto;
         overflow-x: hidden;
+         transition: background 0.25s, color 0.25s;
       }
 
       /* ── Nav ── */
@@ -620,6 +641,14 @@
         <!-- <span class="nav-logo-text">Ech<span class="nav-logo-dot">o</span></span> -->
       </a>
       <div class="nav-actions">
+        <button
+          class="btn btn-ghost"
+          id="themeBtn"
+          onclick="toggleTheme()"
+          aria-label="Toggle dark mode"
+        >
+          <span id="themeIcon">🌙</span> 
+        </button>
         <a href="/login" class="btn btn-ghost">Log in</a>
         <a href="/register" class="btn btn-primary">Get Started</a>
       </div>
@@ -780,26 +809,28 @@
       <!-- ── Quote ── -->
       <div class="quote-strip">
         <blockquote>
-          "The best teachers don't just teach — <strong>they listen.</strong>"
+          "We hear you — <strong> loud and clear.</strong>"
         </blockquote>
         <cite>The Echo Philosophy</cite>
       </div>
 
       <!-- ── CTA Banner ── -->
       <div class="cta-banner">
-        <h2>Ready to <em>amplify</em> your classroom?</h2>
+        <h2>Ready to <em>amplify</em> your voice?</h2>
         <div class="cta-actions">
           <a href="/register" class="btn btn-primary btn-lg"
-            >Register as Teacher</a
+            >Try it for FREE!</a
           >
-          <a href="/register" class="btn btn-ghost btn-lg">Join as Student</a>
         </div>
       </div>
 
       <!-- ── Footer ── -->
       <footer class="hero-footer">
         <span>&copy; <%= new Date().getFullYear() %> Echo &mdash; Group 7</span>
-        <a href="/login">Sign in &rarr;</a>
+        <div>
+          <a href="/team">About us &rarr;</a>
+          <a href="/login">Sign in &rarr;</a>
+        </div>
       </footer>
     </div>
     <!-- /page -->
@@ -813,6 +844,28 @@
         },
         { passive: true },
       );
+
+      function toggleTheme() {
+        const isDark =
+          document.documentElement.getAttribute("data-theme") === "dark";
+        document.documentElement.setAttribute(
+          "data-theme",
+          isDark ? "light" : "dark",
+        );
+        document.getElementById("themeIcon").textContent = isDark ? "🌙" : "☀️";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      }
+
+      // Restore saved preference on load
+      const saved =
+        localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+      if (saved === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.getElementById("themeIcon").textContent = "☀️";
+      }
     </script>
   </body>
 </html>

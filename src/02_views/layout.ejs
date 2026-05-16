@@ -38,6 +38,9 @@
     <!-- Navigation Links -->
     <nav class="nav-links" id="nav-links">
         <% if (locals.user) { %>
+            <button class="btn btn-ghost" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                <span id="themeIcon">🌙</span> 
+            </button>
             <a href="/dashboard">Dashboard</a>
             <a href="/results">Results</a>
             
@@ -46,8 +49,14 @@
             <a href="/logout" class="logout mobile-only">Log out</a>
             <a href="/" class="mobile-only">Back to Home</a>
         <% } else { %>
+            <button class="btn btn-ghost" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                <span id="themeIcon">🌙</span>
+            </button>
             <a href="/login">Log in</a>
             <a href="/register">Register</a>
+        <% } %>
+        <% if (locals.showBack !== false) { %>
+            <button class="btn btn-ghost" onclick="history.back()">← Back</button>
         <% } %>
     </nav>
 </header>
@@ -60,12 +69,14 @@
             <span class="nav-section">Account</span>
             <a href="/profile">Profile</a>
             <a href="/logout" class="logout">Log out</a>
+            <span class="nav-section">More</span>
+            <a href="/team">About Us</a>
         <% } else { %>
             <span class="nav-section">Account</span>
             <a href="/login">Log in</a>
             <a href="/register">Register</a>
             <span class="nav-section">More</span>
-            <a href="/about">About Group 7</a>
+            <a href="/team">About Group 7</a>
             <a href="/">Facebook</a>
             <a href="/">Instagram</a>
             <a href="/">YouTube</a>
@@ -95,6 +106,22 @@
         <span>Echo &copy; <%= new Date().getFullYear() %></span>
         <a href="/team">Group 7</a>
     </footer>
+    <script>
+  function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeIcon').textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  }
+
+  // Restore saved preference on load
+  const saved = localStorage.getItem('theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeIcon').textContent = '☀️';
+  }
+</script>
 
 </body>
 </html>
