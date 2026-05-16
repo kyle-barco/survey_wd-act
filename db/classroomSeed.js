@@ -1,43 +1,20 @@
 import { prisma } from "../lib/prisma.js";
 
 async function main() {
-  // 1. Find existing teacher
-  const teacher = await prisma.user.findFirst({ where: { role: "TEACHER" } });
-  console.log("Teacher:", teacher?.id, teacher?.name);
+  // 1. Find existing teacher/admin
+  const admin = await prisma.user.findFirst({ where: { role: "TEACHER" } });
+  console.log("Admin:", admin?.id, admin?.name);
 
-  // 2. Create Math classroom
-  const mathClassroom = await prisma.classroom.create({
-    data: { name: "Math", teacherId: teacher.id },
+  // 2. Create one disaster survey covering all required fields
+  const survey = await prisma.disasterSurvey.create({
+    data: {
+      title: "Disaster Preparedness Survey",
+      category: "HOUSEHOLD_READINESS",
+      adminId: admin.id,
+    },
   });
-  console.log("Math classroom created:", mathClassroom.id);
-
-  // 3. Create Science classroom
-  const scienceClassroom = await prisma.classroom.create({
-    data: { name: "Science", teacherId: teacher.id },
-  });
-  console.log("Science classroom created:", scienceClassroom.id);
-
-  // 4. Create English classroom
-  const englishClassroom = await prisma.classroom.create({
-    data: { name: "English", teacherId: teacher.id },
-  });
-  console.log("English classroom created:", englishClassroom.id);
-
-  // 5. Create surveys for each classroom
-  const mathSurvey = await prisma.survey.create({
-    data: { title: "Feedback on Math Classroom", classId: mathClassroom.id },
-  });
-  console.log("Math survey created with ID:", mathSurvey.id);
-
-  const scienceSurvey = await prisma.survey.create({
-    data: { title: "Feedback on Science Classroom", classId: scienceClassroom.id },
-  });
-  console.log("Science survey created with ID:", scienceSurvey.id);
-
-  const englishSurvey = await prisma.survey.create({
-    data: { title: "Feedback on English Classroom", classId: englishClassroom.id },
-  });
-  console.log("English survey created with ID:", englishSurvey.id);
+  console.log("Disaster survey created with ID:", survey.id);
+  console.log("\n✅ Use this in disasterQuery.js → FIXED_SURVEY_ID =", survey.id);
 }
 
 main()

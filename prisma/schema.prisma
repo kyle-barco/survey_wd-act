@@ -93,40 +93,28 @@ model DisasterSurvey {
 }
 
 model DisasterSurveyResponse {
-  id        Int            @id @default(autoincrement())
-  createdAt DateTime       @default(now())
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
 
-  // Household Readiness
-  householdSize        Int?
-  hasEmergencyPlan     Boolean?
-  planPracticeFreq     String?   // "never" | "rarely" | "sometimes" | "regularly"
-  awareCommunityAlerts Boolean?
+  // Household Info
+  address       String?
+  householdSize Int?
 
-  // Emergency Supplies
-  hasGoBag        Boolean?
-  waterSupplyDays Int?
-  hasFirstAidKit  Boolean?
-  hasFlashlight   Boolean?
-  hasBatteryRadio Boolean?
-  foodSupplyDays  Int?
+  // Preparedness Check
+  hasGoBag                  Boolean?  // emergency kit yes/no
+  hasDesignatedMeetingPoint Boolean?  // checkbox: family meeting point
+  knowsLocalShelter         Boolean?  // checkbox: assigned evacuation center
+  knowsEvacuationRoute      Boolean?  // checkbox: known evacuation route
 
-  // Evacuation Planning
-  knowsEvacuationRoute      Boolean?
-  hasDesignatedMeetingPoint Boolean?
-  practisedEvacuation       Boolean?
-  evacPracticeFreq          String?  // "never" | "once" | "annually" | "biannually"
-  knowsLocalShelter         Boolean?
-
-  // General / open-ended
-  biggestConcern     String?
-  additionalComments String?
+  // Past Disaster Experience
+  biggestConcern     String?  // past disaster experience textarea
+  additionalComments String?  // additional comments textarea
 
   survey       DisasterSurvey @relation(fields: [surveyId], references: [id])
   surveyId     Int
   respondent   User?          @relation(fields: [respondentId], references: [id])
   respondentId Int?
 }
-
 
 enum DisasterSurveyCategory {
   HOUSEHOLD_READINESS
