@@ -10,7 +10,7 @@
     <% } else { %>
       <title>Hello User, Welcome to Echo!</title>
     <% } %>
-    <link rel="icon" type="image/x-icon" href="../../resources/img/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="img/favicon.svg">
 
     <% if (!isProduction) { %>
         <script type="module" src="http://localhost:5173/@vite/client"></script>
@@ -21,12 +21,14 @@
         <script type="module" src="/dist/<%= locals.jsFile %>"></script>
         <link rel="stylesheet" href="/dist/<%= locals.cssFile %>">
     <% } %>
-</link>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
 </head>
 <body>
 
 <header class="navbar">
-    <h1><a class="nav-logo" href="/"><img src="../../resources/img/echo_logo_svg.svg" alt=""></a></h1>
+    <h1><a class="nav-logo" href="/"><img src="img/echo_logo_svg.svg" alt=""></a></h1>
 
     <!-- Hamburger Toggle -->
     <div class="hamburger" id="hamburger">
@@ -122,6 +124,10 @@
     document.getElementById('themeIcon').textContent = '☀️';
   }
 </script>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
 
 </body>
 </html>

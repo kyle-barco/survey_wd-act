@@ -1609,3 +1609,5 @@ header.navbar h1 {
   background: #f8fafc;
   border-color: #cbd5e1;
 }
+
+#map { height: 180px; }

@@ -46,7 +46,7 @@ app.set("views", path.join(__dirname, "02_views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")))
 // app.use(express.static('public'));
-app.use('/resources', express.static('resources'));
+app.use(express.static('resources'));
 
 app.use(expressLayouts);
 app.set("layout", "layout");
