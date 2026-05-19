@@ -1,7 +1,9 @@
-const {Router} = require("express")
-const teamController = require("../03_controllers/teamController")
+const { Router } = require("express");
+const teamController = require("../03_controllers/teamController");
 
-const router = Router()
-router.get("/", teamController.showTeam)
+const router = Router();
 
-module.exports = router
+// Points the team page to the showTeam method
+router.get("/", teamController.showTeam);
+
+module.exports = router;

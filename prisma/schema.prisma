@@ -9,9 +9,19 @@ datasource db {
   provider = "postgresql"
 }
 
+// ──────────────────────────────────────────────
+//  Enums
+// ──────────────────────────────────────────────
+
 enum Role {
   TEACHER
   STUDENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }
 
 enum DisasterSurveyCategory {
@@ -28,6 +38,10 @@ enum QuestionType {
   RATING
 }
 
+// ──────────────────────────────────────────────
+//  Core Models
+// ──────────────────────────────────────────────
+
 model Session {
   id        String   @id
   sid       String   @unique
@@ -39,8 +53,13 @@ model User {
   id                      Int                      @id @default(autoincrement())
   email                   String                   @unique
   password                String
-  role                    Role                     @default(TEACHER)
   name                    String
+  role                    Role                     @default(TEACHER)
+  
+  // New Demographics Fields for Survey Analytics
+  gender                  Gender
+  birthday                DateTime
+  institution             String?                  // Optional/Nullable field
 
   // A Teacher owns Classrooms
   classrooms              Classroom[]
@@ -85,10 +104,10 @@ model Feedback {
   suggestions    String?
   anonymous      Boolean  @default(false)
 
-  survey    Survey @relation(fields: [surveyId], references: [id])
-  surveyId  Int
-  student   User?  @relation(fields: [studentId], references: [id])
-  studentId Int?
+  survey         Survey @relation(fields: [surveyId], references: [id])
+  surveyId       Int
+  student        User?  @relation(fields: [studentId], references: [id])
+  studentId      Int?
 }
 
 // ──────────────────────────────────────────────
@@ -96,12 +115,12 @@ model Feedback {
 // ──────────────────────────────────────────────
 
 model DisasterSurvey {
-  id        Int                      @id @default(autoincrement())
+  id        Int                    @id @default(autoincrement())
   title     String
   category  DisasterSurveyCategory
-  createdAt DateTime                 @default(now())
+  createdAt DateTime               @default(now())
   adminId   Int
-  admin     User                     @relation(fields: [adminId], references: [id])
+  admin     User                   @relation(fields: [adminId], references: [id])
   responses DisasterSurveyResponse[]
 }
 
@@ -114,10 +133,10 @@ model DisasterSurveyResponse {
   householdSize Int?
 
   // Preparedness Check
-  hasGoBag                  Boolean?
-  hasDesignatedMeetingPoint Boolean?
-  knowsLocalShelter         Boolean?
-  knowsEvacuationRoute      Boolean?
+  hasGoBag                   Boolean?
+  hasDesignatedMeetingPoint  Boolean?
+  knowsLocalShelter          Boolean?
+  knowsEvacuationRoute       Boolean?
 
   // Past Disaster Experience
   biggestConcern     String?

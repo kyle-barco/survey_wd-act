@@ -26,10 +26,24 @@
     </div>
 
     <div class="profile-field">
+      <span class="profile-field__label">Institution</span>
+      <span class="profile-field__value"><%= user.institution %></span>
+    </div>
+
+    <div class="profile-field">
       <span class="profile-field__label">Role</span>
       <span class="profile-field__value"><%= user.role %></span>
     </div>
 
+    <div class="profile-field">
+      <span class="profile-field__label">Gender</span>
+      <span class="profile-field__value"><%= user.gender %></span>
+    </div>
+
+    <div class="profile-field">
+      <span class="profile-field__label">Birthday</span>
+      <span class="profile-field__value"><%= user.birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'}) %></span>
+    </div>
   </div>
 
   <% if (user.role === 'TEACHER') { %>

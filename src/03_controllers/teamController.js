@@ -6,9 +6,9 @@ const teamMembers = [
     { name: "Dave Llaguno", role: "Content & Documentation Specialist", imgUrl: 'img/dave.jpg' }
 ];
 
+
 exports.showTeam = async (req, res) => {
     try {
-        // Renders your EJS file (e.g., 'org-chart.ejs') and injects the array
         res.render('team', { team: teamMembers });
     } catch (error) {
         console.error("Error rendering team chart:", error);

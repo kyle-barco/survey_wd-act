@@ -16,14 +16,17 @@
         <script type="module" src="http://localhost:5173/@vite/client"></script>
         <script type="module" src="http://localhost:5173/resources/js/main.js"></script>
         <link rel="stylesheet" href="http://localhost:5173/resources/css/style.css">
+        <link rel="icon" type="image/x-icon" href="img/favicon.svg">
     <% } else { %>
         <script async src="<%= umamiUrl %>" data-website-id="<%= umamiWebsiteId %>"></script>
         <script type="module" src="/dist/<%= locals.jsFile %>"></script>
         <link rel="stylesheet" href="/dist/<%= locals.cssFile %>">
+        <link rel="icon" type="image/x-icon" href="img/favicon.svg">
     <% } %>
      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
+    <link rel="icon" type="image/x-icon" href="img/favicon.svg">
 </head>
 <body>
 
@@ -40,12 +43,10 @@
     <!-- Navigation Links -->
     <nav class="nav-links" id="nav-links">
         <% if (locals.user) { %>
+            <a href="/">Dashboard</a>
             <button class="btn btn-ghost" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle dark mode">
                 <span id="themeIcon">🌙</span> 
             </button>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/results">Results</a>
-            
             <!-- These will only show on mobile -->
             <a href="/profile" class="mobile-only">Profile</a>
             <a href="/logout" class="logout mobile-only">Log out</a>
@@ -58,7 +59,7 @@
             <a href="/register">Register</a>
         <% } %>
         <% if (locals.showBack !== false) { %>
-            <button class="btn btn-ghost" onclick="history.back()">← Back</button>
+            <button class="btn btn-ghost back-btn" onclick="history.back()">← Back</button>
         <% } %>
     </nav>
 </header>
@@ -68,6 +69,8 @@
             <span class="nav-section">Surveys</span>
             <a href="/custom-survey/new">Create Survey</a>
             <a href="/custom-survey">Custom Survey List</a>
+            <a href="/custom-survey">Classroom Survey Result</a>
+            <a href="/custom-survey">Disaster Survey Result</a>
             <span class="nav-section">Account</span>
             <a href="/profile">Profile</a>
             <a href="/logout" class="logout">Log out</a>
@@ -104,7 +107,7 @@
     </aside>
 
     <footer>
-        <script src="/resources/js/navbar.js" defer></script>
+        <script src="js/navbar.js" defer></script>
         <span>Echo &copy; <%= new Date().getFullYear() %></span>
         <a href="/team">Group 7</a>
     </footer>

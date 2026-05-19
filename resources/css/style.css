@@ -241,6 +241,10 @@ body > nav a.active {
     display: flex;
     background-color: var(--navy-700);
   }
+
+  .btn-ghost {
+    color: var(--gray-200);
+  }
 }
 
 /* Locate the mobile styles section in your CSS */
@@ -291,6 +295,10 @@ body > nav a.active {
 
   .btn-group {
     flex-direction: column;
+  }
+
+  .btn-ghost {
+    color: var(--gray-200);
   }
 }
 
@@ -1434,6 +1442,10 @@ header.navbar h1 {
     width: 100%;
     text-align: center;
   }
+
+  .back-btn{
+    color: var(--gray-200);
+  }
 }
 
 /* dresults */
@@ -1609,5 +1621,3 @@ header.navbar h1 {
   background: #f8fafc;
   border-color: #cbd5e1;
 }
-
-#map { height: 180px; }
