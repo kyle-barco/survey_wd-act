@@ -14,6 +14,20 @@ enum Role {
   STUDENT
 }
 
+enum DisasterSurveyCategory {
+  HOUSEHOLD_READINESS
+  EMERGENCY_SUPPLIES
+  EVACUATION_PLANNING
+}
+
+enum QuestionType {
+  TEXT
+  RADIO
+  CHECKBOX
+  DROPDOWN
+  RATING
+}
+
 model Session {
   id        String   @id
   sid       String   @unique
@@ -27,16 +41,20 @@ model User {
   password                String
   role                    Role                     @default(TEACHER)
   name                    String
-  
+
   // A Teacher owns Classrooms
-  classrooms              Classroom[]              
-  
+  classrooms              Classroom[]
+
   // A Student provides Feedback
-  feedbacks               Feedback[]               
-  
-  // Existing relations
+  feedbacks               Feedback[]
+
+  // Disaster survey relations
   disasterSurveys         DisasterSurvey[]
   disasterSurveyResponses DisasterSurveyResponse[]
+
+  // Custom survey relations
+  customSurveys           CustomSurvey[]
+  customResponses         CustomResponse[]
 }
 
 model Classroom {
@@ -57,26 +75,21 @@ model Survey {
 }
 
 model Feedback {
-  id              Int      @id @default(autoincrement())
-  createdAt       DateTime @default(now())
-  
-  // Fields from classroom.ejs
-  grade           String   // Maps to <select name="grade">
-  subject         String   // Maps to <select name="subject">
-  rating          Int      // Maps to <input name="rating"> (1-5)
-  favoriteLesson  String   // Maps to <input name="favoriteLesson">
-  suggestions     String?  // Maps to <textarea name="suggestions">
-  anonymous       Boolean  @default(false) // Maps to <input name="anonymous">
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
 
-  // Relations
-  survey          Survey   @relation(fields: [surveyId], references: [id])
-  surveyId        Int
-  
-  // Link to the User (Student) who submitted
-  student         User?    @relation(fields: [studentId], references: [id])
-  studentId       Int?
+  grade          String
+  subject        String
+  rating         Int
+  favoriteLesson String
+  suggestions    String?
+  anonymous      Boolean  @default(false)
+
+  survey    Survey @relation(fields: [surveyId], references: [id])
+  surveyId  Int
+  student   User?  @relation(fields: [studentId], references: [id])
+  studentId Int?
 }
-
 
 // ──────────────────────────────────────────────
 //  Disaster Preparedness Survey
@@ -101,14 +114,14 @@ model DisasterSurveyResponse {
   householdSize Int?
 
   // Preparedness Check
-  hasGoBag                  Boolean?  // emergency kit yes/no
-  hasDesignatedMeetingPoint Boolean?  // checkbox: family meeting point
-  knowsLocalShelter         Boolean?  // checkbox: assigned evacuation center
-  knowsEvacuationRoute      Boolean?  // checkbox: known evacuation route
+  hasGoBag                  Boolean?
+  hasDesignatedMeetingPoint Boolean?
+  knowsLocalShelter         Boolean?
+  knowsEvacuationRoute      Boolean?
 
   // Past Disaster Experience
-  biggestConcern     String?  // past disaster experience textarea
-  additionalComments String?  // additional comments textarea
+  biggestConcern     String?
+  additionalComments String?
 
   survey       DisasterSurvey @relation(fields: [surveyId], references: [id])
   surveyId     Int
@@ -116,8 +129,47 @@ model DisasterSurveyResponse {
   respondentId Int?
 }
 
-enum DisasterSurveyCategory {
-  HOUSEHOLD_READINESS
-  EMERGENCY_SUPPLIES
-  EVACUATION_PLANNING
+// ──────────────────────────────────────────────
+//  Custom Survey Builder
+// ──────────────────────────────────────────────
+
+model CustomSurvey {
+  id        Int              @id @default(autoincrement())
+  title     String
+  createdAt DateTime         @default(now())
+  creatorId Int
+  creator   User             @relation(fields: [creatorId], references: [id])
+  questions CustomQuestion[]
+  responses CustomResponse[]
+}
+
+model CustomQuestion {
+  id       Int            @id @default(autoincrement())
+  label    String
+  type     QuestionType
+  options  String?        // JSON string for radio/checkbox/dropdown choices
+  required Boolean        @default(false)
+  order    Int
+  survey   CustomSurvey   @relation(fields: [surveyId], references: [id])
+  surveyId Int
+  answers  CustomAnswer[]
+}
+
+model CustomResponse {
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  survey       CustomSurvey   @relation(fields: [surveyId], references: [id])
+  surveyId     Int
+  answers      CustomAnswer[]
+  respondent   User?          @relation(fields: [respondentId], references: [id])
+  respondentId Int?
+}
+
+model CustomAnswer {
+  id         Int            @id @default(autoincrement())
+  value      String
+  question   CustomQuestion @relation(fields: [questionId], references: [id])
+  questionId Int
+  response   CustomResponse @relation(fields: [responseId], references: [id])
+  responseId Int
 }

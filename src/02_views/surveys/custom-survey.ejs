@@ -1,0 +1,652 @@
+<style>
+/* ── Layout ── */
+.cs-container {
+  max-width: 680px;
+  margin: 2rem auto;
+  padding: 0 1rem 4rem;
+  font-family: var(--font-sans, sans-serif);
+}
+
+.cs-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.cs-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* ── Cards ── */
+.cs-section,
+.cs-question-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: border-color .2s;
+}
+
+.cs-question-card:focus-within {
+  border-color: var(--color-border-secondary);
+}
+
+.cs-section__title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+}
+
+/* ── Question card header ── */
+.cs-question-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: .75rem;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+}
+
+.cs-question-card__number {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+/* ── Two-column grid for type + required ── */
+.cs-question-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+/* ── Fields ── */
+.cs-field {
+  margin-bottom: 1rem;
+  display: block;  
+  width: 100%;
+}
+
+.cs-field:last-child {
+  margin-bottom: 0;
+}
+
+.cs-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+.cs-hint {
+  font-weight: 400;
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+}
+
+.cs-input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color .15s;
+}
+
+/* Padding safety wrapper for dropdown selections */
+select.cs-input {
+  padding-right: 28px;
+}
+
+.cs-input:focus {
+  border-color: var(--color-border-primary);
+  box-shadow: 0 0 0 3px rgba(120, 120, 255, .1);
+}
+
+.cs-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+/* ── Choice Options Layout (Radio / Checkbox Rows) ── */
+.cs-choice-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cs-choice-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+/* ── Rating Matrix Layout ── */
+.cs-rating-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cs-rating-label {
+  flex: 1;
+  text-align: center;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.cs-rating-label:hover {
+  background: var(--color-background-secondary);
+}
+
+/* ── Required checkbox container ── */
+.cs-required-container {
+  height: 36px; 
+  display: flex;
+  align-items: center;
+}
+
+.cs-required-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.cs-checkbox {
+  width: 15px;
+  height: 15px;
+  accent-color: #7f77dd;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Options field ── */
+.cs-options-field {
+  margin-top: 12px;
+}
+
+/* ── Remove button ── */
+.cs-remove-btn {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-danger);
+  background: var(--color-background-danger);
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: 5px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cs-remove-btn:hover {
+  opacity: .85;
+}
+
+/* ── Add question button ── */
+.cs-add-btn {
+  width: 100%;
+  padding: .75rem;
+  border: 0.5px dashed var(--color-border-secondary);
+  border-radius: var(--border-radius-lg);
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 1rem;
+  transition: background .15s, color .15s;
+}
+
+.cs-add-btn:hover {
+  background: var(--color-background-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* ── Footer ── */
+.cs-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 1.25rem;
+}
+
+/* ── Buttons ── */
+.cs-btn {
+  padding: 9px 20px;
+  border-radius: var(--border-radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .15s;
+}
+
+.cs-btn--primary {
+  background: #7f77dd;
+  color: #fff;
+  border: none;
+}
+
+.cs-btn--primary:hover {
+  background: #534ab7;
+}
+
+.cs-btn--ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 0.5px solid var(--color-border-secondary);
+}
+
+.cs-btn--ghost:hover {
+  background: var(--color-background-secondary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .cs-question-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .cs-required-container {
+    height: auto;
+    margin-top: 4px;
+  }
+
+  .cs-footer {
+    flex-direction: column;
+  }
+
+  .cs-btn {
+    justify-content: center;
+  }
+}
+</style>
+
+<div class="cs-container">
+
+  <% if (mode === 'take') { %>
+    <div class="cs-header">
+      <h1 class="cs-title"><%= survey.title %></h1>
+      <p class="cs-subtitle">Please complete the questionnaire form elements below.</p>
+    </div>
+
+    <form id="takeSurveyForm" action="/custom-survey/<%= survey.id %>" method="POST">
+      
+      <% survey.questions.forEach((question, index) => { %>
+        <div class="cs-question-card">
+          <label class="cs-label">
+            <strong><%= index + 1 %>. <%= question.label %></strong>
+            <% if (question.required) { %>
+              <span style="color: var(--color-text-danger); font-weight: bold;">*</span>
+            <% } %>
+          </label>
+
+          <div style="margin-top: 0.5rem;">
+            <% if (question.type === 'TEXT') { %>
+              <input 
+                type="text" 
+                name="answers[<%= question.id %>]" 
+                class="cs-input" 
+                placeholder="Type your answer here..." 
+                <%= question.required ? 'required' : '' %>
+              >
+
+            <% } else if (question.type === 'RADIO') { %>
+              <div class="cs-choice-group">
+                <% question.options.forEach((option) => { %>
+                  <label class="cs-choice-label">
+                    <input 
+                      type="radio" 
+                      name="answers[<%= question.id %>]" 
+                      value="<%= option %>" 
+                      class="cs-checkbox" 
+                      <%= question.required ? 'required' : '' %>
+                    >
+                    <span><%= option %></span>
+                  </label>
+                <% }) %>
+              </div>
+
+            <% } else if (question.type === 'CHECKBOX') { %>
+              <div class="cs-choice-group">
+                <% question.options.forEach((option) => { %>
+                  <label class="cs-choice-label">
+                    <input 
+                      type="checkbox" 
+                      name="answers[<%= question.id %>][]" 
+                      value="<%= option %>" 
+                      class="cs-checkbox"
+                    >
+                    <span><%= option %></span>
+                  </label>
+                <% }) %>
+              </div>
+
+            <% } else if (question.type === 'DROPDOWN') { %>
+              <select name="answers[<%= question.id %>]" class="cs-input" <%= question.required ? 'required' : '' %>>
+                <option value="">-- Choose an Option --</option>
+                <% question.options.forEach((option) => { %>
+                  <option value="<%= option %>"><%= option %></option>
+                <% }) %>
+              </select>
+
+            <% } else if (question.type === 'RATING') { %>
+              <div class="cs-rating-group">
+                <% [1, 2, 3, 4, 5].forEach((num) => { %>
+                  <label class="cs-rating-label">
+                    <input 
+                      type="radio" 
+                      name="answers[<%= question.id %>]" 
+                      value="<%= num %>" 
+                      class="cs-checkbox" 
+                      <%= question.required ? 'required' : '' %>
+                    >
+                    <span><%= num %></span>
+                  </label>
+                <% }) %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+
+      <div class="cs-footer">
+        <button type="submit" class="cs-btn cs-btn--primary">Submit Answers</button>
+        <a href="/custom-survey" class="cs-btn cs-btn--ghost">Back</a>
+      </div>
+    </form>
+
+  <% } else { %>
+    <div class="cs-header">
+      <h1 class="cs-title">Create a Survey</h1>
+      <p class="cs-subtitle">Build your survey by adding questions below.</p>
+    </div>
+
+    <form action="/custom-survey" method="POST" id="surveyForm">
+      <div class="cs-section">
+        <div class="cs-section__title">Survey Details</div>
+        <div class="cs-field">
+          <label class="cs-label" for="title">Survey Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            class="cs-input"
+            placeholder="e.g. Community Feedback Survey"
+            required
+          >
+        </div>
+      </div>
+
+      <div id="questions-list"></div>
+
+      <button type="button" class="cs-add-btn" id="addQuestion">+ Add Question</button>
+
+      <div class="cs-footer">
+        <button type="submit" class="cs-btn cs-btn--primary">Create Survey</button>
+        <a href="/" class="cs-btn cs-btn--ghost">Cancel</a>
+      </div>
+    </form>
+  <% } %>
+</div>
+
+
+<% if (mode === 'take') { %>
+<script>
+  // This intercept script runs ONLY when the user is FILLING OUT a survey response
+  const takeForm = document.getElementById("takeSurveyForm");
+  if (takeForm) {
+    takeForm.addEventListener("submit", async (e) => {
+      e.preventDefault(); 
+
+      const formData = new FormData(takeForm);
+      const answers = {};
+
+      formData.forEach((value, key) => {
+        if (key.startsWith("answers[")) {
+          const qId = key.match(/\[(.*?)\]/)[1];
+          
+          if (key.endsWith("[]")) { 
+            if (!answers[qId]) answers[qId] = [];
+            answers[qId].push(value);
+          } else {
+            answers[qId] = value;
+          }
+        }
+      });
+
+      try {
+        const response = await fetch(takeForm.action, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ answers })
+        });
+
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else if (response.ok) {
+          window.location.href = "/custom-survey";
+        } else {
+          const errText = await response.text();
+          alert("Submission Failed: " + errText);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("An error occurred while transmitting your responses.");
+      }
+    });
+  }
+</script>
+<% } else { %>
+
+<%# ── Hidden Question Template Block (Only needed for Creation Mode) ── %>
+<template id="question-template">
+  <div class="cs-question-card" data-index="">
+
+    <div class="cs-question-card__header">
+      <span class="cs-question-card__number">Question <span class="q-number"></span></span>
+      <button type="button" class="cs-remove-btn">Remove</button>
+    </div>
+
+    <div class="cs-field">
+      <label class="cs-label">Question Label</label>
+      <input
+        type="text"
+        name="questions[INDEX][label]"
+        class="cs-input"
+        placeholder="e.g. What is your name?"
+        required
+      >
+    </div>
+
+    <div class="cs-question-grid">
+      <div class="cs-field">
+        <label class="cs-label">Question Type</label>
+        <select name="questions[INDEX][type]" class="cs-input cs-type-select">
+          <option value="TEXT">Text (short answer)</option>
+          <option value="RADIO">Radio (single choice)</option>
+          <option value="CHECKBOX">Checkbox (multiple choice)</option>
+          <option value="DROPDOWN">Dropdown (select)</option>
+          <option value="RATING">Rating scale (1–5)</option>
+        </select>
+      </div>
+
+      <div class="cs-field cs-required-container">
+        <label class="cs-required-label">
+          <input
+            type="checkbox"
+            name="questions[INDEX][required]"
+            value="true"
+            class="cs-checkbox"
+          >
+          Mark as required
+        </label>
+      </div>
+    </div>
+
+    <div class="cs-field cs-options-field" style="display:none;">
+      <label class="cs-label">
+        Options
+        <span class="cs-hint">(one per line)</span>
+      </label>
+      <textarea
+        name="questions[INDEX][options]"
+        class="cs-input cs-textarea"
+        rows="4"
+        placeholder="Option 1&#10;Option 2&#10;Option 3"
+      ></textarea>
+    </div>
+
+  </div>
+</template>
+
+<script>
+  // This builder script runs ONLY when a manager is CREATING a survey structure
+  const list     = document.getElementById("questions-list");
+  const addBtn   = document.getElementById("addQuestion");
+  const template = document.getElementById("question-template");
+  let count      = 0;
+
+  function addQuestion() {
+    const index = count;
+    count++;
+
+    const clone = template.content.cloneNode(true);
+    const card  = clone.querySelector(".cs-question-card");
+
+    card.dataset.index = index;
+    card.querySelector(".q-number").textContent = list.children.length + 1;
+
+    card.querySelectorAll("[name]").forEach(el => {
+      el.name = el.name.replace("INDEX", index);
+    });
+
+    const typeSelect   = card.querySelector(".cs-type-select");
+    const optionsField = card.querySelector(".cs-options-field");
+
+    typeSelect.addEventListener("change", () => {
+      const needs = ["RADIO", "CHECKBOX", "DROPDOWN"].includes(typeSelect.value);
+      optionsField.style.display = needs ? "block" : "none";
+
+      const textarea = optionsField.querySelector("textarea");
+      textarea.required = needs;
+    });
+
+    card.querySelector(".cs-remove-btn").addEventListener("click", () => {
+      card.remove();
+      renumber();
+    });
+
+    list.appendChild(clone);
+  }
+
+  function renumber() {
+    list.querySelectorAll(".cs-question-card").forEach((card, i) => {
+      card.querySelector(".q-number").textContent = i + 1;
+    });
+  }
+
+  if (addBtn) {
+    addBtn.addEventListener("click", addQuestion);
+  }
+
+  document.getElementById("surveyForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const cards = list.querySelectorAll(".cs-question-card");
+    if (cards.length === 0) {
+      alert("Please add at least one question.");
+      return;
+    }
+
+    const titleInput = document.getElementById("title");
+    
+    const payload = {
+      title: titleInput.value,
+      questions: {}
+    };
+
+    cards.forEach((card, idx) => {
+      const labelValue = card.querySelector('input[type="text"]').value;
+      const typeValue  = card.querySelector('select').value;
+      const isRequired = card.querySelector('input[type="checkbox"]').checked;
+      const optionsText = card.querySelector('textarea').value;
+
+      payload.questions[idx] = {
+        label: labelValue,
+        type: typeValue,
+        required: isRequired ? "true" : "false",
+        options: optionsText
+      };
+    });
+
+    try {
+      const response = await fetch("/custom-survey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else if (response.ok) {
+        window.location.href = "/custom-survey";
+      } else {
+        const errText = await response.text();
+        alert("Submission Failed: " + errText);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An unexpected error occurred saving your survey configuration.");
+    }
+  });
+
+  addQuestion();
+</script>
+<% } %>

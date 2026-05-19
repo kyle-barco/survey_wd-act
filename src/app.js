@@ -22,6 +22,7 @@ const classroomsurveyRouter = require("./routes/surveys/classroomSurveyRouter.js
 const disasterSurveyRouter = require("./routes/surveys/disasterSurveyRouter.js");
 const profileRouter = require("./routes/profileRouter.js");
 const teamRouter = require('./routes/teamRouter.js')
+const customSurveyRouter = require('./routes/surveys/customSurveyRouter.js')
 
 setInterval(() => {
   https.get('https://survey-wd-act.onrender.com', (res) => {
@@ -52,7 +53,8 @@ app.use(expressLayouts);
 app.set("layout", "layout");
 
 app.use('/dist', express.static('dist'))
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use(
@@ -150,6 +152,8 @@ app.use("/classroom-survey", classroomsurveyRouter)
 app.use("/disaster-survey", disasterSurveyRouter)
 app.use("/profile", profileRouter)
 app.use("/team", teamRouter)
+app.use("/", customSurveyRouter);
+
 
 app.use((req, res, next) => {
     res.status(404).render('404', { title: '404: File Not Found' });
