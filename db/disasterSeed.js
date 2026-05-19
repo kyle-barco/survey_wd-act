@@ -9,6 +9,8 @@ async function populateWithTestData() {
       email: "admin@disasterprep.com",
       password: "password123",
       role: "TEACHER",
+      gender: "FEMALE",
+      birthday: new Date("1990-01-01"), // 👈 Added this to fix the missing birthday validation error
     }
   });
 
@@ -43,6 +45,6 @@ populateWithTestData()
   })
   .catch(async (err) => {
     console.error(err);
-    prisma.$disconnect();
+    await prisma.$disconnect();
     process.exit(1);
   });
