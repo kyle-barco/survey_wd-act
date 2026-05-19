@@ -21,26 +21,27 @@
         <thead>
           <tr>
             <th>Student</th>
-            <th>Mood</th>
-            <th>Understanding</th>
-            <th>Pacing</th>
-            <th>Confusing Part</th>
-            <th>Favorite Part</th>
-            <th>Shoutout</th>
+            <th>Grade/Class</th>
+            <th>Subject</th>
+            <th>Rating</th>
+            <th>Favorite Lesson</th>
+            <th>Suggestions</th>
           </tr>
         </thead>
         <tbody>
           <% survey.responses.forEach(response => { %>
             <tr>
-              <td class="font-bold"><%= response.student ? response.student.name : "Anonymous" %></td>
-              <td><%= response.mood %></td>
-              <td>
-                <span class="score-badge"><%= response.understanding %>/5</span>
+              <!-- Handles anonymous responses based on your schema's "anonymous" boolean -->
+              <td class="font-bold">
+                <%= response.anonymous || !response.student ? "Anonymous" : response.student.name %>
               </td>
-              <td><%= response.pacing %></td>
-              <td class="text-small"><%= response.confusingPart || "—" %></td>
-              <td class="text-small"><%= response.favoritePart || "—" %></td>
-              <td class="text-small"><%= response.shoutout || "—" %></td>
+              <td><%= response.grade %></td>
+              <td><%= response.subject %></td>
+              <td>
+                <span class="score-badge"><%= response.rating %>/5</span>
+              </td>
+              <td class="text-small"><%= response.favoriteLesson || "—" %></td>
+              <td class="text-small"><%= response.suggestions || "—" %></td>
             </tr>
           <% }) %>
         </tbody>

@@ -1,15 +1,9 @@
-const {
-  showSurvey,
-  submitSurvey,
-  showResults,
-} = require("../../03_controllers/surveys/disasterController");
+const router  = require("express").Router();
+const ctrl    = require("../../03_controllers/surveys/disasterController"); // fix path to yours
 
-const { Router } = require("express");
+router.get("/",          ctrl.showSurvey);
+router.post("/respond",  ctrl.submitSurvey);
+router.get("/thank-you", ctrl.thankYou);
+router.get("/results",   ctrl.showResults);
 
-const disasterSurveyRouter = Router();
-
-disasterSurveyRouter.get("/:id", showSurvey);
-disasterSurveyRouter.get("/:id/results", showResults);
-disasterSurveyRouter.post("/:id/respond", submitSurvey);
-
-module.exports = disasterSurveyRouter;
+module.exports = router;

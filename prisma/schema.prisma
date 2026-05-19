@@ -9,23 +9,71 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id                      Int                      @id @default(autoincrement())
-  email                   String                   @unique
-  password                String
-  role                    Role                     @default(TEACHER)
-  name                    String
-  classrooms              Classroom[]
-  feedbacks               Feedback[]
-  disasterSurveys         DisasterSurvey[]
-  disasterSurveyResponses DisasterSurveyResponse[]
+// ──────────────────────────────────────────────
+//  Enums
+// ──────────────────────────────────────────────
+
+enum Role {
+  TEACHER
+  STUDENT
 }
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum DisasterSurveyCategory {
+  HOUSEHOLD_READINESS
+  EMERGENCY_SUPPLIES
+  EVACUATION_PLANNING
+}
+
+enum QuestionType {
+  TEXT
+  RADIO
+  CHECKBOX
+  DROPDOWN
+  RATING
+}
+
+// ──────────────────────────────────────────────
+//  Core Models
+// ──────────────────────────────────────────────
 
 model Session {
   id        String   @id
   sid       String   @unique
   data      String
   expiresAt DateTime
+}
+
+model User {
+  id                      Int                      @id @default(autoincrement())
+  email                   String                   @unique
+  password                String
+  name                    String
+  role                    Role                     @default(TEACHER)
+  
+  // New Demographics Fields for Survey Analytics
+  gender                  Gender
+  birthday                DateTime
+  institution             String?                  // Optional/Nullable field
+
+  // A Teacher owns Classrooms
+  classrooms              Classroom[]
+
+  // A Student provides Feedback
+  feedbacks               Feedback[]
+
+  // Disaster survey relations
+  disasterSurveys         DisasterSurvey[]
+  disasterSurveyResponses DisasterSurveyResponse[]
+
+  // Custom survey relations
+  customSurveys           CustomSurvey[]
+  customResponses         CustomResponse[]
 }
 
 model Classroom {
@@ -46,18 +94,20 @@ model Survey {
 }
 
 model Feedback {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  mood          String
-  understanding Int
-  pacing        String
-  confusingPart String?
-  favoritePart  String?
-  shoutout      String?
-  survey        Survey   @relation(fields: [surveyId], references: [id])
-  surveyId      Int
-  student       User?    @relation(fields: [studentId], references: [id])
-  studentId     Int?
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+
+  grade          String
+  subject        String
+  rating         Int
+  favoriteLesson String
+  suggestions    String?
+  anonymous      Boolean  @default(false)
+
+  survey         Survey @relation(fields: [surveyId], references: [id])
+  surveyId       Int
+  student        User?  @relation(fields: [studentId], references: [id])
+  studentId      Int?
 }
 
 // ──────────────────────────────────────────────
@@ -65,41 +115,30 @@ model Feedback {
 // ──────────────────────────────────────────────
 
 model DisasterSurvey {
-  id        Int                      @id @default(autoincrement())
+  id        Int                    @id @default(autoincrement())
   title     String
   category  DisasterSurveyCategory
-  createdAt DateTime                 @default(now())
+  createdAt DateTime               @default(now())
   adminId   Int
-  admin     User                     @relation(fields: [adminId], references: [id])
+  admin     User                   @relation(fields: [adminId], references: [id])
   responses DisasterSurveyResponse[]
 }
 
 model DisasterSurveyResponse {
-  id        Int            @id @default(autoincrement())
-  createdAt DateTime       @default(now())
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
 
-  // Household Readiness
-  householdSize        Int?
-  hasEmergencyPlan     Boolean?
-  planPracticeFreq     String?   // "never" | "rarely" | "sometimes" | "regularly"
-  awareCommunityAlerts Boolean?
+  // Household Info
+  address       String?
+  householdSize Int?
 
-  // Emergency Supplies
-  hasGoBag        Boolean?
-  waterSupplyDays Int?
-  hasFirstAidKit  Boolean?
-  hasFlashlight   Boolean?
-  hasBatteryRadio Boolean?
-  foodSupplyDays  Int?
+  // Preparedness Check
+  hasGoBag                   Boolean?
+  hasDesignatedMeetingPoint  Boolean?
+  knowsLocalShelter          Boolean?
+  knowsEvacuationRoute       Boolean?
 
-  // Evacuation Planning
-  knowsEvacuationRoute      Boolean?
-  hasDesignatedMeetingPoint Boolean?
-  practisedEvacuation       Boolean?
-  evacPracticeFreq          String?  // "never" | "once" | "annually" | "biannually"
-  knowsLocalShelter         Boolean?
-
-  // General / open-ended
+  // Past Disaster Experience
   biggestConcern     String?
   additionalComments String?
 
@@ -109,13 +148,47 @@ model DisasterSurveyResponse {
   respondentId Int?
 }
 
-enum Role {
-  TEACHER
-  STUDENT
+// ──────────────────────────────────────────────
+//  Custom Survey Builder
+// ──────────────────────────────────────────────
+
+model CustomSurvey {
+  id        Int              @id @default(autoincrement())
+  title     String
+  createdAt DateTime         @default(now())
+  creatorId Int
+  creator   User             @relation(fields: [creatorId], references: [id])
+  questions CustomQuestion[]
+  responses CustomResponse[]
 }
 
-enum DisasterSurveyCategory {
-  HOUSEHOLD_READINESS
-  EMERGENCY_SUPPLIES
-  EVACUATION_PLANNING
+model CustomQuestion {
+  id       Int            @id @default(autoincrement())
+  label    String
+  type     QuestionType
+  options  String?        // JSON string for radio/checkbox/dropdown choices
+  required Boolean        @default(false)
+  order    Int
+  survey   CustomSurvey   @relation(fields: [surveyId], references: [id])
+  surveyId Int
+  answers  CustomAnswer[]
+}
+
+model CustomResponse {
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  survey       CustomSurvey   @relation(fields: [surveyId], references: [id])
+  surveyId     Int
+  answers      CustomAnswer[]
+  respondent   User?          @relation(fields: [respondentId], references: [id])
+  respondentId Int?
+}
+
+model CustomAnswer {
+  id         Int            @id @default(autoincrement())
+  value      String
+  question   CustomQuestion @relation(fields: [questionId], references: [id])
+  questionId Int
+  response   CustomResponse @relation(fields: [responseId], references: [id])
+  responseId Int
 }

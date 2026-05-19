@@ -1,167 +1,685 @@
-<div class="disaster-container">
-  <div class="disaster-header">
-    <h1><%= survey.title %></h1>
-    <span class="disaster-badge disaster-badge--<%= survey.category.toLowerCase() %>">
-      <%= survey.category.replace(/_/g, ' ') %>
-    </span>
-  </div>
+<div class="ds-wrap">
+  <p class="ds-title">Disaster Survey</p>
 
-  <form action="/disaster-survey/<%= survey.id %>/respond" method="POST">
+  <style>
+    .ds-wrap {
+      max-width: 750px;
+      margin: 0 auto;
+      padding: 1rem 0;
+      font-size: 15px;
+    }
+    .ds-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-text-primary, #1e293b);
+      margin: 0 0 4px;
+    }
+    .ds-responses {
+      font-size: 13px;
+      color: #64748b;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 6px 12px;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+    .ds-section-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+    .ds-field {
+      margin-bottom: 1rem;
+    }
+    .ds-label {
+      display: block;
+      font-size: 14px;
+      color: #1e293b;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .ds-radio-btn {
+      width: 100%;
+      padding: 10px 14px;
+      background: #fff;
+      border: 0.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #1e293b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      box-sizing: border-box;
+    }
+    .ds-radio-btn:hover {
+      background: #f8fafc;
+    }
+    .ds-radio-btn.selected {
+      background: #e6f1fb;
+      border-color: #378add;
+      color: #0c447c;
+    }
+    .ds-radio-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 0.5px solid #94a3b8;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ds-radio-dot.filled {
+      background: #378add;
+      border-color: #378add;
+    }
+    .ds-radio-dot.filled::after {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fff;
+      display: block;
+    }
+    .ds-check-btn {
+      width: 100%;
+      padding: 10px 14px;
+      background: #fff;
+      border: 0.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #1e293b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      box-sizing: border-box;
+    }
+    .ds-check-btn:hover {
+      background: #f8fafc;
+    }
+    .ds-check-btn.checked {
+      background: #e6f1fb;
+      border-color: #378add;
+      color: #0c447c;
+    }
+    .ds-check-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 0.5px solid #94a3b8;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 13px;
+      color: #fff;
+    }
+    .ds-check-box.checked {
+      background: #378add;
+      border-color: #378add;
+    }
+    .ds-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: #e2e8f0;
+      margin-top: 6px;
+    }
+    .ds-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: #378add;
+      transition: width 0.3s;
+    }
+    .ds-stat {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .ds-alert {
+      background: #fcebeb;
+      border: 0.5px solid #f7c1c1;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #791f1f;
+      margin-top: 8px;
+      display: none;
+    }
+    .ds-alert.visible {
+      display: block;
+    }
+    .ds-divider {
+      border: none;
+      border-top: 0.5px solid #e2e8f0;
+      margin: 1.25rem 0;
+    }
+    .ds-input {
+      width: 100%;
+      font-size: 14px;
+      padding: 10px 14px;
+      box-sizing: border-box;
+      border-radius: 8px;
+      border: 0.5px solid #cbd5e1;
+      background: #f8fafc;
+    }
+    .ds-textarea {
+      width: 100%;
+      font-size: 14px;
+      padding: 10px 14px;
+      box-sizing: border-box;
+      border-radius: 8px;
+      border: 0.5px solid #cbd5e1;
+      resize: vertical;
+      background: #f8fafc;
+    }
+    .ds-map {
+      background: #f1f5f9;
+      border: 1px dashed #94a3b8;
+      border-radius: 8px;
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #64748b;
+      font-size: 13px;
+    }
+    .ds-footer {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .ds-submit {
+      flex: 1;
+      padding: 11px;
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .ds-submit:hover {
+      background: #b91c1c;
+    }
+    .ds-print {
+      padding: 11px 20px;
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .ds-cancel {
+      padding: 11px 20px;
+      background: transparent;
+      border: 0.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #64748b;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    @media print {
+      .ds-footer,
+      .ds-map {
+        display: none;
+      }
+    }
 
-    <% if (survey.category === 'HOUSEHOLD_READINESS') { %>
-    <div class="disaster-section">
-      <div class="disaster-section__title">Household Readiness</div>
+    [data-theme="dark"] {
+      --navy-900: #d4e2f0;
+      --navy-800: #a8bee0;
+      --navy-700: #7aaad4;
+      --navy-600: #5a8cb8;
+      --navy-400: #4a7aaa;
+      --navy-200: #2a4a6e;
+      --navy-100: #1a3050;
+      --navy-50: #0d1f35;
 
-      <div class="disaster-field">
-        <label class="disaster-label" for="householdSize">How many people live in your household?</label>
-        <input type="number" id="householdSize" name="householdSize" min="1" max="20" class="disaster-input" required>
+      --gray-900: #f0f0f0;
+      --gray-700: #c8c8c8;
+      --gray-500: #9a9a9a;
+      --gray-300: #5a5a5a;
+      --gray-200: #3a3a3a;
+      --gray-100: #2a2a2a;
+      --gray-50: #1e1e1e;
+      --white: #1a1a2e;
+    }
+    [data-theme="dark"] .ds-radio-btn,
+    [data-theme="dark"] .ds-check-btn,
+    [data-theme="dark"] .ds-input,
+    [data-theme="dark"] .ds-textarea {
+      background: #1e2a3a;
+      border-color: #2a4a6e;
+      color: #d4e2f0;
+    }
+
+    [data-theme="dark"] .ds-radio-btn:hover,
+    [data-theme="dark"] .ds-check-btn:hover {
+      background: #1a2535;
+    }
+
+    [data-theme="dark"] .ds-label {
+      color: #d4e2f0;
+    }
+
+    [data-theme="dark"] .ds-section-label {
+      color: #9a9a9a;
+    }
+
+    [data-theme="dark"] .ds-responses {
+      background: #1a2535;
+      color: #9a9a9a;
+    }
+
+    [data-theme="dark"] .ds-title {
+      color: #d4e2f0;
+    }
+
+    [data-theme="dark"] .ds-bar {
+      background: #2a3a4e;
+    }
+
+    [data-theme="dark"] .ds-stat {
+      color: #9a9a9a;
+    }
+
+    [data-theme="dark"] .ds-cancel {
+      border-color: #2a4a6e;
+      color: #9a9a9a;
+    }
+
+    [data-theme="dark"] .ds-map {
+      background: #1a2535;
+      border-color: #2a4a6e;
+      color: #9a9a9a;
+    }
+
+    [data-theme="dark"] .ds-check-box {
+      background: #1e2a3a;
+      border-color: #2a4a6e;
+    }
+
+    [data-theme="dark"] hr.ds-divider {
+      border-color: #2a4a6e;
+    }
+
+    body {
+      transition:
+        background 0.25s,
+        color 0.25s;
+    }
+
+    #map {
+      height: 250px;
+    }
+  </style>
+
+  <form action="/disaster-survey/respond" method="POST">
+    <%# Household Info %>
+    <div class="ds-section-label">Household info</div>
+    <div class="ds-field">
+      <label class="ds-label">Home address</label>
+      <input
+        type="text"
+        name="address"
+        class="ds-input"
+        placeholder="e.g. 123 Rizal St., Brgy. San Jose"
+        required
+      />
+    </div>
+    <div class="ds-field">
+      <label class="ds-label">Number of family members</label>
+      <input
+        type="number"
+        name="householdSize"
+        min="1"
+        max="20"
+        class="ds-input"
+        required
+      />
+    </div>
+
+    <hr class="ds-divider" />
+
+    <%# Preparedness Check %>
+    <div class="ds-section-label">Preparedness check</div>
+    <div class="ds-field">
+      <label class="ds-label">Do you have an emergency kit ready?</label>
+      <div class="ds-radio-btn" id="kit-yes" onclick="selectKit('yes')">
+        <div class="ds-radio-dot" id="dot-yes"></div>
+        Yes
+        <input
+          type="radio"
+          name="hasGoBag"
+          value="true"
+          id="r-yes"
+          style="display: none"
+          required
+        />
       </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Does your household have an emergency plan?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="hasEmergencyPlan" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="hasEmergencyPlan" value="false"> No</label>
-        </div>
+      <div class="ds-radio-btn" id="kit-no" onclick="selectKit('no')">
+        <div class="ds-radio-dot" id="dot-no"></div>
+        No
+        <input
+          type="radio"
+          name="hasGoBag"
+          value="false"
+          id="r-no"
+          style="display: none"
+        />
       </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label" for="planPracticeFreq">How often does your household practice the emergency plan?</label>
-        <select id="planPracticeFreq" name="planPracticeFreq" class="disaster-input">
-          <option value="">-- Select --</option>
-          <option value="never">Never</option>
-          <option value="rarely">Rarely</option>
-          <option value="sometimes">Sometimes</option>
-          <option value="regularly">Regularly</option>
-        </select>
+      <div class="ds-alert" id="kit-alert">
+        ⚠️ No emergency kit detected. Your household may be at risk.
       </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Are you aware of your community's disaster alert system?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="awareCommunityAlerts" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="awareCommunityAlerts" value="false"> No</label>
-        </div>
+      <div class="ds-bar">
+        <div class="ds-bar-fill" id="kit-bar" style="width: 0%"></div>
+      </div>
+      <div class="ds-stat">
+        <span id="stat-yes">Yes — 0%</span><span id="stat-no">No — 0%</span>
       </div>
     </div>
-    <% } %>
 
-    <% if (survey.category === 'EMERGENCY_SUPPLIES') { %>
-    <div class="disaster-section">
-      <div class="disaster-section__title">Emergency Supplies</div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Do you have a go-bag ready?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="hasGoBag" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="hasGoBag" value="false"> No</label>
-        </div>
+    <div class="ds-field">
+      <label class="ds-label">Evacuation plan — check all that apply</label>
+      <div
+        class="ds-check-btn"
+        id="chk-meeting"
+        onclick="
+          toggleCheck('chk-meeting', 'box-meeting', 'hasDesignatedMeetingPoint')
+        "
+      >
+        <div class="ds-check-box" id="box-meeting"></div>
+        <input
+          type="checkbox"
+          name="hasDesignatedMeetingPoint"
+          value="true"
+          id="cb-meeting"
+          style="display: none"
+        />
+        Family meeting point
       </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label" for="waterSupplyDays">How many days of water supply do you have?</label>
-        <input type="number" id="waterSupplyDays" name="waterSupplyDays" min="0" class="disaster-input" required>
+      <div
+        class="ds-check-btn"
+        id="chk-center"
+        onclick="toggleCheck('chk-center', 'box-center', 'knowsLocalShelter')"
+      >
+        <div class="ds-check-box" id="box-center"></div>
+        <input
+          type="checkbox"
+          name="knowsLocalShelter"
+          value="true"
+          id="cb-center"
+          style="display: none"
+        />
+        Assigned evacuation center
       </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label" for="foodSupplyDays">How many days of food supply do you have?</label>
-        <input type="number" id="foodSupplyDays" name="foodSupplyDays" min="0" class="disaster-input" required>
-      </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Do you have a first aid kit?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="hasFirstAidKit" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="hasFirstAidKit" value="false"> No</label>
-        </div>
-      </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Do you have a flashlight with working batteries?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="hasFlashlight" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="hasFlashlight" value="false"> No</label>
-        </div>
-      </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Do you have a battery-powered radio?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="hasBatteryRadio" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="hasBatteryRadio" value="false"> No</label>
-        </div>
-      </div>
-    </div>
-    <% } %>
-
-    <% if (survey.category === 'EVACUATION_PLANNING') { %>
-    <div class="disaster-section">
-      <div class="disaster-section__title">Evacuation Planning</div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Do you know your evacuation route?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="knowsEvacuationRoute" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="knowsEvacuationRoute" value="false"> No</label>
-        </div>
-      </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Do you have a designated meeting point for your household?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="hasDesignatedMeetingPoint" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="hasDesignatedMeetingPoint" value="false"> No</label>
-        </div>
-      </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Have you ever practiced an evacuation drill?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="practisedEvacuation" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="practisedEvacuation" value="false"> No</label>
-        </div>
-      </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label" for="evacPracticeFreq">How often do you practice evacuation drills?</label>
-        <select id="evacPracticeFreq" name="evacPracticeFreq" class="disaster-input">
-          <option value="">-- Select --</option>
-          <option value="never">Never</option>
-          <option value="once">Once</option>
-          <option value="annually">Annually</option>
-          <option value="biannually">Biannually</option>
-        </select>
-      </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label">Do you know the location of your nearest evacuation shelter?</label>
-        <div class="disaster-radio-group">
-          <label class="disaster-radio-option"><input type="radio" name="knowsLocalShelter" value="true" required> Yes</label>
-          <label class="disaster-radio-option"><input type="radio" name="knowsLocalShelter" value="false"> No</label>
-        </div>
-      </div>
-    </div>
-    <% } %>
-
-    <%# ── General ── %>
-    <div class="disaster-section disaster-section--general">
-      <div class="disaster-section__title">General</div>
-
-      <div class="disaster-field">
-        <label class="disaster-label" for="biggestConcern">What is your biggest concern during a disaster?</label>
-        <textarea id="biggestConcern" name="biggestConcern" class="disaster-input disaster-textarea" rows="3" placeholder="e.g. Safety of family members, lack of supplies..."></textarea>
-      </div>
-
-      <div class="disaster-field">
-        <label class="disaster-label" for="additionalComments">Any additional comments or suggestions?</label>
-        <textarea id="additionalComments" name="additionalComments" class="disaster-input disaster-textarea" rows="3" placeholder="Optional"></textarea>
+      <div
+        class="ds-check-btn"
+        id="chk-route"
+        onclick="toggleCheck('chk-route', 'box-route', 'knowsEvacuationRoute')"
+      >
+        <div class="ds-check-box" id="box-route"></div>
+        <input
+          type="checkbox"
+          name="knowsEvacuationRoute"
+          value="true"
+          id="cb-route"
+          style="display: none"
+        />
+        Known evacuation route
       </div>
     </div>
 
-    <div class="disaster-footer">
-      <button type="submit" class="disaster-btn disaster-btn--primary">Submit Response</button>
-      <a href="/" class="disaster-btn disaster-btn--ghost">Cancel</a>
+    <hr class="ds-divider" />
+
+    <%# Past Disaster Experience %>
+    <div class="ds-section-label">Past disaster experience</div>
+    <div class="ds-field">
+      <label class="ds-label"
+        >Describe your experience during past disasters</label
+      >
+      <textarea
+        name="biggestConcern"
+        class="ds-textarea"
+        rows="3"
+        placeholder="e.g. During Typhoon Ondoy, our house was flooded..."
+      ></textarea>
+    </div>
+    <div class="ds-field">
+      <label class="ds-label">Additional comments for your barangay</label>
+      <textarea
+        name="additionalComments"
+        class="ds-textarea"
+        rows="2"
+        placeholder="Optional"
+      ></textarea>
     </div>
 
+    <hr class="ds-divider" />
+
+    <%# Map Placeholder %>
+    <div class="ds-section-label">Location map</div>
+    <div id="map"></div>
+
+    <div class="ds-footer">
+      <button type="submit" class="ds-submit">Submit response</button>
+      <button type="button" class="ds-print" onclick="window.print()">
+        Print report
+      </button>
+      <a href="/" class="ds-cancel">Cancel</a>
+    </div>
   </form>
 </div>
+
+<script>
+  function selectKit(val) {
+    document
+      .getElementById("kit-yes")
+      .classList.toggle("selected", val === "yes");
+    document
+      .getElementById("kit-no")
+      .classList.toggle("selected", val === "no");
+    document
+      .getElementById("dot-yes")
+      .classList.toggle("filled", val === "yes");
+    document.getElementById("dot-no").classList.toggle("filled", val === "no");
+    document.getElementById("r-yes").checked = val === "yes";
+    document.getElementById("r-no").checked = val === "no";
+    document
+      .getElementById("kit-alert")
+      .classList.toggle("visible", val === "no");
+    const pct = val === "yes" ? 75 : 25;
+    document.getElementById("kit-bar").style.width = pct + "%";
+    document.getElementById("stat-yes").textContent = "Yes — " + pct + "%";
+    document.getElementById("stat-no").textContent =
+      "No — " + (100 - pct) + "%";
+  }
+
+  function toggleCheck(btnId, boxId, cbName) {
+    const btn = document.getElementById(btnId);
+    const box = document.getElementById(boxId);
+    const cb = document.querySelector('input[name="' + cbName + '"]');
+    btn.classList.toggle("checked");
+    box.classList.toggle("checked");
+    cb.checked = btn.classList.contains("checked");
+    box.textContent = btn.classList.contains("checked") ? "✓" : "";
+  }
+</script>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+<script>
+  const loginUser = "<%= user.name %>";
+  const map = L.map('map', {
+    preferCanvas: true,
+    zoomAnimation: false,    // ← reduces lag on zoom
+    markerZoomAnimation: false
+  }).setView([14.5995, 120.9842], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    updateWhenIdle: true,    // ← only loads tiles when map stops moving
+    keepBuffer: 1
+  }).addTo(map);
+
+  function getStyle(feature) {
+    const level = feature.properties.Var;
+    const color = level === 3 ? '#dc2626' :
+                  level === 2 ? '#f97316' :
+                  level === 1 ? '#facc15' : '#94a3b8';
+    return { color, weight: 0.5, fillColor: color, fillOpacity: 0.4 };
+  }
+
+  let floodLayer, landslideLayer, stormSurgeLayer;
+  let controlAdded = false;
+
+  function updateControls() {
+    if (controlAdded) return;
+    controlAdded = true;
+    const overlays = {};
+    if (floodLayer)      overlays['🌊 Flood Hazard']     = floodLayer;
+    if (landslideLayer)  overlays['⛰️ Landslide Hazard'] = landslideLayer;
+    if (stormSurgeLayer) overlays['🌪️ Storm Surge']      = stormSurgeLayer;
+    L.control.layers(null, overlays, { collapsed: false }).addTo(map);
+  }
+
+  function loadLayer(url, type, emoji, callback) {
+    fetch(url)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        const layer = L.geoJSON(data, {
+          style: getStyle,
+          onEachFeature: (feature, layer) => {
+            const val = feature.properties.Var;
+            const level = val === 3 ? 'High' :
+                          val === 2 ? 'Medium' :
+                          val === 1 ? 'Low' : 'Unknown';
+            // ← use mouseover instead of click for lighter interaction
+            layer.on('mouseover', function () {
+              layer.bindPopup(`<b>${emoji} ${type}</b><br>Level: <b>${level}</b>`).openPopup();
+            });
+          }
+        });
+        callback(layer);
+        updateControls();
+      })
+      .catch(err => console.warn(`${type} layer failed:`, err));
+  }
+
+  loadLayer('/data/MetroManila_Flood_100year.json', 'Flood Hazard', '🌊', (layer) => {
+    floodLayer = layer;
+    floodLayer.addTo(map);
+  });
+
+  setTimeout(() => {
+    landslideLayer  = landslideLayer  || L.geoJSON();
+    stormSurgeLayer = stormSurgeLayer || L.geoJSON();
+    updateControls();
+  }, 3000);
+
+  map.on('overlayadd', function (e) {
+    if (e.name === '⛰️ Landslide Hazard' && !landslideLayer._layers) {
+      loadLayer('/data/MetroManila_LandslideHazards.json', 'Landslide Hazard', '⛰️', (layer) => {
+        landslideLayer = layer;
+        landslideLayer.addTo(map);
+      });
+    }
+    if (e.name === '🌪️ Storm Surge' && !stormSurgeLayer._layers) {
+      loadLayer('/data/MetroManila_StormSurge_SSA1.json', 'Storm Surge', '🌪️', (layer) => {
+        stormSurgeLayer = layer;
+        stormSurgeLayer.addTo(map);
+      });
+    }
+  });
+
+  // ── Legend ──────────────────────────────────────────
+  const legend = L.control({ position: 'bottomright' });
+  legend.onAdd = function () {
+    const div = L.DomUtil.create('div');
+    div.style.cssText = `
+      background: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      line-height: 1.8;
+    `;
+    div.innerHTML = `
+      <b>Hazard Level</b><br>
+      <span style="color:#dc2626">■</span> High<br>
+      <span style="color:#f97316">■</span> Medium<br>
+      <span style="color:#facc15">■</span> Low
+    `;
+    return div;
+  };
+  legend.addTo(map);
+
+  // ── User location ───────────────────────────────────
+  let currentLocation = null;
+
+  function placeMarker(lat, lng) {
+    currentLocation = { lat, lng };
+    map.setView([lat, lng], 16);
+
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+      .then(res => res.json())
+      .then(data => {
+        const city = data.address.city
+                  || data.address.town
+                  || data.address.municipality
+                  || 'your area';
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(`Hello <b>${loginUser}</b><br>You are in <b>${city}</b>`)
+          .openPopup();
+      })
+      .catch(() => {
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(`Hello <b>${loginUser}</b>`)
+          .openPopup();
+      });
+  }
+
+  function ipFallback() {
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => placeMarker(data.latitude, data.longitude))
+      .catch(() => placeMarker(14.5995, 120.9842));
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => placeMarker(pos.coords.latitude, pos.coords.longitude),
+      err => { console.warn(err.message); ipFallback(); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+    );
+  } else {
+    ipFallback();
+  }
+</script>

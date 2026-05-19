@@ -37,6 +37,26 @@
   --primary-blue: #1e3a5f;
 }
 
+[data-theme="dark"] {
+  --navy-900: #d4e2f0;
+  --navy-800: #a8bee0;
+  --navy-700: #7aaad4;
+  --navy-600: #5a8cb8;
+  --navy-400: #4a7aaa;
+  --navy-200: #2a4a6e;
+  --navy-100: #1a3050;
+  --navy-50:  #0d1f35;
+
+  --gray-900: #f0f0f0;
+  --gray-700: #c8c8c8;
+  --gray-500: #9a9a9a;
+  --gray-300: #5a5a5a;
+  --gray-200: #3a3a3a;
+  --gray-100: #2a2a2a;
+  --gray-50:  #1e1e1e;
+  --white:    #1a1a2e;
+}
+
 /* ===== BODY — Holy Grail shell ===== */
 body {
   font-family: "Archivo", sans-serif;
@@ -56,6 +76,7 @@ body {
   grid-template-columns: var(--sidebar-left-width) 1fr var(
       --sidebar-right-width
     );
+    transition: background 0.25s, color 0.25s;
 }
 
 /* ===== HEADER ===== */
@@ -220,6 +241,10 @@ body > nav a.active {
     display: flex;
     background-color: var(--navy-700);
   }
+
+  .btn-ghost {
+    color: var(--gray-200);
+  }
 }
 
 /* Locate the mobile styles section in your CSS */
@@ -270,6 +295,10 @@ body > nav a.active {
 
   .btn-group {
     flex-direction: column;
+  }
+
+  .btn-ghost {
+    color: var(--gray-200);
   }
 }
 
@@ -1412,6 +1441,10 @@ header.navbar h1 {
   .profile-btn--danger {
     width: 100%;
     text-align: center;
+  }
+
+  .back-btn{
+    color: var(--gray-200);
   }
 }
 

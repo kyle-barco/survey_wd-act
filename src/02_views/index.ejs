@@ -1,103 +1,22 @@
-<div class="card-container">
-  <div class="card-header">
-    <h1>Welcome to Echo</h1>
-  </div>
+<% if (locals.user) { %>
+  <div class="survey-list">
 
-  <div class="card-body">
-    <% if (user) { %>
-      <h2>Hello <%= user.role === 'TEACHER' ? 'Teacher ' : '' %><%= user.name %></h2>
-    <% } else { %>
-      <h2>Hello Guest</h2>
-    <% } %>
-  </div>
-
-  <% if (user) { %>
-    <div class="survey-list">
-      <%# ── Classroom Surveys ── %>
+    <%# ── Classroom Surveys ── %>
+    <% if (user.role !== 'TEACHER') { %>
       <div style="font-size: 1.75em; font-weight: bold;">Classroom Surveys</div>
       <hr>
+        <a class="btn btn-ghost" href="/classroom-survey/">Answer Classroom Survey</a>
+    <% } %>
 
-      <% if (surveys.length > 0) { %>
-        <div class="grid-survey">
-          <% surveys.forEach(survey => { %>
-            <div class="survey-card">
-              <div class="survey-card-header">
-                <h3><%= survey.title %></h3>
-                <% if (survey.status) { %>
-                  <span class="survey-badge <%= survey.status.toLowerCase() %>"><%= survey.status %></span>
-                <% } %>
-              </div>
+    <%# ── Disaster Preparedness Surveys ── %>
+    <div style="font-size: 1.75em; font-weight: bold; margin-top: 2em;">Disaster Preparedness Surveys</div>
+    <hr>
+    <a class="btn btn-ghost" href="/disaster-survey/">Answer Disaster Survey</a>
 
-              <div class="survey-card-body">
-                <% if (survey.description) { %>
-                  <p><%= survey.description %></p>
-                <% } %>
-                <div class="survey-meta">
-                  <% if (survey.createdAt) { %>
-                    <span>Created <%= new Date(survey.createdAt).toLocaleDateString() %></span>
-                  <% } %>
-                </div>
-              </div>
-
-            <div class="survey-card-footer">
-                <a class="btn btn-primary" href="/classroom-survey/<%= survey.id %><%= user.role === 'TEACHER' ? '/results' : '' %>">
-                    <%= user.role === 'TEACHER' ? 'View Results' : 'Take Survey' %>
-                </a>
-                <% if (user.role === 'TEACHER') { %>
-                    <a class="btn btn-ghost" href="/classroom-survey/<%= survey.id %>">Engage</a>
-                <% } %>
-            </div>
-            </div>
-          <% }) %>
-        </div>
-      <% } %>
-
-      <%# ── Disaster Preparedness Surveys ── %>
-      <div style="font-size: 1.75em; font-weight: bold; margin-top: 2em;">Disaster Preparedness Surveys</div>
-      <hr>
-
-      <% if (disasterSurveys.length > 0) { %>
-        <div class="grid-survey">
-          <% disasterSurveys.forEach(survey => { %>
-            <div class="survey-card">
-              <div class="survey-card-header">
-                <h3><%= survey.title %></h3>
-                <span class="survey-badge <%= survey.category.toLowerCase() %>">
-                  <%= survey.category.replace(/_/g, ' ') %>
-                </span>
-              </div>
-
-              <div class="survey-card-body">
-                <div class="survey-meta">
-                  <% if (survey.createdAt) { %>
-                    <span>Created <%= new Date(survey.createdAt).toLocaleDateString() %></span>
-                  <% } %>
-                </div>
-              </div>
-
-            <div class="survey-card-footer">
-                <a class="btn btn-primary" href="/disaster-survey/<%= survey.id %><%= user.role === 'TEACHER' ? '/results' : '' %>">
-                    <%= user.role === 'TEACHER' ? 'View Results' : 'Take Survey' %>
-                </a>
-                <% if (user.role === 'TEACHER') { %>
-                    <a class="btn btn-ghost" href="/disaster-survey/<%= survey.id %>">Engage</a>
-                <% } %>
-            </div>
-            </div>
-          <% }) %>
-        </div>
-      <% } else { %>
-        <div class="empty-state">
-          <p>No disaster surveys available yet.</p>
-        </div>
-      <% } %>
-
-    </div>
-
-  <% } else { %>
-    <div class="btn-group">
-      <a href="/register" class="btn btn-primary">Register</a>
-      <a href="/login" class="btn btn-ghost">Login</a>
-    </div>
-  <% } %>
-</div>
+  </div>
+<% } else { %>
+  <div class="btn-group">
+    <a href="/register" class="btn btn-primary">Register</a>
+    <a href="/login" class="btn btn-ghost">Login</a>
+  </div>
+<% } %>

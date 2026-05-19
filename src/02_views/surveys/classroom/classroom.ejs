@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classroom Survey Feedback</title>
+    
+
+    <link rel="icon" type="image/x-icon" href="resources/img/favicon.svg">
+    <style>
+        /* 1. SCOPING & RESET: Prevents dashboard CSS from bleeding in */
+        #classroom-survey-scope {
+            all: initial; /* Strips dashboard defaults */
+            display: block;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        #classroom-survey-scope * {
+            box-sizing: border-box;
+        }
+
+        /* 2. NOTEBOOK CONTAINER */
+        #classroom-survey-scope .notebook-wrapper {
+            background-color: #fff;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            /* Creating the notebook lines */
+            background-image: linear-gradient(#e1e9f0 1px, transparent 1px);
+            background-size: 100% 2.5rem;
+            padding: 3rem 3rem 3rem 5rem; /* Extra left padding for the margin */
+            border-left: 10px solid #475569;
+            border-radius: 4px;
+        }
+
+        /* The Red Margin Line */
+        #classroom-survey-scope .notebook-wrapper::before {
+            content: '';
+            position: absolute;
+            left: 4rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #ffadad;
+        }
+
+        #classroom-survey-scope h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+            line-height: 1.2;
+        }
+
+        #classroom-survey-scope .subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        /* 3. FORM ELEMENTS */
+        #classroom-survey-scope .form-section {
+            margin-bottom: 2rem;
+        }
+
+        #classroom-survey-scope .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        #classroom-survey-scope label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #334155;
+        }
+
+        #classroom-survey-scope input[type="text"], 
+        #classroom-survey-scope select, 
+        #classroom-survey-scope textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        #classroom-survey-scope input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #fff;
+        }
+
+        /* 4. STAR RATING SYSTEM */
+        #classroom-survey-scope .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        #classroom-survey-scope .star-rating input {
+            display: none;
+        }
+
+        #classroom-survey-scope .star-rating label {
+            all: unset; /* Nuclear reset for dashboard button styles */
+            font-size: 2.5rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            line-height: 1;
+            margin: 0;
+        }
+
+        #classroom-survey-scope .star-rating input:checked ~ label,
+        #classroom-survey-scope .star-rating label:hover,
+        #classroom-survey-scope .star-rating label:hover ~ label {
+            color: #fbbf24 !important;
+        }
+
+        /* 5. CHECKBOX FIX: Prevents stretching */
+        #classroom-survey-scope .checkbox-group {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px;
+            margin-top: 1rem;
+        }
+
+        #classroom-survey-scope .checkbox-group input[type="checkbox"] {
+            width: 20px !important;
+            height: 20px !important;
+            margin: 0 !important;
+            flex-shrink: 0;
+            accent-color: #2563eb;
+        }
+
+        #classroom-survey-scope .checkbox-group label {
+            display: inline;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        /* 6. BUTTONS */
+        #classroom-survey-scope .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        #classroom-survey-scope .btn-submit {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        #classroom-survey-scope .btn-home {
+            text-decoration: none;
+            color: #64748b;
+            padding: 12px 28px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        /* 7. FILTERABLE TABLE */
+        #classroom-survey-scope .results-section {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 2px dashed #cbd5e1;
+        }
+
+        #classroom-survey-scope .filter-input {
+            margin-bottom: 1rem;
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        #classroom-survey-scope table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 10px;
+        }
+
+        #classroom-survey-scope th, #classroom-survey-scope td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: left;
+        }
+
+        #classroom-survey-scope th { background: #f8fafc; }
+
+        /* Fix for the Student Name display */
+#classroom-survey-scope .student-name-display {
+    all: initial; /* Reset global <p> styles */
+    display: block;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.1rem;
+    color: #1e293b;
+    padding: 5px 10px;
+    margin: 0;
+    /* Optional: uncomment below for a handwritten look */
+    /* font-family: 'Comic Sans MS', cursive; color: #2563eb; */
+}
+
+/* Ensure the label and name have a nice relationship */
+#classroom-survey-scope .name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    border-bottom: 1px solid #cbd5e1; /* Visual underline for the name */
+    width: fit-content;
+    min-width: 250px;
+    margin-bottom: 1rem;
+}
+    </style>
+</head>
+<body>
+
+    <div id="classroom-survey-scope">
+        <div class="notebook-wrapper">
+            <header>
+                <h1>Classroom Survey Feedback</h1>
+                <p class="subtitle">Tell us!</p>
+            </header>
+
+            <% if(locals.user) { %> 
+
+            <form action="/classroom-survey/respond" method="POST">
+                
+                <div class="form-section">
+                  <div class="input-group">
+                <label for="name">Student Name</label>
+                <div class="name-row">
+                    <p class="student-name-display"><%= user.name %></p>
+                </div>
+    </div>
+
+    <div class="input-group">
+        <label for="grade">Grade & Section</label>
+        <select name="grade" id="grade" required>
+            <option value="" disabled selected>Choose your section</option>
+            <option value="Grade 7-A">Grade 7-A</option>
+            <option value="Grade 8-B">Grade 8-B</option>
+        </select>
+    </div>
+                </div>
+
+
+                <div class="form-section">
+                    <div class="input-group">
+                        <label for="subject">Subject</label>
+                        <select name="subject" id="subject" required>
+                            <option value="Math">Math</option>
+                            <option value="Science">Science</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Teacher Rating</label>
+                        <div class="star-rating">
+                            <input type="radio" name="rating" value="5" id="star5" required /><label for="star5">★</label>
+                            <input type="radio" name="rating" value="4" id="star4" /><label for="star4">★</label>
+                            <input type="radio" name="rating" value="3" id="star3" /><label for="star3">★</label>
+                            <input type="radio" name="rating" value="2" id="star2" /><label for="star2">★</label>
+                            <input type="radio" name="rating" value="1" id="star1" /><label for="star1">★</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="favoriteLesson">Favorite Lesson</label>
+                        <input type="text" name="favoriteLesson" id="favoriteLesson" placeholder="What part did you like?" required />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="suggestions">Suggestions for Improvement</label>
+                        <textarea name="suggestions" id="suggestions" rows="4" placeholder="How can we make this class better?"></textarea>
+                    </div>
+
+                    <div class="input-group checkbox-group">
+                        <input type="checkbox" name="anonymous" id="anonymous" />
+                        <label for="anonymous">Submit feedback anonymously</label>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="btn-submit">Submit Survey</button>
+                    <a href="/" class="btn-home">Go Home</a>
+                </div>
+            </form>
+
+            <div class="results-section">
+                <h3>Class Submissions</h3>
+                <input type="text" class="filter-input" id="tableSearch" onkeyup="filterTable()" placeholder="Filter by Subject or Rating...">
+                
+                <table id="feedbackTable">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Subject</th>
+                            <th>Rating</th>
+                            <th>Lesson</th>
+                        </tr>
+                    </thead>
+                    <tbody> <% feedbacks.forEach(fb => { %>
+                        <tr>
+                        <td><%= fb.anonymous ? 'anonymous' : (fb.student?.name || 'unknown') %></td>
+                        <td><%= fb.subject %></td>
+                        <td><%= fb.rating %> ⭐</td>
+                        <td><%= fb.favoriteLesson %></td>
+                        </tr>
+                    <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <% } %> 
+    </div>
+
+    <script>
+        function filterTable() {
+            const input = document.getElementById("tableSearch");
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById("feedbackTable");
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let rowText = tr[i].textContent || tr[i].innerText;
+                tr[i].style.display = rowText.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html>

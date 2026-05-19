@@ -1,2 +1,2 @@
 TODO:
-- add disaster survey
+- hero & welcome page with animations
