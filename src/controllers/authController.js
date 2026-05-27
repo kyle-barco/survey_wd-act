@@ -183,7 +183,7 @@ const getResetPassword = async (req, res) => {
       return res.redirect('/forgot-password');
     }
 
-    res.render('auth/reset-password', { title: 'Reset Password', token: req.params.token });
+    res.render('password/reset-password', { title: 'Reset Password', token: req.params.token });
   } catch (err) {
     console.error(err);
     req.flash('error', 'An error occurred. Please try again.');
