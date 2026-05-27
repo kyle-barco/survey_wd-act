@@ -1,7 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
-const { getLogin, postLogin, getRegister, postRegister, logout } = require('../controllers/authController');
+
+// Destructure all the functions out of your controller at the top
+const { 
+  getLogin, 
+  postLogin, 
+  getRegister, 
+  postRegister, 
+  logout,
+  getForgotPassword,
+  postForgotPassword,
+  getResetPassword,
+  postResetPassword 
+} = require('../controllers/authController');
+
 const { isGuest, isAuthenticated } = require('../middleware/auth');
 
 // Home → redirect
@@ -40,5 +53,31 @@ router.post('/register', isGuest,
 );
 
 router.post('/logout', isAuthenticated, logout);
+
+// ==========================================
+// New: Forgot & Reset Password Routes
+// ==========================================
+
+// Requesting a reset link
+router.get('/forgot-password', isGuest, getForgotPassword);
+router.post('/forgot-password', isGuest,
+  [
+    body('email').isEmail().withMessage('Valid email required.')
+  ],
+  postForgotPassword
+);
+
+// Executing the password reset via token
+router.get('/reset-password/:token', isGuest, getResetPassword);
+router.post('/reset-password/:token', isGuest,
+  [
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters.'),
+    body('confirmPassword').custom((val, { req }) => {
+      if (val !== req.body.password) throw new Error('Passwords do not match.');
+      return true;
+    }),
+  ],
+  postResetPassword
+);
 
 module.exports = router;

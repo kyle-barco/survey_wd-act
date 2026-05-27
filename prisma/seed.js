@@ -15,9 +15,14 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   const password = await bcrypt.hash('admin123', 10);
 
+  // Seeding Admin
   const admin = await prisma.user.upsert({
     where: { email: 'admin@surveyhub.edu' },
-    update: {},
+    update: {
+      // Wipes out old reset tokens if you re-seed the DB
+      resetPasswordToken: null,
+      resetPasswordExpires: null
+    },
     create: {
       name: 'System Administrator',
       email: 'admin@surveyhub.edu',
@@ -25,13 +30,19 @@ async function main() {
       role: 'ADMIN',
       phone: '+63 912 000 0000',
       address: 'DepEd Building, Quezon City',
+      resetPasswordToken: null,
+      resetPasswordExpires: null
     }
   });
 
+  // Seeding Teacher
   const teacherPass = await bcrypt.hash('teacher123', 10);
   const teacher = await prisma.user.upsert({
     where: { email: 'teacher@surveyhub.edu' },
-    update: {},
+    update: {
+      resetPasswordToken: null,
+      resetPasswordExpires: null
+    },
     create: {
       name: 'Maria Santos',
       email: 'teacher@surveyhub.edu',
@@ -39,13 +50,19 @@ async function main() {
       role: 'TEACHER',
       phone: '+63 917 123 4567',
       address: 'Quezon City, Metro Manila',
+      resetPasswordToken: null,
+      resetPasswordExpires: null
     }
   });
 
+  // Seeding Student
   const studentPass = await bcrypt.hash('student123', 10);
   const student = await prisma.user.upsert({
     where: { email: 'student@surveyhub.edu' },
-    update: {},
+    update: {
+      resetPasswordToken: null,
+      resetPasswordExpires: null
+    },
     create: {
       name: 'Juan dela Cruz',
       email: 'student@surveyhub.edu',
@@ -53,6 +70,8 @@ async function main() {
       role: 'STUDENT',
       phone: '+63 921 987 6543',
       address: 'Barangay San Isidro, Quezon City',
+      resetPasswordToken: null,
+      resetPasswordExpires: null
     }
   });
 
@@ -64,4 +83,9 @@ async function main() {
 
 main()
   .catch(console.error)
-  .finally(() => prisma.$disconnect());
+  .finally(async () => {
+    // Gracefully disconnect Prisma
+    await prisma.$disconnect();
+    // End the native pg pool so the CLI command returns immediately
+    await pool.end();
+  });
