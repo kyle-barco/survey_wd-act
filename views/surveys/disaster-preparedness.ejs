@@ -1,0 +1,107 @@
+<%- include('../partials/header') %>
+
+<div class="disaster-container">
+  <div class="disaster-card">
+    <div class="disaster-header">
+      <div class="alert-banner">
+        <span class="alert-icon">⚠️</span>
+        <span>DISASTER PREPAREDNESS ASSESSMENT</span>
+        <span class="alert-icon">⚠️</span>
+      </div>
+      <h1>🌊 Household Preparedness Survey</h1>
+      <p>Help your barangay identify households that need emergency support during typhoons and floods.</p>
+    </div>
+
+    <form action="/surveys/disaster" method="POST" novalidate id="disasterForm" class="disaster-form">
+
+      <!-- Household Info -->
+      <fieldset class="form-section form-section--alert">
+        <legend>🏠 Household Information</legend>
+
+        <div class="form-group">
+          <label for="address">Home Address <span class="required">*</span></label>
+          <input type="text" id="address" name="address"
+            placeholder="e.g. 123 Rizal St., Barangay San Isidro, Marikina City" required />
+        </div>
+
+        <div class="form-group">
+          <label for="familyMembers">Number of Family Members <span class="required">*</span></label>
+          <input type="number" id="familyMembers" name="familyMembers"
+            placeholder="e.g. 5" min="1" max="50" required />
+        </div>
+      </fieldset>
+
+      <!-- Preparedness -->
+      <fieldset class="form-section form-section--alert">
+        <legend>🛡️ Preparedness Check</legend>
+
+        <div class="form-group">
+          <label>Does your household have an Emergency Kit? <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-label radio-label--yes">
+              <input type="radio" name="hasEmergencyKit" value="yes" required />
+              <span>✅ Yes, we have one</span>
+            </label>
+            <label class="radio-label radio-label--no">
+              <input type="radio" name="hasEmergencyKit" value="no" required />
+              <span>❌ No, we don't have one</span>
+            </label>
+          </div>
+          <div class="no-kit-warning" id="noKitWarning">
+            <span>⚠️</span>
+            <span>Your household may need emergency assistance! Contact your barangay hall.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Evacuation Plan (select all that apply)</label>
+          <div class="checkbox-stack">
+            <label class="checkbox-label">
+              <input type="checkbox" name="evacuationPlan" value="Assigned Evacuation Center" />
+              <span>🏫 Assigned Evacuation Center</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="evacuationPlan" value="Family Meeting Point" />
+              <span>📍 Family Meeting Point</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="evacuationPlan" value="Relative's House" />
+              <span>🏡 Relative's House</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="evacuationPlan" value="Community Shelter" />
+              <span>🏢 Community Shelter</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pastExperience">Past Disaster Experience <span class="required">*</span></label>
+          <textarea id="pastExperience" name="pastExperience" rows="5"
+            placeholder="Describe any past experiences with typhoons, floods, or earthquakes in your area..." required></textarea>
+        </div>
+      </fieldset>
+
+      <!-- Map Placeholder -->
+      <div class="map-placeholder">
+        <div class="map-placeholder-inner">
+          <span class="map-icon">🗺️</span>
+          <p><strong>GIS Map Integration</strong></p>
+          <p>Your address will be plotted on the barangay risk map after submission.</p>
+          <small>Powered by future GIS/OpenStreetMap integration</small>
+        </div>
+      </div>
+
+      <div class="form-actions-row">
+        <button type="submit" class="btn-danger btn-full">
+          🆘 Submit Preparedness Report
+        </button>
+        <button type="button" class="btn-secondary btn-full" onclick="window.print()">
+          🖨️ Print for Barangay Officials
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

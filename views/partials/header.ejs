@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | ECHO</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.svg?v=2" />
+</head>
+<body class="role-<%= user ? user.role.toLowerCase() : 'guest' %>">
+
+<% if (user) { %>
+<nav class="navbar">
+  <div class="nav-brand">
+      <a class="brand-icon" href="/"><img src="/img/echo_logo_svg.svg" alt="logo" /></a>
+  </div>
+  <div class="nav-links">
+    <% if (user.role === 'ADMIN') { %>
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/users">Users</a>
+      <a href="/admin/surveys">All Surveys</a>
+    <% } else if (user.role === 'TEACHER') { %>
+      <a href="/teacher/dashboard">Dashboard</a>
+      <a href="/surveys/classroom-feedback/results">Feedback Results</a>
+      <a href="/surveys/disaster/results">Disaster Results</a>
+      <a href="/teacher/profile">Profile</a>
+    <% } else { %>
+      <a href="/student/dashboard">Dashboard</a>
+      <a href="/surveys/classroom-feedback">Classroom Survey</a>
+      <a href="/surveys/disaster">Disaster Survey</a>
+      <a href="/student/profile">Profile</a>
+    <% } %>
+  </div>
+  <div class="nav-user">
+    <span class="user-badge role-<%= user.role.toLowerCase() %>"><%= user.role %></span>
+    <span class="user-name">👤 <%= user.name %></span>
+    <form action="/logout" method="POST" style="display:inline;">
+      <button type="submit" class="btn-logout">Logout</button>
+    </form>
+  </div>
+</nav>
+<% } %>
+
+<main class="main-content">
+  <% if (success && success.length > 0) { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
+  <% if (error && error.length > 0) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>

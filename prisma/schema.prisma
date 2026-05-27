@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,186 +6,49 @@ datasource db {
   provider = "postgresql"
 }
 
-// ──────────────────────────────────────────────
-//  Enums
-// ──────────────────────────────────────────────
-
 enum Role {
+  ADMIN
   TEACHER
   STUDENT
 }
 
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
-}
-
-enum DisasterSurveyCategory {
-  HOUSEHOLD_READINESS
-  EMERGENCY_SUPPLIES
-  EVACUATION_PLANNING
-}
-
-enum QuestionType {
-  TEXT
-  RADIO
-  CHECKBOX
-  DROPDOWN
-  RATING
-}
-
-// ──────────────────────────────────────────────
-//  Core Models
-// ──────────────────────────────────────────────
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt DateTime
-}
-
 model User {
-  id                      Int                      @id @default(autoincrement())
-  email                   String                   @unique
-  password                String
-  name                    String
-  role                    Role                     @default(TEACHER)
-  
-  // New Demographics Fields for Survey Analytics
-  gender                  Gender
-  birthday                DateTime
-  institution             String?                  // Optional/Nullable field
-
-  // A Teacher owns Classrooms
-  classrooms              Classroom[]
-
-  // A Student provides Feedback
-  feedbacks               Feedback[]
-
-  // Disaster survey relations
-  disasterSurveys         DisasterSurvey[]
-  disasterSurveyResponses DisasterSurveyResponse[]
-
-  // Custom survey relations
-  customSurveys           CustomSurvey[]
-  customResponses         CustomResponse[]
-}
-
-model Classroom {
   id        Int      @id @default(autoincrement())
   name      String
-  teacherId Int
-  teacher   User     @relation(fields: [teacherId], references: [id])
-  surveys   Survey[]
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classroomFeedbacks ClassroomFeedback[]
+  disasterSurveys    DisasterSurvey[]
 }
 
-model Survey {
-  id        Int        @id @default(autoincrement())
-  title     String
-  createdAt DateTime   @default(now())
-  classId   Int
-  classroom Classroom  @relation(fields: [classId], references: [id])
-  responses Feedback[]
-}
-
-model Feedback {
+model ClassroomFeedback {
   id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-
-  grade          String
+  userId         Int?
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name           String?
+  gradeSection   String
   subject        String
-  rating         Int
+  teacherRating  Int
   favoriteLesson String
-  suggestions    String?
-  anonymous      Boolean  @default(false)
-
-  survey         Survey @relation(fields: [surveyId], references: [id])
-  surveyId       Int
-  student        User?  @relation(fields: [studentId], references: [id])
-  studentId      Int?
+  suggestions    String
+  isAnonymous    Boolean  @default(false)
+  createdAt      DateTime @default(now())
 }
-
-// ──────────────────────────────────────────────
-//  Disaster Preparedness Survey
-// ──────────────────────────────────────────────
 
 model DisasterSurvey {
-  id        Int                    @id @default(autoincrement())
-  title     String
-  category  DisasterSurveyCategory
-  createdAt DateTime               @default(now())
-  adminId   Int
-  admin     User                   @relation(fields: [adminId], references: [id])
-  responses DisasterSurveyResponse[]
-}
-
-model DisasterSurveyResponse {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-
-  // Household Info
-  address       String?
-  householdSize Int?
-
-  // Preparedness Check
-  hasGoBag                   Boolean?
-  hasDesignatedMeetingPoint  Boolean?
-  knowsLocalShelter          Boolean?
-  knowsEvacuationRoute       Boolean?
-
-  // Past Disaster Experience
-  biggestConcern     String?
-  additionalComments String?
-
-  survey       DisasterSurvey @relation(fields: [surveyId], references: [id])
-  surveyId     Int
-  respondent   User?          @relation(fields: [respondentId], references: [id])
-  respondentId Int?
-}
-
-// ──────────────────────────────────────────────
-//  Custom Survey Builder
-// ──────────────────────────────────────────────
-
-model CustomSurvey {
-  id        Int              @id @default(autoincrement())
-  title     String
-  createdAt DateTime         @default(now())
-  creatorId Int
-  creator   User             @relation(fields: [creatorId], references: [id])
-  questions CustomQuestion[]
-  responses CustomResponse[]
-}
-
-model CustomQuestion {
-  id       Int            @id @default(autoincrement())
-  label    String
-  type     QuestionType
-  options  String?        // JSON string for radio/checkbox/dropdown choices
-  required Boolean        @default(false)
-  order    Int
-  survey   CustomSurvey   @relation(fields: [surveyId], references: [id])
-  surveyId Int
-  answers  CustomAnswer[]
-}
-
-model CustomResponse {
-  id           Int            @id @default(autoincrement())
-  createdAt    DateTime       @default(now())
-  survey       CustomSurvey   @relation(fields: [surveyId], references: [id])
-  surveyId     Int
-  answers      CustomAnswer[]
-  respondent   User?          @relation(fields: [respondentId], references: [id])
-  respondentId Int?
-}
-
-model CustomAnswer {
-  id         Int            @id @default(autoincrement())
-  value      String
-  question   CustomQuestion @relation(fields: [questionId], references: [id])
-  questionId Int
-  response   CustomResponse @relation(fields: [responseId], references: [id])
-  responseId Int
+  id              Int      @id @default(autoincrement())
+  userId          Int?
+  user            User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  address         String
+  familyMembers   Int
+  hasEmergencyKit Boolean
+  evacuationPlan  String[]
+  pastExperience  String
+  createdAt       DateTime @default(now())
 }

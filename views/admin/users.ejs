@@ -1,0 +1,51 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>👥 Manage Users</h1>
+    <p>View, edit, or remove system accounts</p>
+  </div>
+
+  <div class="section-card">
+    <div class="table-toolbar">
+      <input type="text" id="userSearch" placeholder="🔍 Search by name or email..." class="search-input" />
+    </div>
+    <table class="data-table" id="usersTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Role</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach((u, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><strong><%= u.name %></strong></td>
+          <td><%= u.email %></td>
+          <td><%= u.phone || '—' %></td>
+          <td><%= u.address || '—' %></td>
+          <td><span class="role-badge role-<%= u.role.toLowerCase() %>"><%= u.role %></span></td>
+          <td><%= new Date(u.createdAt).toLocaleDateString('en-PH') %></td>
+          <td class="action-cell">
+            <a href="/admin/users/<%= u.id %>/edit" class="btn-sm btn-edit">Edit</a>
+            <% if (u.id !== user.id) { %>
+            <form action="/admin/users/<%= u.id %>?_method=DELETE" method="POST" style="display:inline;" onsubmit="return confirm('Delete this user?')">
+              <button type="submit" class="btn-sm btn-danger">Delete</button>
+            </form>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

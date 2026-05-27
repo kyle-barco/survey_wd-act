@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>📋 All Surveys</h1>
+    <p>Complete record of submitted surveys</p>
+  </div>
+
+  <div class="section-card">
+    <h2>🎓 Classroom Feedback (<%= feedbacks.length %>)</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Student</th><th>Grade</th><th>Subject</th><th>Rating</th><th>Favorite Lesson</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        <% feedbacks.forEach(f => { %>
+        <tr>
+          <td><%= f.isAnonymous ? '🕵️ Anonymous' : (f.name || f.user?.name || '—') %></td>
+          <td><%= f.gradeSection %></td>
+          <td><%= f.subject %></td>
+          <td>
+            <% for(let i = 0; i < 5; i++) { %>
+              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+            <% } %>
+          </td>
+          <td><%= f.favoriteLesson %></td>
+          <td><%= new Date(f.createdAt).toLocaleDateString('en-PH') %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-card" style="margin-top:2rem;">
+    <h2>🌊 Disaster Preparedness Surveys (<%= disasters.length %>)</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Respondent</th><th>Address</th><th>Family</th><th>Emergency Kit</th><th>Evacuation Plan</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        <% disasters.forEach(d => { %>
+        <tr>
+          <td><%= d.user?.name || '—' %></td>
+          <td><%= d.address %></td>
+          <td><%= d.familyMembers %> members</td>
+          <td>
+            <span class="kit-badge <%= d.hasEmergencyKit ? 'kit-yes' : 'kit-no' %>">
+              <%= d.hasEmergencyKit ? '✅ YES' : '❌ NO' %>
+            </span>
+          </td>
+          <td><%= d.evacuationPlan.join(', ') || '—' %></td>
+          <td><%= new Date(d.createdAt).toLocaleDateString('en-PH') %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

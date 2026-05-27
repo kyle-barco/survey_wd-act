@@ -1,0 +1,88 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>👩‍🏫 Teacher Dashboard</h1>
+    <p>Monitor student feedback and survey submissions</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card stat-card--blue">
+      <div class="stat-icon">📝</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= feedbacks.length %></div>
+        <div class="stat-label">Recent Feedbacks</div>
+      </div>
+    </div>
+    <div class="stat-card stat-card--yellow">
+      <div class="stat-icon">⭐</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= avgRating %></div>
+        <div class="stat-label">Average Rating</div>
+      </div>
+    </div>
+    <div class="stat-card stat-card--green">
+      <div class="stat-icon">📚</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= Object.keys(bySubject).length %></div>
+        <div class="stat-label">Subjects Covered</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <a href="/surveys/classroom-feedback/results" class="action-card">
+      <span class="action-icon">📊</span>
+      <span>Classroom Results</span>
+    </a>
+    <a href="/surveys/disaster/results" class="action-card">
+      <span class="action-icon">🆘</span>
+      <span>Disaster Results</span>
+    </a>
+    <a href="/teacher/profile" class="action-card">
+      <span class="action-icon">👤</span>
+      <span>My Profile</span>
+    </a>
+  </div>
+
+  <div class="section-card">
+    <h2>Subject Breakdown</h2>
+    <div class="subject-bars">
+      <% Object.entries(bySubject).forEach(([subj, count]) => { %>
+      <div class="subject-bar-row">
+        <span class="subject-label"><%= subj %></span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: <%= Math.min((count / feedbacks.length) * 100, 100) %>%"></div>
+        </div>
+        <span class="subject-count"><%= count %></span>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <h2>Latest Feedbacks</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Student</th><th>Grade</th><th>Subject</th><th>Rating</th><th>Favorite Lesson</th></tr>
+      </thead>
+      <tbody>
+        <% feedbacks.forEach(f => { %>
+        <tr>
+          <td><%= f.isAnonymous ? '🕵️ Anonymous' : (f.name || '—') %></td>
+          <td><%= f.gradeSection %></td>
+          <td><%= f.subject %></td>
+          <td>
+            <% for(let i = 0; i < 5; i++) { %>
+              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+            <% } %>
+          </td>
+          <td><%= f.favoriteLesson %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,87 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>🛠️ Admin Dashboard</h1>
+    <p>System overview and management</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card stat-card--blue">
+      <div class="stat-icon">👥</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= userCount %></div>
+        <div class="stat-label">Total Users</div>
+      </div>
+    </div>
+    <div class="stat-card stat-card--green">
+      <div class="stat-icon">📝</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= feedbackCount %></div>
+        <div class="stat-label">Classroom Feedbacks</div>
+      </div>
+    </div>
+    <div class="stat-card stat-card--red">
+      <div class="stat-icon">🌊</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= disasterCount %></div>
+        <div class="stat-label">Disaster Surveys</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-actions">
+    <a href="/admin/users" class="action-card">
+      <span class="action-icon">👤</span>
+      <span>Manage Users</span>
+    </a>
+    <a href="/admin/surveys" class="action-card">
+      <span class="action-icon">📋</span>
+      <span>View All Surveys</span>
+    </a>
+    <a href="/surveys/classroom-feedback/results" class="action-card">
+      <span class="action-icon">⭐</span>
+      <span>Classroom Results</span>
+    </a>
+    <a href="/surveys/disaster/results" class="action-card">
+      <span class="action-icon">🆘</span>
+      <span>Disaster Results</span>
+    </a>
+  </div>
+
+  <div class="section-card">
+    <h2>Recent Classroom Feedbacks</h2>
+    <% if (recentFeedbacks.length === 0) { %>
+      <p class="empty-state">No feedbacks yet.</p>
+    <% } else { %>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Subject</th>
+          <th>Grade</th>
+          <th>Rating</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% recentFeedbacks.forEach(f => { %>
+        <tr>
+          <td><%= f.isAnonymous ? '🕵️ Anonymous' : (f.name || f.user?.name || '—') %></td>
+          <td><%= f.subject %></td>
+          <td><%= f.gradeSection %></td>
+          <td class="rating-cell">
+            <% for(let i = 0; i < 5; i++) { %>
+              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+            <% } %>
+          </td>
+          <td><%= new Date(f.createdAt).toLocaleDateString('en-PH') %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

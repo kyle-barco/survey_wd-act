@@ -1,0 +1,24 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>👤 My Profile</h1>
+    <p>Your account information</p>
+  </div>
+
+  <div class="section-card profile-card" style="max-width:520px;">
+    <div class="profile-avatar">
+      <span><%= profileUser.name.charAt(0).toUpperCase() %></span>
+    </div>
+    <table class="profile-table">
+      <tr><th>Full Name</th><td><%= profileUser.name %></td></tr>
+      <tr><th>Email</th><td><%= profileUser.email %></td></tr>
+      <tr><th>Phone</th><td><%= profileUser.phone || '<span class="muted">Not provided</span>' %></td></tr>
+      <tr><th>Address</th><td><%= profileUser.address || '<span class="muted">Not provided</span>' %></td></tr>
+      <tr><th>Role</th><td><span class="role-badge role-<%= profileUser.role.toLowerCase() %>"><%= profileUser.role %></span></td></tr>
+      <tr><th>Member Since</th><td><%= new Date(profileUser.createdAt).toLocaleDateString('en-PH', { year:'numeric', month:'long', day:'numeric' }) %></td></tr>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

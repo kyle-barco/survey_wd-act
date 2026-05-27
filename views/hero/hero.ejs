@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Echo — Hear Every Voice</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.svg?v=2" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --navy-900: #0f1e35;
+        --navy-800: #1a2f4e;
+        --navy-700: #1e3a61;
+        --navy-600: #244576;
+        --navy-400: #3a6494;
+        --navy-200: #a8bee0;
+        --navy-100: #d4e2f0;
+        --navy-50:  #edf3f9;
+        --gray-900: #1e1e1e;
+        --gray-700: #3c3c3c;
+        --gray-500: #6b6b6b;
+        --gray-300: #b0b0b0;
+        --gray-200: #d6d6d6;
+        --gray-100: #eeeeee;
+        --gray-50:  #f7f7f7;
+        --white:    #ffffff;
+        --header-height: 64px;
+      }
+
+      [data-theme="dark"] {
+        --navy-900: #d4e2f0;
+        --navy-800: #a8bee0;
+        --navy-700: #7aaad4;
+        --navy-600: #5a8cb8;
+        --navy-400: #4a7aaa;
+        --navy-200: #2a4a6e;
+        --navy-100: #1a3050;
+        --navy-50:  #0d1f35;
+        --gray-900: #f0f0f0;
+        --gray-700: #c8c8c8;
+        --gray-500: #9a9a9a;
+        --gray-300: #5a5a5a;
+        --gray-200: #3a3a3a;
+        --gray-100: #2a2a2a;
+        --gray-50:  #1e1e1e;
+        --white:    #1a1a2e;
+      }
+
+      html, body {
+        height: 100%;
+        background: var(--gray-50);
+        color: var(--gray-900);
+        font-family: "Archivo", sans-serif;
+        font-optical-sizing: auto;
+        overflow-x: hidden;
+        transition: background 0.25s, color 0.25s;
+      }
+
+      /* ── Nav ── */
+      .hero-nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+        height: var(--header-height);
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 2.5rem;
+        background: var(--white); border-bottom: 1px solid var(--gray-200);
+        transition: box-shadow 0.2s, background 0.25s, border-color 0.25s;
+      }
+      .hero-nav.scrolled { box-shadow: 0 2px 12px rgba(15,30,53,0.08); }
+      .nav-logo { display: flex; align-items: center; text-decoration: none; }
+      .nav-logo img { height: 50px; width: auto; display: block; }
+      .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+      .btn {
+        display: inline-block; font-family: "Archivo", sans-serif;
+        font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+        text-decoration: none; padding: 0.7rem 1.5rem; border-radius: 6px;
+        border: 1px solid var(--navy-700); cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, color 0.15s; white-space: nowrap;
+      }
+      .btn-primary { background: var(--navy-700); color: var(--white); }
+      .btn-primary:hover { background: var(--navy-900); border-color: var(--navy-900); }
+      .btn-ghost { background: transparent; color: var(--navy-700); border-color: var(--gray-200); }
+      .btn-ghost:hover { background: var(--navy-50); border-color: var(--navy-200); color: var(--navy-900); }
+      .btn-lg { padding: 0.85rem 2rem; font-size: 0.88rem; }
+
+      .page { padding-top: var(--header-height); }
+
+      /* ── Hero ── */
+      .hero {
+        display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+        gap: 4rem; max-width: 1200px; margin: 0 auto;
+        padding: 6rem 2.5rem 5rem; min-height: calc(100vh - var(--header-height));
+      }
+      .hero-text { display: flex; flex-direction: column; gap: 1.75rem; }
+      .hero-eyebrow {
+        display: inline-flex; align-items: center; gap: 0.6rem;
+        font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--navy-400); opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
+      }
+      .hero-eyebrow::before { content: ""; display: block; width: 24px; height: 2px; background: var(--navy-400); border-radius: 2px; }
+      .hero-headline {
+        font-size: clamp(2.6rem, 4.5vw, 4.25rem); font-weight: 800; line-height: 1.08;
+        letter-spacing: -0.03em; color: var(--navy-900); opacity: 0; animation: fadeUp 0.7s 0.25s forwards;
+      }
+      .hero-headline em { font-style: italic; font-weight: 400; color: var(--navy-400); }
+      .hero-sub { font-size: 1rem; line-height: 1.75; color: var(--gray-500); max-width: 38ch; opacity: 0; animation: fadeUp 0.7s 0.4s forwards; }
+      .hero-cta { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.55s forwards; }
+      .hero-note { font-size: 0.75rem; color: var(--gray-300); letter-spacing: 0.04em; }
+
+      .hero-visual { position: relative; opacity: 0; animation: fadeIn 0.9s 0.4s forwards; }
+      .visual-frame { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.75rem; box-shadow: 0 4px 24px rgba(15,30,53,0.1), 0 1px 4px rgba(15,30,53,0.06); position: relative; }
+      .visual-tag { position: absolute; top: -0.75rem; left: 1.25rem; background: var(--navy-700); color: var(--white); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 4px; }
+      .visual-survey-title { font-size: 1rem; font-weight: 700; color: var(--navy-900); margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-100); letter-spacing: -0.01em; }
+      .visual-question { font-size: 0.82rem; color: var(--gray-500); margin-bottom: 0.75rem; }
+      .visual-options { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.25rem; }
+      .visual-option { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.8rem; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 0.82rem; color: var(--gray-700); cursor: default; }
+      .visual-option.selected { border-color: var(--navy-400); background: var(--navy-50); color: var(--navy-800); font-weight: 500; }
+      .visual-option-dot { width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid var(--gray-200); flex-shrink: 0; }
+      .visual-option.selected .visual-option-dot { background: var(--navy-700); border-color: var(--navy-700); }
+      .visual-bar-section { margin-top: 0.25rem; }
+      .visual-bar-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--gray-500); margin-bottom: 0.28rem; }
+      .visual-bar-track { height: 5px; background: var(--gray-100); border-radius: 99px; overflow: hidden; margin-bottom: 0.55rem; }
+      .visual-bar-fill { height: 100%; background: var(--navy-600); border-radius: 99px; transform-origin: left; animation: growBar 1s ease-out both; }
+      @keyframes growBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+      .chip { position: absolute; background: var(--white); border: 1px solid var(--gray-200); border-radius: 6px; padding: 0.45rem 0.85rem; font-size: 0.72rem; font-weight: 600; color: var(--navy-700); box-shadow: 0 2px 8px rgba(15,30,53,0.08); white-space: nowrap; }
+      .chip-1 { top: -1.25rem; right: 1.75rem; animation: float 3s ease-in-out infinite; }
+      .chip-2 { bottom: 0.75rem; right: -1.25rem; animation: float 3.4s 0.5s ease-in-out infinite; }
+      @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+      .section-divider { border: none; border-top: 1px solid var(--gray-200); max-width: 1200px; margin: 0 auto; }
+
+      /* ── Features ── */
+      .features { max-width: 1200px; margin: 0 auto; padding: 5rem 2.5rem; }
+      .features-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3rem; }
+      .features-header h2 { font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 800; letter-spacing: -0.025em; color: var(--navy-900); white-space: nowrap; }
+      .features-header-line { flex: 1; height: 1px; background: var(--gray-200); }
+      .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--gray-200); border-radius: 10px; overflow: hidden; background: var(--white); }
+      .feature-cell { padding: 1.75rem 1.5rem; border-right: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); transition: background 0.15s; }
+      .feature-cell:nth-child(3n) { border-right: none; }
+      .feature-cell:nth-last-child(-n+3) { border-bottom: none; }
+      .feature-cell:hover { background: var(--navy-50); }
+      .feature-icon { width: 36px; height: 36px; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: center; background: var(--navy-50); border: 1px solid var(--navy-100); border-radius: 6px; font-size: 1rem; }
+      .feature-cell h3 { font-size: 0.92rem; font-weight: 700; color: var(--navy-900); margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+      .feature-cell p { font-size: 0.82rem; line-height: 1.65; color: var(--gray-500); }
+
+      /* ── Quote ── */
+      .quote-strip { background: var(--navy-900); color: var(--white); padding: 4rem 2.5rem; text-align: center; }
+      .quote-strip blockquote { font-size: clamp(1.1rem, 2vw, 1.55rem); font-style: italic; font-weight: 300; max-width: 640px; margin: 0 auto 0.85rem; line-height: 1.55; color: var(--navy-100); }
+      .quote-strip blockquote strong { font-weight: 700; color: var(--white); font-style: normal; }
+      .quote-strip cite { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--navy-400); }
+
+      /* ── CTA Banner ── */
+      .cta-banner { max-width: 1200px; margin: 0 auto; padding: 5rem 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 3rem; flex-wrap: wrap; }
+      .cta-banner h2 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); font-weight: 800; letter-spacing: -0.025em; color: var(--navy-900); max-width: 22ch; line-height: 1.2; }
+      .cta-banner h2 em { font-style: italic; font-weight: 400; color: var(--navy-400); }
+      .cta-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+      /* ══════════════════════════════════════
+         TEAM CHART — themed to design system
+         ══════════════════════════════════════ */
+      .echo-chart-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2.5rem 6rem 2.5rem;
+        border-top: 1px solid var(--gray-200);
+      }
+
+      .echo-chart-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .echo-chart-header h2 {
+        font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        color: var(--navy-900);
+        margin-bottom: 0.35rem;
+      }
+      .echo-chart-header .subtitle {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray-500);
+      }
+
+      .chart-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+
+      /* connector lines using CSS variable color */
+      .tier-1 { margin-bottom: 40px; position: relative; }
+      .tier-1::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: 50%;
+        width: 2px; height: 40px;
+        background: var(--gray-200);
+      }
+
+      .tier-2 {
+        display: flex; justify-content: space-around; gap: 1.25rem;
+        flex-wrap: wrap; width: 100%; padding-top: 30px; position: relative;
+      }
+      .tier-2::before {
+        content: ''; position: absolute; top: 0; left: 12%; right: 12%;
+        height: 2px; background: var(--gray-200);
+      }
+      .tier-2 .member-card { position: relative; }
+      .tier-2 .member-card::before {
+        content: ''; position: absolute; top: -30px; left: 50%;
+        transform: translateX(-50%); width: 2px; height: 30px;
+        background: var(--gray-200);
+      }
+
+      /* card */
+      .member-card {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 10px;
+        padding: 1.5rem 1.25rem;
+        width: 250px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(15,30,53,0.06);
+        transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+        box-sizing: border-box;
+      }
+      .member-card:hover {
+        box-shadow: 0 6px 20px rgba(15,30,53,0.1);
+        border-color: var(--navy-200);
+        transform: translateY(-3px);
+      }
+
+      /* avatar */
+      .avatar {
+        width: 100px; height: 100px; border-radius: 50%;
+        margin: 0 auto 0.9rem;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 1.1rem;
+        overflow: hidden; flex-shrink: 0;
+      }
+      .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+
+      /* leader — deep navy, ring accent */
+      .layer-leader {
+        background: linear-gradient(135deg, var(--navy-800), var(--navy-600));
+        color: var(--white);
+        box-shadow: 0 0 0 3px var(--navy-100);
+      }
+      /* staff — mid navy */
+      .layer-staff {
+        background: linear-gradient(135deg, var(--navy-600), var(--navy-400));
+        color: var(--white);
+      }
+
+      .member-card .name {
+        font-size: 1rem; font-weight: 700; color: var(--navy-900);
+        margin: 0 0 0.3rem; line-height: 1.3; letter-spacing: -0.01em;
+      }
+      .member-card .role {
+        font-size: 0.68rem; color: var(--gray-500); font-weight: 600;
+        letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.4; margin: 0;
+      }
+
+      .no-data { color: var(--gray-500); text-align: center; font-size: 0.85rem; }
+
+      /* ── Footer ── */
+      .hero-footer {
+        border-top: 1px solid var(--gray-200); background: var(--white);
+        padding: 0 2.5rem; height: 48px;
+        display: flex; align-items: center; justify-content: space-between;
+        transition: background 0.25s, border-color 0.25s;
+      }
+      .hero-footer span, .hero-footer a { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-300); text-decoration: none; }
+      .hero-footer div { display: flex; gap: 1.25rem; }
+      .hero-footer a:hover { color: var(--navy-400); }
+
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+      /* ── Responsive ── */
+      @media (max-width: 900px) {
+        .hero { grid-template-columns: 1fr; padding: 4rem 1.5rem 3.5rem; min-height: auto; gap: 2.5rem; }
+        .hero-visual { display: none; }
+        .features { padding: 3rem 1.5rem; }
+        .features-grid { grid-template-columns: 1fr 1fr; }
+        .feature-cell:nth-child(2n) { border-right: none; }
+        .feature-cell:nth-child(3n) { border-right: 1px solid var(--gray-200); }
+        .cta-banner { padding: 3rem 1.5rem; flex-direction: column; align-items: flex-start; }
+        .hero-nav, .hero-footer { padding: 0 1.5rem; }
+        .echo-chart-wrapper { padding: 3rem 1.5rem 2rem; }
+        .member-card { width: 260px; padding: 1.25rem 0.85rem; }
+      }
+      @media (max-width: 768px) {
+        .tier-2 { flex-direction: column; align-items: center; gap: 2rem; padding-top: 40px; }
+        .tier-2::before { display: none; }
+        .tier-1::after { top: 100%; left: 50%; transform: translateX(-50%); bottom: auto; }
+        .tier-2 .member-card { width: 100%; max-width: 260px; }
+        .tier-2 .member-card::before { height: 32px; top: -32px; }
+        .tier-2 .member-card::after { content: ''; position: absolute; bottom: -32px; left: 50%; transform: translateX(-50%); width: 2px; height: 32px; background: var(--gray-200); }
+        .tier-2 .member-card:last-child::after { display: none; }
+      }
+      @media (max-width: 560px) {
+        .features-grid { grid-template-columns: 1fr; }
+        .feature-cell { border-right: none !important; }
+        .feature-cell:nth-last-child(-n+3) { border-bottom: 1px solid var(--gray-200); }
+        .feature-cell:last-child { border-bottom: none; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <nav class="hero-nav" id="heroNav">
+      <a class="nav-logo" href="/"><img src="img/echo_logo_svg.svg" alt="logo" /></a>
+      <div class="nav-actions">
+       
+        <a href="/login" class="btn btn-ghost">Log in</a>
+        <a href="/register" class="btn btn-primary">Get Started</a>
+      </div>
+    </nav>
+
+    <div class="page">
+
+      <section class="hero">
+        <div class="hero-text">
+          <span class="hero-eyebrow">Survey &amp; Feedback Platform</span>
+          <h1 class="hero-headline">Every voice<br /><em>deserves</em><br />to be heard.</h1>
+          <p class="hero-sub">Echo brings classroom surveys and disaster preparedness assessments together in one place — built for teachers, trusted by students.</p>
+          <div class="hero-cta">
+            <a href="/register" class="btn btn-primary btn-lg">Create an account</a>
+            <a href="/login" class="btn btn-ghost btn-lg">Sign in</a>
+          </div>
+          <p class="hero-note">Free to join &mdash; no credit card required.</p>
+        </div>
+        <div class="hero-visual">
+          <div class="chip chip-1">📋 12 responses</div>
+          <div class="chip chip-2">✅ Survey live</div>
+          <div class="visual-frame">
+            <span class="visual-tag">Live Preview</span>
+            <div class="visual-survey-title">End-of-Week Classroom Check-In</div>
+            <p class="visual-question">How well did you understand today's lesson?</p>
+            <div class="visual-options">
+              <div class="visual-option"><span class="visual-option-dot"></span>Completely clear</div>
+              <div class="visual-option selected"><span class="visual-option-dot"></span>Mostly understood</div>
+              <div class="visual-option"><span class="visual-option-dot"></span>A bit confused</div>
+              <div class="visual-option"><span class="visual-option-dot"></span>Very lost</div>
+            </div>
+            <div class="visual-bar-section">
+              <div class="visual-bar-label"><span>Completely clear</span><span>42%</span></div>
+              <div class="visual-bar-track"><div class="visual-bar-fill" style="width:42%"></div></div>
+              <div class="visual-bar-label"><span>Mostly understood</span><span>35%</span></div>
+              <div class="visual-bar-track"><div class="visual-bar-fill" style="width:35%;animation-delay:0.2s"></div></div>
+              <div class="visual-bar-label"><span>A bit confused</span><span>15%</span></div>
+              <div class="visual-bar-track"><div class="visual-bar-fill" style="width:15%;animation-delay:0.4s"></div></div>
+              <div class="visual-bar-label"><span>Very lost</span><span>8%</span></div>
+              <div class="visual-bar-track"><div class="visual-bar-fill" style="width:8%;animation-delay:0.6s"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <section class="features">
+        <div class="features-header">
+          <h2>Built for the classroom. Ready for anything.</h2>
+          <div class="features-header-line"></div>
+        </div>
+        <div class="features-grid">
+          <div class="feature-cell"><div class="feature-icon">📝</div><h3>Classroom Surveys</h3><p>Pulse-check understanding, gather feedback, and surface insights — all in real time, right from your dashboard.</p></div>
+          <div class="feature-cell"><div class="feature-icon">🚨</div><h3>Disaster Preparedness</h3><p>Structured assessments that help schools measure and improve readiness across multiple emergency categories.</p></div>
+          <div class="feature-cell"><div class="feature-icon">📊</div><h3>Instant Results</h3><p>Teachers see live response summaries the moment students submit. No waiting. No manual tallying.</p></div>
+          <div class="feature-cell"><div class="feature-icon">🎓</div><h3>Role-Based Access</h3><p>Separate teacher and student views — teachers manage and review, students respond with clarity and ease.</p></div>
+          <div class="feature-cell"><div class="feature-icon">🔒</div><h3>Private &amp; Secure</h3><p>Responses stay within your classroom. No data sold, no ads, no noise — just what you need.</p></div>
+          <div class="feature-cell"><div class="feature-icon">⚡</div><h3>Engage Mode</h3><p>Teachers can open a survey live in class and watch participation happen in real time on a shared screen.</p></div>
+        </div>
+      </section>
+
+      <div class="quote-strip">
+        <blockquote>"We hear you — <strong>loud and clear.</strong>"</blockquote>
+        <cite>The Echo Philosophy</cite>
+      </div>
+
+      <div class="cta-banner">
+        <h2>Ready to <em>amplify</em> your voice?</h2>
+        <div class="cta-actions">
+          <a href="/register" class="btn btn-primary btn-lg">Try it for FREE!</a>
+        </div>
+      </div>
+
+      <!-- ── Team Chart ── -->
+      <div class="echo-chart-wrapper">
+        <div class="echo-chart-header">
+          <h2>Meet the Team</h2>
+          <p class="subtitle">Group 7 — Development Team</p>
+        </div>
+
+        <div class="chart-container">
+          <% if (typeof team !== 'undefined' && team && team.length > 0) { %>
+
+            <div class="tier-1">
+              <div class="member-card">
+                <div class="avatar layer-leader">
+                  <% if (team[0].imgUrl && team[0].imgUrl !== '') { %>
+                    <img src="<%= team[0].imgUrl %>" alt="<%= team[0].name %>" />
+                  <% } else { %>
+                    <%= team[0].name.split(' ').map(n => n[0]).join('') %>
+                  <% } %>
+                </div>
+                <p class="name"><%= team[0].name %></p>
+                <p class="role"><%= team[0].role %></p>
+              </div>
+            </div>
+
+            <div class="tier-2">
+              <% for (let i = 1; i < team.length; i++) { %>
+                <div class="member-card">
+                  <div class="avatar layer-staff">
+                    <% if (team[i].imgUrl && team[i].imgUrl !== '') { %>
+                      <img src="<%= team[i].imgUrl %>" alt="<%= team[i].name %>" />
+                    <% } else { %>
+                      <%= team[i].name.split(' ').map(n => n[0]).join('') %>
+                    <% } %>
+                  </div>
+                  <p class="name"><%= team[i].name %></p>
+                  <p class="role"><%= team[i].role %></p>
+                </div>
+              <% } %>
+            </div>
+
+          <% } else { %>
+            <p class="no-data">No team members found.</p>
+          <% } %>
+        </div>
+      </div>
+
+      <footer class="hero-footer">
+        <span>&copy; <%= new Date().getFullYear() %> Echo &mdash; Group 7</span>
+        <div>
+          <a href="/team">About us &rarr;</a>
+          <a href="/login">Sign in &rarr;</a>
+        </div>
+      </footer>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+  <div class="page-header print-header">
+    <h1>🌊 Disaster Preparedness Survey Results</h1>
+    <p>Barangay Risk Assessment Report</p>
+    <div class="print-actions no-print">
+      <button onclick="window.print()" class="btn-secondary">🖨️ Print Report</button>
+    </div>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="stats-grid no-print">
+    <%
+      const withKit = surveys.filter(s => s.hasEmergencyKit).length;
+      const withoutKit = surveys.length - withKit;
+      const totalPeople = surveys.reduce((sum, s) => sum + s.familyMembers, 0);
+    %>
+    <div class="stat-card stat-card--blue">
+      <div class="stat-icon">📋</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= surveys.length %></div>
+        <div class="stat-label">Total Respondents</div>
+      </div>
+    </div>
+    <div class="stat-card stat-card--red">
+      <div class="stat-icon">❌</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= withoutKit %></div>
+        <div class="stat-label">No Emergency Kit</div>
+      </div>
+    </div>
+    <div class="stat-card stat-card--green">
+      <div class="stat-icon">✅</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= withKit %></div>
+        <div class="stat-label">Have Emergency Kit</div>
+      </div>
+    </div>
+    <div class="stat-card stat-card--yellow">
+      <div class="stat-icon">👨‍👩‍👧‍👦</div>
+      <div class="stat-info">
+        <div class="stat-number"><%= totalPeople %></div>
+        <div class="stat-label">Total People Covered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Priority: No Kit households -->
+  <% const priorityHouseholds = surveys.filter(s => !s.hasEmergencyKit); %>
+  <% if (priorityHouseholds.length > 0) { %>
+  <div class="section-card section-card--danger">
+    <h2>🚨 Priority Households — No Emergency Kit (<%= priorityHouseholds.length %>)</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Address</th><th>Family Members</th><th>Evacuation Plan</th><th>Contact</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        <% priorityHouseholds.forEach(d => { %>
+        <tr class="row-danger">
+          <td><%= d.address %></td>
+          <td><%= d.familyMembers %></td>
+          <td><%= d.evacuationPlan.join(', ') || 'None specified' %></td>
+          <td><%= d.user?.phone || d.user?.email || '—' %></td>
+          <td><%= new Date(d.createdAt).toLocaleDateString('en-PH') %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+
+  <!-- All Results -->
+  <div class="section-card" style="margin-top:2rem;">
+    <h2>📋 All Households</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Respondent</th><th>Address</th><th>Family</th><th>Emergency Kit</th><th>Evacuation Plan</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        <% surveys.forEach(d => { %>
+        <tr class="<%= !d.hasEmergencyKit ? 'row-danger' : '' %>">
+          <td><%= d.user?.name || '—' %></td>
+          <td><%= d.address %></td>
+          <td><%= d.familyMembers %> members</td>
+          <td><span class="kit-badge <%= d.hasEmergencyKit ? 'kit-yes' : 'kit-no' %>"><%= d.hasEmergencyKit ? '✅ YES' : '❌ NO' %></span></td>
+          <td><%= d.evacuationPlan.join(', ') || '—' %></td>
+          <td><%= new Date(d.createdAt).toLocaleDateString('en-PH') %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,4 +1,0 @@
-TODO:
-- fix classroom survey checkbox
-- remove classroom & disaster result btn
-- navbar logo and favicon issue in survey page

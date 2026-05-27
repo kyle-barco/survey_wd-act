@@ -1,0 +1,95 @@
+<%- include('../partials/header') %>
+
+<div class="notebook-container">
+  <div class="notebook-card">
+    <div class="notebook-header">
+      <div class="notebook-rings">
+        <% for(let i=0; i<6; i++) { %><div class="ring"></div><% } %>
+      </div>
+      <h1>📓 Classroom Feedback Survey</h1>
+      <p>Your honest feedback helps teachers improve lessons!</p>
+    </div>
+
+    <form action="/surveys/classroom-feedback" method="POST" novalidate id="feedbackForm" class="notebook-form">
+      
+      <!-- Student Info -->
+      <fieldset class="form-section">
+        <legend>🎒 Student Information</legend>
+
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Juan dela Cruz" />
+          <small class="field-hint">Leave blank if submitting anonymously.</small>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="gradeSection">Grade & Section <span class="required">*</span></label>
+            <select id="gradeSection" name="gradeSection" required>
+              <option value="">-- Select --</option>
+              <option value="Grade 7-A">Grade 7-A</option>
+              <option value="Grade 7-B">Grade 7-B</option>
+              <option value="Grade 8-A">Grade 8-A</option>
+              <option value="Grade 8-B">Grade 8-B</option>
+              <option value="Grade 9-A">Grade 9-A</option>
+              <option value="Grade 10-A">Grade 10-A</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject <span class="required">*</span></label>
+            <select id="subject" name="subject" required>
+              <option value="">-- Select --</option>
+              <option value="Math">Math</option>
+              <option value="Science">Science</option>
+              <option value="English">English</option>
+              <option value="Filipino">Filipino</option>
+              <option value="Araling Panlipunan">Araling Panlipunan</option>
+              <option value="MAPEH">MAPEH</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Feedback -->
+      <fieldset class="form-section">
+        <legend>📊 Your Feedback</legend>
+
+        <div class="form-group">
+          <label>Teacher Rating <span class="required">*</span></label>
+          <div class="star-rating-group">
+            <% for(let i = 5; i >= 1; i--) { %>
+              <input type="radio" id="star<%= i %>" name="teacherRating" value="<%= i %>" />
+              <label for="star<%= i %>" title="<%= i %> star<%= i > 1 ? 's' : '' %>">★</label>
+            <% } %>
+          </div>
+          <small class="field-hint">Click to rate your teacher (1 = Poor, 5 = Excellent)</small>
+        </div>
+
+        <div class="form-group">
+          <label for="favoriteLesson">Favorite Lesson <span class="required">*</span></label>
+          <input type="text" id="favoriteLesson" name="favoriteLesson" placeholder="e.g. Photosynthesis, Algebraic Expressions..." required />
+        </div>
+
+        <div class="form-group">
+          <label for="suggestions">Suggestions for Improvement <span class="required">*</span></label>
+          <textarea id="suggestions" name="suggestions" rows="4" placeholder="What can the teacher do better? What topics need more time?" required></textarea>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" name="isAnonymous" id="isAnonymous" />
+            <span class="checkbox-text">🕵️ Submit Anonymously</span>
+          </label>
+          <small class="field-hint">Checking this hides your name from results.</small>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="btn-primary btn-full btn-notebook">
+        ✏️ Submit Feedback
+      </button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

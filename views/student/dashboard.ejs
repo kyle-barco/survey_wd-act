@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>🎒 Student Dashboard</h1>
+    <p>Submit and track your survey responses</p>
+  </div>
+
+  <div class="quick-actions">
+    <a href="/surveys/classroom-feedback" class="action-card action-card--primary">
+      <span class="action-icon">📝</span>
+      <span>Classroom Survey</span>
+    </a>
+    <a href="/surveys/disaster" class="action-card action-card--danger">
+      <span class="action-icon">🌊</span>
+      <span>Disaster Survey</span>
+    </a>
+    <a href="/student/profile" class="action-card">
+      <span class="action-icon">👤</span>
+      <span>My Profile</span>
+    </a>
+  </div>
+
+  <div class="section-card">
+    <h2>📝 My Classroom Feedbacks (<%= myFeedbacks.length %>)</h2>
+    <% if (myFeedbacks.length === 0) { %>
+      <p class="empty-state">You haven't submitted any classroom feedback yet. <a href="/surveys/classroom-feedback">Submit now →</a></p>
+    <% } else { %>
+    <table class="data-table">
+      <thead>
+        <tr><th>Subject</th><th>Grade</th><th>Rating</th><th>Favorite Lesson</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        <% myFeedbacks.forEach(f => { %>
+        <tr>
+          <td><%= f.subject %></td>
+          <td><%= f.gradeSection %></td>
+          <td>
+            <% for(let i = 0; i < 5; i++) { %>
+              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+            <% } %>
+          </td>
+          <td><%= f.favoriteLesson %></td>
+          <td><%= new Date(f.createdAt).toLocaleDateString('en-PH') %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+
+  <div class="section-card" style="margin-top:2rem;">
+    <h2>🌊 My Disaster Surveys (<%= myDisasters.length %>)</h2>
+    <% if (myDisasters.length === 0) { %>
+      <p class="empty-state">No disaster survey submitted yet. <a href="/surveys/disaster">Submit now →</a></p>
+    <% } else { %>
+    <table class="data-table">
+      <thead>
+        <tr><th>Address</th><th>Family</th><th>Emergency Kit</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        <% myDisasters.forEach(d => { %>
+        <tr>
+          <td><%= d.address %></td>
+          <td><%= d.familyMembers %></td>
+          <td><span class="kit-badge <%= d.hasEmergencyKit ? 'kit-yes' : 'kit-no' %>"><%= d.hasEmergencyKit ? '✅ YES' : '❌ NO' %></span></td>
+          <td><%= new Date(d.createdAt).toLocaleDateString('en-PH') %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
