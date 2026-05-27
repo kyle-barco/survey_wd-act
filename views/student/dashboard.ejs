@@ -1,9 +1,59 @@
 <%- include('../partials/header') %>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.js"></script>
+
 <div class="dashboard-container">
   <div class="page-header">
     <h1>🎒 Student Dashboard</h1>
     <p>Submit and track your survey responses</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Feedbacks</div>
+      <div class="stat-value"><%= myFeedbacks.length %></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Disaster Surveys</div>
+      <div class="stat-value"><%= myDisasters.length %></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Avg. Teacher Rating</div>
+      <div class="stat-value">
+        <% 
+          let totalRating = 0;
+          myFeedbacks.forEach(f => totalRating += f.teacherRating);
+          let avg = myFeedbacks.length ? (totalRating / myFeedbacks.length).toFixed(1) : 0;
+        %>
+        ⭐ <%= avg %> / 5
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-container">
+    <% if (myFeedbacks.length > 0) { %>
+      <div class="chart-box">
+        <h3>📊 Teacher Rating per Subject</h3>
+        <canvas id="subjectChart"></canvas>
+      </div>
+      
+      <div class="chart-box">
+        <h3>⭐ Overall Rating Spread</h3>
+        <canvas id="ratingDistChart"></canvas>
+      </div>
+
+      <div class="chart-box">
+        <h3>📚 Surveys per Subject</h3>
+        <canvas id="subjectCountChart"></canvas>
+      </div>
+    <% } %>
+
+    <% if (myDisasters.length > 0) { %>
+      <div class="chart-box">
+        <h3>🍕 Emergency Kit Readiness</h3>
+        <canvas id="kitChart"></canvas>
+      </div>
+    <% } %>
   </div>
 
   <div class="quick-actions">
@@ -72,5 +122,101 @@
     <% } %>
   </div>
 </div>
+
+<script>
+  // --- CLASSROOM FEEDBACK CHARTS ---
+  const feedbacks = <%- JSON.stringify(myFeedbacks) %>;
+  
+  if (feedbacks.length > 0) {
+    const subjectMap = {};
+    const subjectCounts = {};
+    const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    
+    // Process all feedback data dynamically
+    feedbacks.forEach(f => {
+      if(!subjectMap[f.subject]) {
+        subjectMap[f.subject] = { total: 0, count: 0 };
+      }
+      subjectMap[f.subject].total += f.teacherRating;
+      subjectMap[f.subject].count += 1;
+
+      subjectCounts[f.subject] = (subjectCounts[f.subject] || 0) + 1;
+
+      if (ratingCounts[f.teacherRating] !== undefined) {
+        ratingCounts[f.teacherRating]++;
+      }
+    });
+
+    const subjectLabels = Object.keys(subjectMap);
+    const subjectAverages = subjectLabels.map(sub => (subjectMap[sub].total / subjectMap[sub].count).toFixed(2));
+
+    // Draw Average Rating (Bar)
+    new Chart(document.getElementById('subjectChart'), {
+      type: 'bar',
+      data: {
+        labels: subjectLabels,
+        datasets: [{
+          label: 'Average Rating',
+          data: subjectAverages,
+          backgroundColor: '#3b82f6',
+          borderRadius: 4
+        }]
+      },
+      options: { responsive: true, scales: { y: { min: 0, max: 5 } } }
+    });
+
+    // Draw Rating Spread (Doughnut)
+    new Chart(document.getElementById('ratingDistChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+        datasets: [{
+          data: [ratingCounts[1], ratingCounts[2], ratingCounts[3], ratingCounts[4], ratingCounts[5]],
+          backgroundColor: ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'] 
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // Draw Subject Breakdown (Pie)
+    new Chart(document.getElementById('subjectCountChart'), {
+      type: 'pie',
+      data: {
+        labels: Object.keys(subjectCounts),
+        datasets: [{
+          data: Object.values(subjectCounts),
+          backgroundColor: ['#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b', '#10b981', '#6366f1'] 
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+  }
+
+  // --- DISASTER SURVEY CHARTS ---
+  const disasters = <%- JSON.stringify(myDisasters) %>;
+  
+  if (disasters.length > 0) {
+    let hasKitCount = 0;
+    let noKitCount = 0;
+    
+    disasters.forEach(d => {
+      if(d.hasEmergencyKit) hasKitCount++;
+      else noKitCount++;
+    });
+
+    // Draw Kit Readiness (Pie)
+    new Chart(document.getElementById('kitChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Has Kit (Yes)', 'No Kit'],
+        datasets: [{
+          data: [hasKitCount, noKitCount],
+          backgroundColor: ['#10b981', '#ef4444']
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+  }
+</script>
 
 <%- include('../partials/footer') %>

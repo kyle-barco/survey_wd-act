@@ -84,12 +84,7 @@
 
       <!-- Map Placeholder -->
       <div class="map-placeholder">
-        <div class="map-placeholder-inner">
-          <span class="map-icon">🗺️</span>
-          <p><strong>GIS Map Integration</strong></p>
-          <p>Your address will be plotted on the barangay risk map after submission.</p>
-          <small>Powered by future GIS/OpenStreetMap integration</small>
-        </div>
+        <div id="map"></div>
       </div>
 
       <div class="form-actions-row">
@@ -103,5 +98,25 @@
     </form>
   </div>
 </div>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+>
+</script>
+<script>
+  const loginUser = "<%= user.name %>";
+  const map = L.map('map', {
+    preferCanvas: true,
+    zoomAnimation: false,
+    markerZoomAnimation: false
+  }).setView([14.5995, 120.9842], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    updateWhenIdle: true,
+    keepBuffer: 1
+  }).addTo(map);
+</script>
 
 <%- include('../partials/footer') %>

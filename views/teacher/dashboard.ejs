@@ -1,5 +1,7 @@
 <%- include('../partials/header') %>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.js"></script>
+
 <div class="dashboard-container">
   <div class="page-header">
     <h1>👩‍🏫 Teacher Dashboard</h1>
@@ -30,6 +32,20 @@
     </div>
   </div>
 
+  <% if (feedbacks.length > 0) { %>
+    <div class="charts-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+      <div class="chart-box" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #374151;">📊 Average Rating per Subject</h3>
+        <canvas id="teacherSubjectChart" style="max-height: 250px;"></canvas>
+      </div>
+      
+      <div class="chart-box" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #374151;">⭐ Overall Rating Spread</h3>
+        <canvas id="teacherRatingDistChart" style="max-height: 250px;"></canvas>
+      </div>
+    </div>
+  <% } %>
+
   <div class="quick-actions">
     <a href="/surveys/classroom-feedback/results" class="action-card">
       <span class="action-icon">📊</span>
@@ -46,22 +62,10 @@
   </div>
 
   <div class="section-card">
-    <h2>Subject Breakdown</h2>
-    <div class="subject-bars">
-      <% Object.entries(bySubject).forEach(([subj, count]) => { %>
-      <div class="subject-bar-row">
-        <span class="subject-label"><%= subj %></span>
-        <div class="bar-track">
-          <div class="bar-fill" style="width: <%= Math.min((count / feedbacks.length) * 100, 100) %>%"></div>
-        </div>
-        <span class="subject-count"><%= count %></span>
-      </div>
-      <% }) %>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <h2>Latest Feedbacks</h2>
+    <h2>📝 Latest Feedbacks</h2>
+    <% if (feedbacks.length === 0) { %>
+      <p class="empty-state">No student feedbacks received yet.</p>
+    <% } else { %>
     <table class="data-table">
       <thead>
         <tr><th>Student</th><th>Grade</th><th>Subject</th><th>Rating</th><th>Favorite Lesson</th></tr>
@@ -82,7 +86,73 @@
         <% }) %>
       </tbody>
     </table>
+    <% } %>
   </div>
 </div>
+
+<script>
+  const teacherFeedbacks = <%- JSON.stringify(feedbacks) %>;
+  
+  if (teacherFeedbacks.length > 0) {
+    // Aggregation variables
+    const subjectMap = {};
+    const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    
+    // Process all incoming feedbacks
+    teacherFeedbacks.forEach(f => {
+      // 1. Calculate sums for average rating per subject
+      if(!subjectMap[f.subject]) {
+        subjectMap[f.subject] = { total: 0, count: 0 };
+      }
+      subjectMap[f.subject].total += f.teacherRating;
+      subjectMap[f.subject].count += 1;
+
+      // 2. Count star distributions
+      if (ratingCounts[f.teacherRating] !== undefined) {
+        ratingCounts[f.teacherRating]++;
+      }
+    });
+
+    // Extract labels and calculate averages
+    const subjectLabels = Object.keys(subjectMap);
+    const subjectAverages = subjectLabels.map(sub => (subjectMap[sub].total / subjectMap[sub].count).toFixed(2));
+
+    // Chart 1: Draw Average Rating per Subject (Bar)
+    new Chart(document.getElementById('teacherSubjectChart'), {
+      type: 'bar',
+      data: {
+        labels: subjectLabels,
+        datasets: [{
+          label: 'Avg Star Rating',
+          data: subjectAverages,
+          backgroundColor: '#3b82f6', // Primary Blue
+          borderRadius: 4
+        }]
+      },
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false,
+        scales: { y: { min: 0, max: 5 } } 
+      }
+    });
+
+    // Chart 2: Draw Rating Distribution (Doughnut)
+    new Chart(document.getElementById('teacherRatingDistChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+        datasets: [{
+          data: [ratingCounts[1], ratingCounts[2], ratingCounts[3], ratingCounts[4], ratingCounts[5]],
+          backgroundColor: ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'] // Red to Green scale
+        }]
+      },
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'right' } } 
+      }
+    });
+  }
+</script>
 
 <%- include('../partials/footer') %>
