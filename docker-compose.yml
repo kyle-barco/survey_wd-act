@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    container_name: survey_app
+    ports:
+      - "3333:3333"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      # We define these explicitly so prisma.config.js reads the correct Docker values
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      # FIX: Changed 'localhost' to 'db' right here 👇
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres?schema=public
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: echo_survey_db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
