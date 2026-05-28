@@ -6,11 +6,29 @@ datasource db {
   provider = "postgresql"
 }
 
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
 enum Role {
   ADMIN
   TEACHER
   STUDENT
 }
+
+enum QuestionType {
+  short
+  long
+  multiple
+  checkbox
+  dropdown
+  rating
+  scale
+}
+
+// ─────────────────────────────────────────────
+// CORE USER
+// ─────────────────────────────────────────────
 
 model User {
   id        Int      @id @default(autoincrement())
@@ -26,9 +44,18 @@ model User {
   resetPasswordToken   String?
   resetPasswordExpires DateTime?
 
+  // existing relations
   classroomFeedbacks ClassroomFeedback[]
   disasterSurveys    DisasterSurvey[]
+
+  // custom survey relations
+  customSurveysCreated  CustomSurvey[]
+  customSurveyResponses CustomSurveyResponse[]
 }
+
+// ─────────────────────────────────────────────
+// EXISTING SURVEYS (unchanged)
+// ─────────────────────────────────────────────
 
 model ClassroomFeedback {
   id             Int      @id @default(autoincrement())
@@ -47,11 +74,70 @@ model ClassroomFeedback {
 model DisasterSurvey {
   id              Int      @id @default(autoincrement())
   userId          Int?
-  user            User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   address         String
   familyMembers   Int
   hasEmergencyKit Boolean
   evacuationPlan  String[]
   pastExperience  String
   createdAt       DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────
+// CUSTOM SURVEY BUILDER
+// ─────────────────────────────────────────────
+
+model CustomSurvey {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy   Int
+  creator     User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  questions   CustomSurveyQuestion[]
+  responses   CustomSurveyResponse[]
+}
+
+model CustomSurveyQuestion {
+  id       Int          @id @default(autoincrement())
+  order    Int
+  type     QuestionType
+  label    String
+  required Boolean      @default(false)
+  choices  Json?        // String[] — used for multiple, checkbox, dropdown
+
+  surveyId Int
+  survey   CustomSurvey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+
+  answers  CustomSurveyAnswer[]
+}
+
+model CustomSurveyResponse {
+  id          Int      @id @default(autoincrement())
+  submittedAt DateTime @default(now())
+
+  surveyId    Int
+  survey      CustomSurvey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+
+  respondent  Int
+  user        User         @relation(fields: [respondent], references: [id], onDelete: Cascade)
+
+  answers     CustomSurveyAnswer[]
+
+  @@unique([surveyId, respondent]) // one response per student per survey
+}
+
+model CustomSurveyAnswer {
+  id    Int    @id @default(autoincrement())
+  value String // text, number, or JSON array string for checkboxes
+
+  responseId Int
+  response   CustomSurveyResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
+
+  questionId Int
+  question   CustomSurveyQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }

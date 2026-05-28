@@ -1,0 +1,140 @@
+<%- include('../partials/header') %>
+
+<style>
+  :root { --echo-green:#2d7a3a; --echo-light:#eaf3de; }
+  .res-wrap { max-width:800px; margin:2rem auto; padding:0 1rem 3rem; }
+  .res-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:12px; }
+  .res-title { font-size:1.5rem; font-weight:700; color:var(--echo-green); }
+  .res-sub   { font-size:14px; color:#666; margin-top:4px; }
+  .btn { padding:8px 18px; border-radius:8px; font-size:14px; cursor:pointer; border:1px solid #ccc; background:#fff; text-decoration:none; color:#333; display:inline-flex; align-items:center; gap:6px; }
+  .btn:hover { background:#f5f5f5; }
+  .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:1.5rem; }
+  .stat-card { background:#fff; border:1px solid #e0e0e0; border-radius:10px; padding:1rem 1.25rem; }
+  .stat-label { font-size:12px; color:#888; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+  .stat-val   { font-size:1.6rem; font-weight:700; color:var(--echo-green); }
+  .q-result { background:#fff; border:1px solid #e0e0e0; border-radius:12px; padding:1.25rem 1.5rem; margin-bottom:1rem; }
+  .q-result-label { font-size:15px; font-weight:600; color:#222; margin-bottom:.75rem; display:flex; align-items:center; gap:8px; }
+  .q-type-pill { font-size:11px; background:var(--echo-light); color:var(--echo-green); padding:2px 9px; border-radius:999px; font-weight:600; flex-shrink:0; }
+  .bar-wrap { margin-bottom:7px; }
+  .bar-label { display:flex; justify-content:space-between; font-size:13px; color:#444; margin-bottom:3px; }
+  .bar-track { height:10px; background:#f0f0f0; border-radius:999px; overflow:hidden; }
+  .bar-fill  { height:100%; background:var(--echo-green); border-radius:999px; transition:width .6s ease; }
+  .text-answers { display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto; }
+  .text-ans { background:#fafafa; border:1px solid #eee; border-radius:8px; padding:8px 12px; font-size:13px; color:#444; }
+  .avg-display { font-size:2rem; font-weight:700; color:var(--echo-green); }
+  .avg-sub { font-size:13px; color:#888; margin-top:2px; }
+  .stars-disp { font-size:24px; color:#e2c94b; letter-spacing:2px; }
+  .no-answers { font-size:13px; color:#aaa; font-style:italic; }
+  .share-box { background:var(--echo-light); border:1px solid #c6dfaa; border-radius:10px; padding:1rem 1.25rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .share-box input { flex:1; border:1px solid #bdd99a; border-radius:7px; padding:7px 12px; font-size:13px; background:#fff; outline:none; color:#333; min-width:200px; }
+  .copy-btn { padding:7px 14px; border-radius:7px; background:var(--echo-green); color:#fff; border:none; cursor:pointer; font-size:13px; white-space:nowrap; }
+</style>
+
+<div class="res-wrap">
+  <div class="res-top">
+    <div>
+      <div class="res-title">📊 <%= survey.title %></div>
+      <div class="res-sub"><%= survey.description || '' %></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <a href="/surveys/custom/<%= survey.id %>/edit" class="btn">✏️ Edit</a>
+      <a href="/surveys/custom" class="btn">← Back</a>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total responses</div>
+      <div class="stat-val"><%= totalResponses %></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Questions</div>
+      <div class="stat-val"><%= stats.length %></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Status</div>
+      <div class="stat-val" style="font-size:1rem;padding-top:6px;">
+        <% if (survey.isActive) { %><span style="color:#2d7a3a;">● Active</span><% } else { %><span style="color:#e53e3e;">● Inactive</span><% } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-box">
+    <span style="font-size:14px;font-weight:600;color:#2d7a3a;white-space:nowrap;">🔗 Share link:</span>
+    <input type="text" id="share-url" readonly value="<%= process.env.BASE_URL || 'http://localhost:3333' %>/surveys/custom/<%= survey.id %>/fill" />
+    <button class="copy-btn" onclick="copyLink()">Copy</button>
+  </div>
+
+  <% if (totalResponses === 0) { %>
+    <div style="text-align:center;padding:3rem;color:#aaa;border:1.5px dashed #ddd;border-radius:12px;">
+      No responses yet. Share the link above with your students.
+    </div>
+  <% } else { %>
+    <% stats.forEach((q, i) => { %>
+      <div class="q-result">
+        <div class="q-result-label">
+          <span>Q<%= i+1 %>. <%= q.label %></span>
+          <span class="q-type-pill"><%= q.type %></span>
+        </div>
+
+        <% if (q.type === 'short' || q.type === 'long') { %>
+          <% if (q.allAnswers.length === 0) { %>
+            <div class="no-answers">No answers yet</div>
+          <% } else { %>
+            <div class="text-answers">
+              <% q.allAnswers.forEach(a => { if(a) { %>
+                <div class="text-ans">"<%= a %>"</div>
+              <% } }) %>
+            </div>
+          <% } %>
+
+        <% } else if (['multiple','checkbox','dropdown'].includes(q.type)) { %>
+          <% const total = Object.values(q.summary || {}).reduce((a,b)=>a+b,0); %>
+          <% if (total === 0) { %>
+            <div class="no-answers">No answers yet</div>
+          <% } else { %>
+            <% Object.entries(q.summary || {}).forEach(([choice, count]) => { %>
+              <div class="bar-wrap">
+                <div class="bar-label">
+                  <span><%= choice %></span>
+                  <span><%= count %> (<%= Math.round(count/total*100) %>%)</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill" style="width:<%= Math.round(count/total*100) %>%"></div>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+
+        <% } else if (q.type === 'rating') { %>
+          <div class="avg-display"><%= q.summary.avg %> / 5</div>
+          <div class="stars-disp">
+            <% const avg = parseFloat(q.summary.avg) || 0; %>
+            <% for (let s = 1; s <= 5; s++) { %>
+              <%= s <= Math.round(avg) ? '★' : '☆' %>
+            <% } %>
+          </div>
+          <div class="avg-sub">Based on <%= q.summary.count %> response<%= q.summary.count!==1?'s':'' %></div>
+
+        <% } else if (q.type === 'scale') { %>
+          <div class="avg-display"><%= q.summary.avg %> / 10</div>
+          <div class="avg-sub">Based on <%= q.summary.count %> response<%= q.summary.count!==1?'s':'' %></div>
+        <% } %>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+<script>
+  function copyLink() {
+    const input = document.getElementById('share-url');
+    input.select();
+    navigator.clipboard.writeText(input.value).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+
+<%- include('../partials/footer') %>

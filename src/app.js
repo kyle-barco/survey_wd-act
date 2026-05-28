@@ -76,6 +76,7 @@ app.use('/admin', adminRoutes);
 app.use('/teacher', teacherRoutes);
 app.use('/student', studentRoutes);
 app.use('/surveys', surveyRoutes);
+app.use('/surveys/custom', require('./routes/customSurvey'));
 
 // 404
 app.use((req, res) => {

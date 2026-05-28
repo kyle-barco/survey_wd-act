@@ -1,7 +1,16 @@
 // Ensure the user is logged in
 const isAuthenticated = (req, res, next) => {
-  if (req.session.user) return next();
-  req.flash('error', 'Please log in to continue.');
+// 1. Check if the user is logged in via the session
+  if (req.session && req.session.user) {
+    
+    // 2. THE CRITICAL FIX: Copy the session user to req.user 
+    // so your customSurveyController can find it!
+    req.user = req.session.user; 
+    
+    return next();
+  }
+  
+  // 3. If they aren't logged in, send them to login
   res.redirect('/login');
 };
 

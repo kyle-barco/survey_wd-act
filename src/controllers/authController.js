@@ -2,8 +2,11 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const prisma = require('../config/db');
 const { redirectByRole } = require('../middleware/auth');
-const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+
+// Initialize Resend with your API key from .env
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // GET /login
 const getLogin = (req, res) => {
@@ -93,7 +96,6 @@ const getForgotPassword = (req, res) => {
 };
 
 // POST /forgot-password
-// POST /forgot-password
 const postForgotPassword = async (req, res) => {
   // Check validation results
   const errors = validationResult(req);
@@ -133,30 +135,36 @@ const postForgotPassword = async (req, res) => {
     console.log('=============================================\n');
 
     try {
-      // Attempt to send the real email
-      const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        }
+      // Send the email using Resend
+      const { data, error } = await resend.emails.send({
+        from: 'ECHO App <onboarding@resend.dev>', // MUST be this exact address on the free tier
+        to: user.email, 
+        subject: 'ECHO - Password Reset Request',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h3>Password Reset Request</h3>
+            <p>You requested a password reset for your account.</p>
+            <p>Please click the button below to securely update your password:</p>
+            <a href="${resetUrl}" style="padding: 10px 15px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Reset Password</a>
+            <br><br>
+            <p style="color: #666; font-size: 12px;">If you did not request this, you can safely ignore this email.</p>
+          </div>
+        `
       });
 
-      const mailOptions = {
-        to: user.email,
-        from: 'noreply@echo.edu',
-        subject: 'ECHO - Password Reset Request',
-        text: `Please click on the following link to reset your password:\n\n${resetUrl}\n`
-      };
+      if (error) {
+        console.error('❌ Resend API Error:', error);
+        req.flash('success', '[DEV MODE] Resend failed. Check terminal for the link.');
+        return res.redirect('/login');
+      }
 
-      await transporter.sendMail(mailOptions);
       req.flash('success', 'A dynamic password reset link has been sent to your email.');
       res.redirect('/login');
 
     } catch (emailErr) {
       // If email configuration fails, don't crash! 
       // Inform the developer and let them use the terminal link instead.
-      console.error('❌ Nodemailer Error (Email failed to send):', emailErr.message);
+      console.error('❌ Server Error while calling Resend:', emailErr.message);
       req.flash('success', '[DEV MODE] Link printed to your backend server terminal console!');
       res.redirect('/login');
     }

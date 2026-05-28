@@ -1,0 +1,215 @@
+<%- include('../partials/header') %>
+
+<style>
+  :root { --echo-green:#2d7a3a; --echo-light:#eaf3de; }
+  .fill-wrap { max-width:640px; margin:2rem auto; padding:0 1rem 3rem; }
+  .fill-header { background:var(--echo-green); color:#fff; border-radius:12px 12px 0 0; padding:1.5rem 1.75rem; }
+  .fill-header h1 { font-size:1.4rem; font-weight:700; margin-bottom:4px; }
+  .fill-header p  { font-size:14px; opacity:.85; }
+  .fill-body { background:#fff; border:1px solid #e0e0e0; border-top:none; border-radius:0 0 12px 12px; padding:1.5rem 1.75rem; }
+  .q-block { margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid #f0f0f0; }
+  .q-block:last-child { border-bottom:none; margin-bottom:0; }
+  .q-label { font-size:15px; font-weight:600; color:#222; margin-bottom:8px; }
+  .q-label .req { color:#e53e3e; margin-left:3px; }
+  .fill-inp { width:100%; border:1px solid #ddd; border-radius:8px; padding:9px 13px; font-size:14px; font-family:inherit; outline:none; transition:border-color .2s; }
+  .fill-inp:focus { border-color:var(--echo-green); }
+  .fill-ta { min-height:90px; resize:vertical; }
+  .choice-opt { display:flex; align-items:center; gap:9px; font-size:14px; margin-bottom:8px; cursor:pointer; }
+  .choice-opt input { accent-color:var(--echo-green); cursor:pointer; width:16px; height:16px; }
+  .star-row { display:flex; gap:6px; }
+  .star-btn { font-size:28px; background:none; border:none; cursor:pointer; color:#ddd; transition:color .15s; line-height:1; }
+  .star-btn.active { color:#e2c94b; }
+  .scale-row { display:flex; gap:6px; flex-wrap:wrap; }
+  .scale-btn { width:38px; height:38px; border-radius:50%; border:1px solid #ddd; background:#fafafa; font-size:13px; cursor:pointer; transition:all .15s; font-family:inherit; }
+  .scale-btn:hover { border-color:var(--echo-green); color:var(--echo-green); }
+  .scale-btn.sel { background:var(--echo-green); color:#fff; border-color:var(--echo-green); }
+  .submit-btn { width:100%; padding:12px; background:var(--echo-green); color:#fff; border:none; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; margin-top:1.5rem; transition:background .2s; }
+  .submit-btn:hover { background:#245f2d; }
+  .submit-btn:disabled { background:#9cba9e; cursor:not-allowed; }
+  .already-done { text-align:center; padding:3rem 1rem; color:#555; }
+  .already-done .big { font-size:3rem; margin-bottom:.5rem; }
+  #err-msg { color:#e53e3e; font-size:13px; margin-top:.5rem; display:none; }
+  #success-msg { text-align:center; padding:2rem; display:none; }
+  #success-msg .big { font-size:3rem; }
+</style>
+
+<div class="fill-wrap">
+  <% if (alreadySubmitted) { %>
+    <div class="fill-header"><h1><%= survey.title %></h1></div>
+    <div class="fill-body already-done">
+      <div class="big">✅</div>
+      <h2 style="color:#2d7a3a;margin-bottom:.5rem;">Already Submitted</h2>
+      <p>You've already completed this survey. Thank you!</p>
+      <a href="/student/dashboard" style="display:inline-block;margin-top:1.5rem;padding:9px 22px;background:#2d7a3a;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;">Back to Dashboard</a>
+    </div>
+  <% } else { %>
+    <div class="fill-header">
+      <h1><%= survey.title %></h1>
+      <% if (survey.description) { %><p><%= survey.description %></p><% } %>
+    </div>
+
+    <div class="fill-body">
+      <div id="form-body">
+        <% survey.questions.forEach((q, i) => { %>
+          <div class="q-block" data-qid="<%= q.id %>" data-type="<%= q.type %>" data-required="<%= q.required %>">
+            <div class="q-label">
+              <%= i+1 %>. <%= q.label %>
+              <% if (q.required) { %><span class="req">*</span><% } %>
+            </div>
+
+            <% if (q.type === 'short') { %>
+              <input class="fill-inp q-answer" type="text" placeholder="Your answer" />
+
+            <% } else if (q.type === 'long') { %>
+              <textarea class="fill-inp fill-ta q-answer" placeholder="Your answer"></textarea>
+
+            <% } else if (q.type === 'multiple') { %>
+              <% (q.choices || []).forEach(choice => { %>
+                <label class="choice-opt">
+                  <input type="radio" name="q<%= q.id %>" value="<%= choice %>" class="q-answer" />
+                  <%= choice %>
+                </label>
+              <% }) %>
+
+            <% } else if (q.type === 'checkbox') { %>
+              <% (q.choices || []).forEach(choice => { %>
+                <label class="choice-opt">
+                  <input type="checkbox" value="<%= choice %>" class="q-answer" />
+                  <%= choice %>
+                </label>
+              <% }) %>
+
+            <% } else if (q.type === 'dropdown') { %>
+              <select class="fill-inp q-answer">
+                <option value="">Choose an option...</option>
+                <% (q.choices || []).forEach(choice => { %>
+                  <option value="<%= choice %>"><%= choice %></option>
+                <% }) %>
+              </select>
+
+            <% } else if (q.type === 'rating') { %>
+              <div class="star-row" data-rating="0">
+                <% for (let s = 1; s <= 5; s++) { %>
+                  <button type="button" class="star-btn" data-val="<%= s %>">★</button>
+                <% } %>
+                <input type="hidden" class="q-answer" value="" />
+              </div>
+
+            <% } else if (q.type === 'scale') { %>
+              <div class="scale-row">
+                <% for (let s = 1; s <= 10; s++) { %>
+                  <button type="button" class="scale-btn" data-val="<%= s %>"><%= s %></button>
+                <% } %>
+                <input type="hidden" class="q-answer" value="" />
+              </div>
+            <% } %>
+          </div>
+        <% }) %>
+
+        <div id="err-msg">Please answer all required questions before submitting.</div>
+        <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit Survey</button>
+      </div>
+
+      <div id="success-msg">
+        <div class="big">🎉</div>
+        <h2 style="color:#2d7a3a;margin-bottom:.5rem;">Thank you!</h2>
+        <p style="color:#555;margin-bottom:1.5rem;">Your response has been recorded.</p>
+        <a href="/student/dashboard" style="display:inline-block;padding:9px 22px;background:#2d7a3a;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;">Back to Dashboard</a>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<script>
+  // Star rating interaction
+  document.querySelectorAll('.star-row').forEach(row => {
+    const stars = row.querySelectorAll('.star-btn');
+    const hidden = row.querySelector('input[type=hidden]');
+    stars.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.dataset.val);
+        hidden.value = val;
+        stars.forEach((s, i) => s.classList.toggle('active', i < val));
+      });
+      btn.addEventListener('mouseenter', () => {
+        const val = parseInt(btn.dataset.val);
+        stars.forEach((s, i) => s.style.color = i < val ? '#e2c94b' : '#ddd');
+      });
+    });
+    row.addEventListener('mouseleave', () => {
+      const cur = parseInt(hidden.value) || 0;
+      stars.forEach((s, i) => { s.style.color=''; s.classList.toggle('active', i < cur); });
+    });
+  });
+
+  // Scale interaction
+  document.querySelectorAll('.scale-row').forEach(row => {
+    const btns = row.querySelectorAll('.scale-btn');
+    const hidden = row.querySelector('input[type=hidden]');
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('sel'));
+        btn.classList.add('sel');
+        hidden.value = btn.dataset.val;
+      });
+    });
+  });
+
+  async function submitForm() {
+    const errEl = document.getElementById('err-msg');
+    errEl.style.display = 'none';
+    const answers = [];
+    let valid = true;
+
+    document.querySelectorAll('.q-block').forEach(block => {
+      const qid      = parseInt(block.dataset.qid);
+      const type     = block.dataset.type;
+      const required = block.dataset.required === 'true';
+      let value      = null;
+
+      if (type === 'short' || type === 'long' || type === 'dropdown') {
+        value = block.querySelector('.q-answer').value.trim();
+      } else if (type === 'multiple') {
+        const checked = block.querySelector('input[type=radio]:checked');
+        value = checked ? checked.value : '';
+      } else if (type === 'checkbox') {
+        value = [...block.querySelectorAll('input[type=checkbox]:checked')].map(c => c.value);
+        if (required && value.length === 0) valid = false;
+        answers.push({ questionId: qid, value });
+        return;
+      } else if (type === 'rating' || type === 'scale') {
+        value = block.querySelector('input[type=hidden]').value;
+      }
+
+      if (required && (!value || value === '')) valid = false;
+      answers.push({ questionId: qid, value });
+    });
+
+    if (!valid) { errEl.style.display = 'block'; return; }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true; btn.textContent = 'Submitting…';
+
+    try {
+      const res  = await fetch('/surveys/custom/<%= survey.id %>/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answers }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('form-body').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      } else {
+        btn.disabled = false; btn.textContent = 'Submit Survey';
+        errEl.textContent = data.message || 'Submission failed. Try again.';
+        errEl.style.display = 'block';
+      }
+    } catch(e) {
+      btn.disabled = false; btn.textContent = 'Submit Survey';
+      errEl.textContent = 'Network error. Please try again.'; errEl.style.display = 'block';
+    }
+  }
+</script>
+
+<%- include('../partials/footer') %>
