@@ -327,7 +327,20 @@
         .tier-2 .member-card::after { content: ''; position: absolute; bottom: -32px; left: 50%; transform: translateX(-50%); width: 2px; height: 32px; background: var(--gray-200); }
         .tier-2 .member-card:last-child::after { display: none; }
       }
-      @media (max-width: 560px) {
+@media (max-width: 560px) {
+        /* Responsive Nav Fixes */
+        .nav-logo img { 
+          height: 36px; /* Scale down the logo slightly */
+        }
+        .nav-actions .btn-ghost { 
+          display: none; /* Hide 'Log in' in the nav to save space; it's in the hero anyway */
+        }
+        .nav-actions .btn {
+          padding: 0.5rem 1rem; /* Make the remaining button a bit more compact */
+          font-size: 0.75rem;
+        }
+
+        /* Your existing 560px rules */
         .features-grid { grid-template-columns: 1fr; }
         .feature-cell { border-right: none !important; }
         .feature-cell:nth-last-child(-n+3) { border-bottom: 1px solid var(--gray-200); }
