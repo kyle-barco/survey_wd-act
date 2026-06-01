@@ -4,7 +4,7 @@
   :root { --echo-green:#2d7a3a; --echo-light:#eaf3de; }
   .fill-wrap { max-width:640px; margin:2rem auto; padding:0 1rem 3rem; }
   .fill-header { background:var(--echo-green); color:#fff; border-radius:12px 12px 0 0; padding:1.5rem 1.75rem; }
-  .fill-header h1 { font-size:1.4rem; font-weight:700; margin-bottom:4px; }
+  .fill-header h1 { font-size:1.4rem; font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
   .fill-header p  { font-size:14px; opacity:.85; }
   .fill-body { background:#fff; border:1px solid #e0e0e0; border-top:none; border-radius:0 0 12px 12px; padding:1.5rem 1.75rem; }
   .q-block { margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid #f0f0f0; }
@@ -17,34 +17,38 @@
   .choice-opt { display:flex; align-items:center; gap:9px; font-size:14px; margin-bottom:8px; cursor:pointer; }
   .choice-opt input { accent-color:var(--echo-green); cursor:pointer; width:16px; height:16px; }
   .star-row { display:flex; gap:6px; }
-  .star-btn { font-size:28px; background:none; border:none; cursor:pointer; color:#ddd; transition:color .15s; line-height:1; }
+  .star-btn { font-size:24px; background:none; border:none; cursor:pointer; color:#ddd; transition:color .15s; line-height:1; }
   .star-btn.active { color:#e2c94b; }
   .scale-row { display:flex; gap:6px; flex-wrap:wrap; }
   .scale-btn { width:38px; height:38px; border-radius:50%; border:1px solid #ddd; background:#fafafa; font-size:13px; cursor:pointer; transition:all .15s; font-family:inherit; }
   .scale-btn:hover { border-color:var(--echo-green); color:var(--echo-green); }
   .scale-btn.sel { background:var(--echo-green); color:#fff; border-color:var(--echo-green); }
-  .submit-btn { width:100%; padding:12px; background:var(--echo-green); color:#fff; border:none; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; margin-top:1.5rem; transition:background .2s; }
+  .submit-btn { width:100%; padding:12px; background:var(--echo-green); color:#fff; border:none; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; margin-top:1.5rem; transition:background .2s; display:flex; align-items:center; justify-content:center; gap:8px; }
   .submit-btn:hover { background:#245f2d; }
   .submit-btn:disabled { background:#9cba9e; cursor:not-allowed; }
   .already-done { text-align:center; padding:3rem 1rem; color:#555; }
-  .already-done .big { font-size:3rem; margin-bottom:.5rem; }
+  .already-done .big { font-size:3.5rem; margin-bottom:.5rem; color:var(--echo-green); }
   #err-msg { color:#e53e3e; font-size:13px; margin-top:.5rem; display:none; }
-  #success-msg { text-align:center; padding:2rem; display:none; }
-  #success-msg .big { font-size:3rem; }
+  #success-msg { text-align:center; padding:3rem 1rem; display:none; }
+  #success-msg .big { font-size:3.5rem; color:var(--echo-green); margin-bottom: 0.5rem; }
+  .back-btn { display:inline-flex; align-items:center; gap:6px; margin-top:1.5rem; padding:9px 22px; background:var(--echo-green); color:#fff; border-radius:8px; text-decoration:none; font-size:14px; transition:background .15s; }
+  .back-btn:hover { background:#245f2d; }
 </style>
 
 <div class="fill-wrap">
   <% if (alreadySubmitted) { %>
-    <div class="fill-header"><h1><%= survey.title %></h1></div>
+    <div class="fill-header">
+      <h1><i class="fa-solid fa-file-signature"></i> <%= survey.title %></h1>
+    </div>
     <div class="fill-body already-done">
-      <div class="big">✅</div>
+      <div class="big"><i class="fa-solid fa-circle-check"></i></div>
       <h2 style="color:#2d7a3a;margin-bottom:.5rem;">Already Submitted</h2>
       <p>You've already completed this survey. Thank you!</p>
-      <a href="/student/dashboard" style="display:inline-block;margin-top:1.5rem;padding:9px 22px;background:#2d7a3a;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;">Back to Dashboard</a>
+      <a href="/student/dashboard" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
     </div>
   <% } else { %>
     <div class="fill-header">
-      <h1><%= survey.title %></h1>
+      <h1><i class="fa-solid fa-file-signature"></i> <%= survey.title %></h1>
       <% if (survey.description) { %><p><%= survey.description %></p><% } %>
     </div>
 
@@ -90,7 +94,7 @@
             <% } else if (q.type === 'rating') { %>
               <div class="star-row" data-rating="0">
                 <% for (let s = 1; s <= 5; s++) { %>
-                  <button type="button" class="star-btn" data-val="<%= s %>">★</button>
+                  <button type="button" class="star-btn" data-val="<%= s %>"><i class="fa-solid fa-star"></i></button>
                 <% } %>
                 <input type="hidden" class="q-answer" value="" />
               </div>
@@ -106,15 +110,17 @@
           </div>
         <% }) %>
 
-        <div id="err-msg">Please answer all required questions before submitting.</div>
-        <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit Survey</button>
+        <div id="err-msg"><i class="fa-solid fa-triangle-exclamation"></i> Please answer all required questions before submitting.</div>
+        <button class="submit-btn" id="submit-btn" onclick="submitForm()">
+          <i class="fa-solid fa-paper-plane"></i> Submit Survey
+        </button>
       </div>
 
       <div id="success-msg">
-        <div class="big">🎉</div>
+        <div class="big"><i class="fa-solid fa-circle-check"></i></div>
         <h2 style="color:#2d7a3a;margin-bottom:.5rem;">Thank you!</h2>
         <p style="color:#555;margin-bottom:1.5rem;">Your response has been recorded.</p>
-        <a href="/student/dashboard" style="display:inline-block;padding:9px 22px;background:#2d7a3a;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;">Back to Dashboard</a>
+        <a href="/student/dashboard" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
       </div>
     </div>
   <% } %>
@@ -188,7 +194,8 @@
     if (!valid) { errEl.style.display = 'block'; return; }
 
     const btn = document.getElementById('submit-btn');
-    btn.disabled = true; btn.textContent = 'Submitting…';
+    btn.disabled = true; 
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
 
     try {
       const res  = await fetch('/surveys/custom/<%= survey.id %>/submit', {
@@ -201,13 +208,16 @@
         document.getElementById('form-body').style.display = 'none';
         document.getElementById('success-msg').style.display = 'block';
       } else {
-        btn.disabled = false; btn.textContent = 'Submit Survey';
-        errEl.textContent = data.message || 'Submission failed. Try again.';
+        btn.disabled = false; 
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Survey';
+        errEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${data.message || 'Submission failed. Try again.'}`;
         errEl.style.display = 'block';
       }
     } catch(e) {
-      btn.disabled = false; btn.textContent = 'Submit Survey';
-      errEl.textContent = 'Network error. Please try again.'; errEl.style.display = 'block';
+      btn.disabled = false; 
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Survey';
+      errEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Network error. Please try again.'; 
+      errEl.style.display = 'block';
     }
   }
 </script>

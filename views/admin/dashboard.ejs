@@ -2,27 +2,27 @@
 
 <div class="dashboard-container">
   <div class="page-header">
-    <h1>🛠️ Admin Dashboard</h1>
+    <h1><i class="fa-solid fa-gears"></i> Admin Dashboard</h1>
     <p>System overview and management</p>
   </div>
 
   <div class="stats-grid">
     <div class="stat-card stat-card--blue">
-      <div class="stat-icon">👥</div>
+      <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
       <div class="stat-info">
         <div class="stat-number"><%= userCount %></div>
         <div class="stat-label">Total Users</div>
       </div>
     </div>
     <div class="stat-card stat-card--green">
-      <div class="stat-icon">📝</div>
+      <div class="stat-icon"><i class="fa-solid fa-file-pen"></i></div>
       <div class="stat-info">
         <div class="stat-number"><%= feedbackCount %></div>
         <div class="stat-label">Classroom Feedbacks</div>
       </div>
     </div>
     <div class="stat-card stat-card--red">
-      <div class="stat-icon">🌊</div>
+      <div class="stat-icon"><i class="fa-solid fa-house-chimney-crack"></i></div>
       <div class="stat-info">
         <div class="stat-number"><%= disasterCount %></div>
         <div class="stat-label">Disaster Surveys</div>
@@ -32,19 +32,19 @@
 
   <div class="admin-actions">
     <a href="/admin/users" class="action-card">
-      <span class="action-icon">👤</span>
+      <span class="action-icon"><i class="fa-solid fa-user-gear"></i></span>
       <span>Manage Users</span>
     </a>
     <a href="/admin/surveys" class="action-card">
-      <span class="action-icon">📋</span>
+      <span class="action-icon"><i class="fa-solid fa-clipboard-list"></i></span>
       <span>View All Surveys</span>
     </a>
     <a href="/surveys/classroom-feedback/results" class="action-card">
-      <span class="action-icon">⭐</span>
+      <span class="action-icon"><i class="fa-solid fa-star-half-stroke"></i></span>
       <span>Classroom Results</span>
     </a>
     <a href="/surveys/disaster/results" class="action-card">
-      <span class="action-icon">🆘</span>
+      <span class="action-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
       <span>Disaster Results</span>
     </a>
   </div>
@@ -67,12 +67,17 @@
       <tbody>
         <% recentFeedbacks.forEach(f => { %>
         <tr>
-          <td><%= f.isAnonymous ? '🕵️ Anonymous' : (f.name || f.user?.name || '—') %></td>
+          <td>
+            <%= f.isAnonymous ? '' : (f.name || f.user?.name || '—') %>
+            <% if (f.isAnonymous) { %>
+              <i class="fa-solid fa-user-secret"></i> Anonymous
+            <% } %>
+          </td>
           <td><%= f.subject %></td>
           <td><%= f.gradeSection %></td>
           <td class="rating-cell">
             <% for(let i = 0; i < 5; i++) { %>
-              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+              <i class="<%= i < f.teacherRating ? 'fa-solid fa-star star--filled' : 'fa-regular fa-star' %>"></i>
             <% } %>
           </td>
           <td><%= new Date(f.createdAt).toLocaleDateString('en-PH') %></td>

@@ -4,27 +4,27 @@
 
 <div class="dashboard-container">
   <div class="page-header">
-    <h1>👩‍🏫 Teacher Dashboard</h1>
+    <h1><i class="fa-solid fa-chalkboard-user"></i> Teacher Dashboard</h1>
     <p>Monitor student feedback and survey submissions</p>
   </div>
 
   <div class="stats-grid">
     <div class="stat-card stat-card--blue">
-      <div class="stat-icon">📝</div>
+      <div class="stat-icon"><i class="fa-solid fa-file-signature"></i></div>
       <div class="stat-info">
         <div class="stat-number"><%= feedbacks.length %></div>
         <div class="stat-label">Recent Feedbacks</div>
       </div>
     </div>
     <div class="stat-card stat-card--yellow">
-      <div class="stat-icon">⭐</div>
+      <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
       <div class="stat-info">
         <div class="stat-number"><%= avgRating %></div>
         <div class="stat-label">Average Rating</div>
       </div>
     </div>
     <div class="stat-card stat-card--green">
-      <div class="stat-icon">📚</div>
+      <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
       <div class="stat-info">
         <div class="stat-number"><%= Object.keys(bySubject).length %></div>
         <div class="stat-label">Subjects Covered</div>
@@ -35,12 +35,12 @@
   <% if (feedbacks.length > 0) { %>
     <div class="charts-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
       <div class="chart-box" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <h3 style="margin-top: 0; color: #374151;">📊 Average Rating per Subject</h3>
+        <h3 style="margin-top: 0; color: #374151;"><i class="fa-solid fa-chart-column"></i> Average Rating per Subject</h3>
         <canvas id="teacherSubjectChart" style="max-height: 250px;"></canvas>
       </div>
       
       <div class="chart-box" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <h3 style="margin-top: 0; color: #374151;">⭐ Overall Rating Spread</h3>
+        <h3 style="margin-top: 0; color: #374151;"><i class="fa-solid fa-chart-pie"></i> Overall Rating Spread</h3>
         <canvas id="teacherRatingDistChart" style="max-height: 250px;"></canvas>
       </div>
     </div>
@@ -48,21 +48,21 @@
 
   <div class="quick-actions">
     <a href="/surveys/classroom-feedback/results" class="action-card">
-      <span class="action-icon">📊</span>
+      <span class="action-icon"><i class="fa-solid fa-square-poll-vertical"></i></span>
       <span>Classroom Results</span>
     </a>
     <a href="/surveys/disaster/results" class="action-card">
-      <span class="action-icon">🆘</span>
+      <span class="action-icon"><i class="fa-solid fa-life-ring"></i></span>
       <span>Disaster Results</span>
     </a>
     <a href="/teacher/profile" class="action-card">
-      <span class="action-icon">👤</span>
+      <span class="action-icon"><i class="fa-solid fa-user"></i></span>
       <span>My Profile</span>
     </a>
   </div>
 
   <div class="section-card">
-    <h2>📝 Latest Feedbacks</h2>
+    <h2><i class="fa-solid fa-clipboard-list"></i> Latest Feedbacks</h2>
     <% if (feedbacks.length === 0) { %>
       <p class="empty-state">No student feedbacks received yet.</p>
     <% } else { %>
@@ -73,12 +73,12 @@
       <tbody>
         <% feedbacks.forEach(f => { %>
         <tr>
-          <td><%= f.isAnonymous ? '🕵️ Anonymous' : (f.name || '—') %></td>
+          <td><%- f.isAnonymous ? '<i class="fa-solid fa-user-secret"></i> Anonymous' : (f.name || '—') %></td>
           <td><%= f.gradeSection %></td>
           <td><%= f.subject %></td>
           <td>
             <% for(let i = 0; i < 5; i++) { %>
-              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+              <i class="<%= i < f.teacherRating ? 'fa-solid fa-star star--filled' : 'fa-regular fa-star' %>"></i>
             <% } %>
           </td>
           <td><%= f.favoriteLesson %></td>

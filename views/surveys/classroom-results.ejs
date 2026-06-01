@@ -2,11 +2,10 @@
 
 <div class="dashboard-container">
   <div class="page-header">
-    <h1>📊 Classroom Feedback Results</h1>
+    <h1><i class="fa-solid fa-chart-column"></i> Classroom Feedback Results</h1>
     <p>Filter and analyze student feedback</p>
   </div>
 
-  <!-- Filter Bar -->
   <div class="section-card filter-bar">
     <form method="GET" action="/surveys/classroom-feedback/results" class="filter-form">
       <div class="form-group">
@@ -31,8 +30,12 @@
         </select>
       </div>
       <div class="filter-actions">
-        <button type="submit" class="btn-primary">Apply Filter</button>
-        <a href="/surveys/classroom-feedback/results" class="btn-secondary">Reset</a>
+        <button type="submit" class="btn-primary">
+          <i class="fa-solid fa-filter"></i> Apply Filter
+        </button>
+        <a href="/surveys/classroom-feedback/results" class="btn-secondary">
+          <i class="fa-solid fa-arrow-rotate-left"></i> Reset
+        </a>
       </div>
     </form>
   </div>
@@ -59,12 +62,17 @@
       <tbody>
         <% feedbacks.forEach(f => { %>
         <tr>
-          <td><%= f.isAnonymous ? '🕵️ Anonymous' : (f.name || f.user?.name || '—') %></td>
+          <td>
+            <%= f.isAnonymous ? '' : (f.name || f.user?.name || '—') %>
+            <% if (f.isAnonymous) { %>
+              <i class="fa-solid fa-user-secret"></i> Anonymous
+            <% } %>
+          </td>
           <td><%= f.gradeSection %></td>
           <td><span class="subject-tag"><%= f.subject %></span></td>
           <td>
             <% for(let i = 0; i < 5; i++) { %>
-              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+              <i class="<%= i < f.teacherRating ? 'fa-solid fa-star star--filled' : 'fa-regular fa-star' %>"></i>
             <% } %>
           </td>
           <td><%= f.favoriteLesson %></td>

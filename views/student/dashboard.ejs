@@ -4,7 +4,7 @@
 
 <div class="dashboard-container">
   <div class="page-header">
-    <h1>🎒 Student Dashboard</h1>
+    <h1><i class="fa-solid fa-backpack"></i> Student Dashboard</h1>
     <p>Submit and track your survey responses</p>
   </div>
 
@@ -25,7 +25,7 @@
           myFeedbacks.forEach(f => totalRating += f.teacherRating);
           let avg = myFeedbacks.length ? (totalRating / myFeedbacks.length).toFixed(1) : 0;
         %>
-        ⭐ <%= avg %> / 5
+        <i class="fa-solid fa-star" style="color: #fbbf24;"></i> <%= avg %> / 5
       </div>
     </div>
   </div>
@@ -33,24 +33,24 @@
   <div class="charts-container">
     <% if (myFeedbacks.length > 0) { %>
       <div class="chart-box">
-        <h3>📊 Teacher Rating per Subject</h3>
+        <h3><i class="fa-solid fa-chart-column"></i> Teacher Rating per Subject</h3>
         <canvas id="subjectChart"></canvas>
       </div>
       
       <div class="chart-box">
-        <h3>⭐ Overall Rating Spread</h3>
+        <h3><i class="fa-solid fa-chart-pie"></i> Overall Rating Spread</h3>
         <canvas id="ratingDistChart"></canvas>
       </div>
 
       <div class="chart-box">
-        <h3>📚 Surveys per Subject</h3>
+        <h3><i class="fa-solid fa-book"></i> Surveys per Subject</h3>
         <canvas id="subjectCountChart"></canvas>
       </div>
     <% } %>
 
     <% if (myDisasters.length > 0) { %>
       <div class="chart-box">
-        <h3>🍕 Emergency Kit Readiness</h3>
+        <h3><i class="fa-solid fa-kit-medical"></i> Emergency Kit Readiness</h3>
         <canvas id="kitChart"></canvas>
       </div>
     <% } %>
@@ -58,21 +58,21 @@
 
   <div class="quick-actions">
     <a href="/surveys/classroom-feedback" class="action-card action-card--primary">
-      <span class="action-icon">📝</span>
+      <span class="action-icon"><i class="fa-solid fa-file-pen"></i></span>
       <span>Classroom Survey</span>
     </a>
     <a href="/surveys/disaster" class="action-card action-card--danger">
-      <span class="action-icon">🌊</span>
+      <span class="action-icon"><i class="fa-solid fa-house-flood-water"></i></span>
       <span>Disaster Survey</span>
     </a>
     <a href="/student/profile" class="action-card">
-      <span class="action-icon">👤</span>
+      <span class="action-icon"><i class="fa-solid fa-user"></i></span>
       <span>My Profile</span>
     </a>
   </div>
 
   <div class="section-card">
-    <h2>📝 My Classroom Feedbacks (<%= myFeedbacks.length %>)</h2>
+    <h2><i class="fa-solid fa-clipboard-list"></i> My Classroom Feedbacks (<%= myFeedbacks.length %>)</h2>
     <% if (myFeedbacks.length === 0) { %>
       <p class="empty-state">You haven't submitted any classroom feedback yet. <a href="/surveys/classroom-feedback">Submit now →</a></p>
     <% } else { %>
@@ -87,7 +87,7 @@
           <td><%= f.gradeSection %></td>
           <td>
             <% for(let i = 0; i < 5; i++) { %>
-              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+              <i class="<%= i < f.teacherRating ? 'fa-solid fa-star star--filled' : 'fa-regular fa-star' %>"></i>
             <% } %>
           </td>
           <td><%= f.favoriteLesson %></td>
@@ -100,7 +100,7 @@
   </div>
 
   <div class="section-card" style="margin-top:2rem;">
-    <h2>🌊 My Disaster Surveys (<%= myDisasters.length %>)</h2>
+    <h2><i class="fa-solid fa-house-flood-water"></i> My Disaster Surveys (<%= myDisasters.length %>)</h2>
     <% if (myDisasters.length === 0) { %>
       <p class="empty-state">No disaster survey submitted yet. <a href="/surveys/disaster">Submit now →</a></p>
     <% } else { %>
@@ -113,7 +113,15 @@
         <tr>
           <td><%= d.address %></td>
           <td><%= d.familyMembers %></td>
-          <td><span class="kit-badge <%= d.hasEmergencyKit ? 'kit-yes' : 'kit-no' %>"><%= d.hasEmergencyKit ? '✅ YES' : '❌ NO' %></span></td>
+          <td>
+            <span class="kit-badge <%= d.hasEmergencyKit ? 'kit-yes' : 'kit-no' %>">
+              <% if (d.hasEmergencyKit) { %>
+                <i class="fa-solid fa-circle-check"></i> YES
+              <% } else { %>
+                <i class="fa-solid fa-circle-xmark"></i> NO
+              <% } %>
+            </span>
+          </td>
           <td><%= new Date(d.createdAt).toLocaleDateString('en-PH') %></td>
         </tr>
         <% }) %>

@@ -6,7 +6,7 @@
       <div class="notebook-rings">
         <% for(let i=0; i<6; i++) { %><div class="ring"></div><% } %>
       </div>
-      <h1>📓 Classroom Feedback Survey</h1>
+      <h1><i class="fa-solid fa-book"></i> Classroom Feedback Survey</h1>
       <p>Your honest feedback helps teachers improve lessons!</p>
     </div>
 
@@ -14,7 +14,7 @@
       
       <!-- Student Info -->
       <fieldset class="form-section">
-        <legend>🎒 Student Information</legend>
+        <legend><i class="fa-solid fa-backpack"></i> Student Information</legend>
 
         <div class="form-group">
           <label for="name">Full Name</label>
@@ -53,14 +53,16 @@
 
       <!-- Feedback -->
       <fieldset class="form-section">
-        <legend>📊 Your Feedback</legend>
+        <legend><i class="fa-solid fa-comments"></i> Your Feedback</legend>
 
         <div class="form-group">
           <label>Teacher Rating <span class="required">*</span></label>
           <div class="star-rating-group">
             <% for(let i = 5; i >= 1; i--) { %>
               <input type="radio" id="star<%= i %>" name="teacherRating" value="<%= i %>" />
-              <label for="star<%= i %>" title="<%= i %> star<%= i > 1 ? 's' : '' %>">★</label>
+              <label for="star<%= i %>" title="<%= i %> star<%= i > 1 ? 's' : '' %>">
+                <i class="fa-solid fa-star"></i>
+              </label>
             <% } %>
           </div>
           <small class="field-hint">Click to rate your teacher (1 = Poor, 5 = Excellent)</small>
@@ -79,14 +81,14 @@
         <div class="form-group checkbox-group">
           <label class="checkbox-label">
             <input type="checkbox" name="isAnonymous" id="isAnonymous" />
-            <span class="checkbox-text">🕵️ Submit Anonymously</span>
+            <span class="checkbox-text"><i class="fa-solid fa-user-secret"></i> Submit Anonymously</span>
           </label>
           <small class="field-hint">Checking this hides your name from results.</small>
         </div>
       </fieldset>
 
       <button type="submit" class="btn-primary btn-full btn-notebook">
-        ✏️ Submit Feedback
+        <i class="fa-solid fa-pen-to-square"></i> Submit Feedback
       </button>
     </form>
   </div>

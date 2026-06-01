@@ -2,12 +2,12 @@
 
 <div class="dashboard-container">
   <div class="page-header">
-    <h1>📋 All Surveys</h1>
+    <h1><i class="fa-solid fa-clipboard-list"></i> All Surveys</h1>
     <p>Complete record of submitted surveys</p>
   </div>
 
   <div class="section-card">
-    <h2>🎓 Classroom Feedback (<%= feedbacks.length %>)</h2>
+    <h2><i class="fa-solid fa-graduation-cap"></i> Classroom Feedback (<%= feedbacks.length %>)</h2>
     <table class="data-table">
       <thead>
         <tr><th>Student</th><th>Grade</th><th>Subject</th><th>Rating</th><th>Favorite Lesson</th><th>Date</th></tr>
@@ -15,12 +15,17 @@
       <tbody>
         <% feedbacks.forEach(f => { %>
         <tr>
-          <td><%= f.isAnonymous ? '🕵️ Anonymous' : (f.name || f.user?.name || '—') %></td>
+          <td>
+            <%= f.isAnonymous ? '' : (f.name || f.user?.name || '—') %>
+            <% if (f.isAnonymous) { %>
+              <i class="fa-solid fa-user-secret"></i> Anonymous
+            <% } %>
+          </td>
           <td><%= f.gradeSection %></td>
           <td><%= f.subject %></td>
-          <td>
+          <td class="rating-cell">
             <% for(let i = 0; i < 5; i++) { %>
-              <span class="<%= i < f.teacherRating ? 'star star--filled' : 'star' %>">★</span>
+              <i class="<%= i < f.teacherRating ? 'fa-solid fa-star star--filled' : 'fa-regular fa-star' %>"></i>
             <% } %>
           </td>
           <td><%= f.favoriteLesson %></td>
@@ -32,7 +37,7 @@
   </div>
 
   <div class="section-card" style="margin-top:2rem;">
-    <h2>🌊 Disaster Preparedness Surveys (<%= disasters.length %>)</h2>
+    <h2><i class="fa-solid fa-water"></i> Disaster Preparedness Surveys (<%= disasters.length %>)</h2>
     <table class="data-table">
       <thead>
         <tr><th>Respondent</th><th>Address</th><th>Family</th><th>Emergency Kit</th><th>Evacuation Plan</th><th>Date</th></tr>
@@ -45,7 +50,11 @@
           <td><%= d.familyMembers %> members</td>
           <td>
             <span class="kit-badge <%= d.hasEmergencyKit ? 'kit-yes' : 'kit-no' %>">
-              <%= d.hasEmergencyKit ? '✅ YES' : '❌ NO' %>
+              <% if (d.hasEmergencyKit) { %>
+                <i class="fa-solid fa-circle-check"></i> YES
+              <% } else { %>
+                <i class="fa-solid fa-circle-xmark"></i> NO
+              <% } %>
             </span>
           </td>
           <td><%= d.evacuationPlan.join(', ') || '—' %></td>

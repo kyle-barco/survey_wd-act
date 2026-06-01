@@ -21,7 +21,7 @@
   .q-card.dragging { opacity:.4; }
   .q-card.drag-over { border-color:var(--echo-green); box-shadow:0 0 0 2px rgba(45,122,58,.2); }
   .q-row { display:flex; align-items:flex-start; gap:10px; }
-  .drag-handle { cursor:grab; color:#bbb; font-size:20px; margin-top:4px; user-select:none; }
+  .drag-handle { cursor:grab; color:#bbb; font-size:16px; margin-top:8px; user-select:none; }
   .drag-handle:active { cursor:grabbing; }
   .q-num { font-size:12px; font-weight:700; color:var(--echo-green); min-width:22px; margin-top:6px; }
   .q-body { flex:1; }
@@ -38,13 +38,13 @@
   .icon-btn.del:hover { color:#e53e3e; background:#fff5f5; }
   .choices-list { display:flex; flex-direction:column; gap:7px; }
   .choice-row { display:flex; align-items:center; gap:8px; }
-  .choice-icon { color:#bbb; font-size:16px; flex-shrink:0; }
+  .choice-icon { color:#bbb; font-size:14px; flex-shrink:0; }
   .choice-inp { flex:1; border:none; border-bottom:1px solid #e0e0e0; outline:none; font-size:14px; padding:2px 0 5px; font-family:inherit; }
   .choice-inp:focus { border-bottom-color:var(--echo-green); }
   .add-choice { background:none; border:none; cursor:pointer; font-size:13px; color:var(--echo-green); padding:5px 0; display:flex; align-items:center; gap:5px; margin-top:5px; font-family:inherit; }
   .preview-box { border:1px solid #e0e0e0; border-radius:8px; padding:8px 12px; font-size:13px; color:#bbb; margin-top:6px; }
   .preview-box.tall { min-height:56px; }
-  .rating-stars { font-size:22px; color:#e2c94b; margin-top:6px; letter-spacing:2px; }
+  .rating-stars { font-size:18px; color:#e2c94b; margin-top:6px; display:flex; gap:4px; }
   .scale-dots { display:flex; gap:5px; margin-top:6px; flex-wrap:wrap; }
   .scale-dot { width:30px; height:30px; border-radius:50%; border:1px solid #ddd; display:flex; align-items:center; justify-content:center; font-size:12px; color:#999; }
   .scale-dot:first-child { border-color:var(--echo-green); color:var(--echo-green); }
@@ -60,11 +60,11 @@
 
 <div class="sb-wrap">
   <div class="sb-top">
-    <div class="sb-heading">📋 Survey Builder</div>
+    <div class="sb-heading"><i class="fa-solid fa-clipboard-list"></i> Survey Builder</div>
     <div class="sb-actions">
-      <button class="btn btn-outline" onclick="openPreview()">👁 Preview</button>
+      <button class="btn btn-outline" onclick="openPreview()"><i class="fa-solid fa-eye"></i> Preview</button>
       <button class="btn btn-green" onclick="saveSurvey()">
-        <%= survey ? '💾 Update Survey' : '🚀 Save Survey' %>
+        <%- survey ? '<i class="fa-solid fa-floppy-disk"></i> Update Survey' : '<i class="fa-solid fa-rocket"></i> Save Survey' %>
       </button>
     </div>
   </div>
@@ -79,20 +79,20 @@
   <div class="add-q-section">
     <div class="add-q-label">Add a question</div>
     <div class="add-q-grid">
-      <button class="add-q-btn" onclick="addQ('short')">📝 Short text</button>
-      <button class="add-q-btn" onclick="addQ('long')">📄 Long text</button>
-      <button class="add-q-btn" onclick="addQ('multiple')">🔘 Multiple choice</button>
-      <button class="add-q-btn" onclick="addQ('checkbox')">☑️ Checkboxes</button>
-      <button class="add-q-btn" onclick="addQ('dropdown')">🔽 Dropdown</button>
-      <button class="add-q-btn" onclick="addQ('rating')">⭐ Star rating</button>
-      <button class="add-q-btn" onclick="addQ('scale')">📊 Scale 1–10</button>
+      <button class="add-q-btn" onclick="addQ('short')"><i class="fa-solid fa-pen"></i> Short text</button>
+      <button class="add-q-btn" onclick="addQ('long')"><i class="fa-solid fa-align-left"></i> Long text</button>
+      <button class="add-q-btn" onclick="addQ('multiple')"><i class="fa-regular fa-circle-dot"></i> Multiple choice</button>
+      <button class="add-q-btn" onclick="addQ('checkbox')"><i class="fa-regular fa-square-check"></i> Checkboxes</button>
+      <button class="add-q-btn" onclick="addQ('dropdown')"><i class="fa-solid fa-caret-down"></i> Dropdown</button>
+      <button class="add-q-btn" onclick="addQ('rating')"><i class="fa-solid fa-star"></i> Star rating</button>
+      <button class="add-q-btn" onclick="addQ('scale')"><i class="fa-solid fa-chart-column"></i> Scale 1–10</button>
     </div>
   </div>
 
   <div class="save-bar">
     <a href="/surveys/custom" class="btn">Cancel</a>
     <button class="btn btn-green" onclick="saveSurvey()">
-      <%= survey ? '💾 Update Survey' : '🚀 Save & Publish' %>
+      <%- survey ? '<i class="fa-solid fa-floppy-disk"></i> Update Survey' : '<i class="fa-solid fa-rocket"></i> Save & Publish' %>
     </button>
   </div>
 </div>
@@ -100,9 +100,9 @@
 <div id="toast"></div>
 
 <!-- Preview Modal -->
-<div id="preview-backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;">
+<div id="preview-backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:14px;padding:2rem;max-width:560px;width:90%;max-height:85vh;overflow-y:auto;position:relative;">
-    <button onclick="document.getElementById('preview-backdrop').style.display='none'" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;">✕</button>
+    <button onclick="document.getElementById('preview-backdrop').style.display='none'" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
     <div id="preview-content"></div>
   </div>
 </div>
@@ -118,7 +118,7 @@
   function render() {
     const list = document.getElementById('questions-list');
     if (!questions.length) {
-      list.innerHTML = '<div class="empty-state">No questions yet. Add one above ☝️</div>';
+      list.innerHTML = '<div class="empty-state">No questions yet. Add one above <i class="fa-solid fa-arrow-up"></i></div>';
       return;
     }
     list.innerHTML = questions.map((q, i) => buildCard(q, i)).join('');
@@ -140,7 +140,7 @@
   }
 
   function buildCard(q, i) {
-    const choiceIcon = q.type === 'checkbox' ? '☑' : q.type === 'dropdown' ? '▸' : '◉';
+    const choiceIcon = q.type === 'checkbox' ? '<i class="fa-regular fa-square-check"></i>' : q.type === 'dropdown' ? '<i class="fa-solid fa-caret-right"></i>' : '<i class="fa-regular fa-circle"></i>';
     let body = '';
     if (q.type === 'short') body = '<div class="preview-box">Short answer</div>';
     else if (q.type === 'long') body = '<div class="preview-box tall">Long answer</div>';
@@ -150,19 +150,19 @@
           <span class="choice-icon">${choiceIcon}</span>
           <input class="choice-inp" type="text" value="${escHtml(c)}" placeholder="Option ${ci+1}"
             onchange="updateChoice(${q.tempId},${ci},this.value)" />
-          <button class="icon-btn del" onclick="removeChoice(${q.tempId},${ci})" title="Remove">✕</button>
+          <button class="icon-btn del" onclick="removeChoice(${q.tempId},${ci})" title="Remove"><i class="fa-solid fa-xmark"></i></button>
         </div>`).join('');
       body = `<div class="choices-list">${rows}</div>
-        <button class="add-choice" onclick="addChoice(${q.tempId})">＋ Add option</button>`;
+        <button class="add-choice" onclick="addChoice(${q.tempId})"><i class="fa-solid fa-plus"></i> Add option</button>`;
     } else if (q.type === 'rating') {
-      body = '<div class="rating-stars">★★★★★</div>';
+      body = '<div class="rating-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>';
     } else if (q.type === 'scale') {
       body = '<div class="scale-dots">' + Array.from({length:10},(_,k)=>`<div class="scale-dot">${k+1}</div>`).join('') + '</div>';
     }
 
     return `<div class="q-card" draggable="true" data-tid="${q.tempId}">
       <div class="q-row">
-        <span class="drag-handle" title="Drag to reorder">⠿</span>
+        <span class="drag-handle" title="Drag to reorder"><i class="fa-solid fa-grip-vertical"></i></span>
         <span class="q-num">Q${i+1}</span>
         <div class="q-body">
           <input class="q-label-inp" type="text" value="${escHtml(q.label)}" placeholder="Question text"
@@ -180,8 +180,8 @@
           ${body}
         </div>
         <div class="q-ctrls">
-          <button class="icon-btn" onclick="dupQ(${q.tempId})" title="Duplicate">⧉</button>
-          <button class="icon-btn del" onclick="delQ(${q.tempId})" title="Delete">🗑</button>
+          <button class="icon-btn" onclick="dupQ(${q.tempId})" title="Duplicate"><i class="fa-regular fa-copy"></i></button>
+          <button class="icon-btn del" onclick="delQ(${q.tempId})" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
         </div>
       </div>
     </div>`;
@@ -255,7 +255,7 @@
       else if(q.type==='multiple') html+=q.choices.map(c=>`<label style="display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:6px;cursor:pointer;"><input type="radio" name="pq${i}" style="accent-color:#2d7a3a;"> ${escHtml(c)}</label>`).join('');
       else if(q.type==='checkbox') html+=q.choices.map(c=>`<label style="display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:6px;cursor:pointer;"><input type="checkbox" style="accent-color:#2d7a3a;"> ${escHtml(c)}</label>`).join('');
       else if(q.type==='dropdown') html+=`<select style="border:1px solid #ddd;border-radius:7px;padding:7px 12px;font-size:14px;width:100%;"><option>Choose...</option>${q.choices.map(c=>`<option>${escHtml(c)}</option>`).join('')}</select>`;
-      else if(q.type==='rating') html+=`<div style="font-size:28px;color:#e2c94b;letter-spacing:3px;cursor:pointer;">★★★★★</div>`;
+      else if(q.type==='rating') html+=`<div style="font-size:20px;color:#e2c94b;cursor:pointer;display:flex;gap:4px;"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>`;
       else if(q.type==='scale') html+=`<div style="display:flex;gap:5px;flex-wrap:wrap;">${Array.from({length:10},(_,k)=>`<button style="width:34px;height:34px;border-radius:50%;border:1px solid #ddd;background:#fafafa;cursor:pointer;font-size:13px;">${k+1}</button>`).join('')}</div>`;
       html += '</div>';
     });

@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -127,7 +128,7 @@
       .visual-bar-track { height: 5px; background: var(--gray-100); border-radius: 99px; overflow: hidden; margin-bottom: 0.55rem; }
       .visual-bar-fill { height: 100%; background: var(--navy-600); border-radius: 99px; transform-origin: left; animation: growBar 1s ease-out both; }
       @keyframes growBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-      .chip { position: absolute; background: var(--white); border: 1px solid var(--gray-200); border-radius: 6px; padding: 0.45rem 0.85rem; font-size: 0.72rem; font-weight: 600; color: var(--navy-700); box-shadow: 0 2px 8px rgba(15,30,53,0.08); white-space: nowrap; }
+      .chip { position: absolute; background: var(--white); border: 1px solid var(--gray-200); border-radius: 6px; padding: 0.45rem 0.85rem; font-size: 0.72rem; font-weight: 600; color: var(--navy-700); box-shadow: 0 2px 8px rgba(15,30,53,0.08); white-space: nowrap; display: flex; align-items: center; gap: 0.4rem; }
       .chip-1 { top: -1.25rem; right: 1.75rem; animation: float 3s ease-in-out infinite; }
       .chip-2 { bottom: 0.75rem; right: -1.25rem; animation: float 3.4s 0.5s ease-in-out infinite; }
       @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
@@ -144,9 +145,25 @@
       .feature-cell:nth-child(3n) { border-right: none; }
       .feature-cell:nth-last-child(-n+3) { border-bottom: none; }
       .feature-cell:hover { background: var(--navy-50); }
-      .feature-icon { width: 36px; height: 36px; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: center; background: var(--navy-50); border: 1px solid var(--navy-100); border-radius: 6px; font-size: 1rem; }
+      .feature-icon { width: 36px; height: 36px; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: center; background: var(--navy-50); border: 1px solid var(--navy-100); border-radius: 6px; font-size: 1rem; color: var(--navy-700); }
       .feature-cell h3 { font-size: 0.92rem; font-weight: 700; color: var(--navy-900); margin-bottom: 0.4rem; letter-spacing: -0.01em; }
       .feature-cell p { font-size: 0.82rem; line-height: 1.65; color: var(--gray-500); }
+
+      /* ── Mission & Vision ── */
+      .mission-vision { max-width: 1200px; margin: 0 auto; padding: 5rem 2.5rem; }
+      .mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+      .mv-card { 
+        background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; 
+        padding: 3.5rem 3rem; text-align: center; 
+        box-shadow: 0 4px 24px rgba(15,30,53,0.04); transition: transform 0.2s, box-shadow 0.2s; 
+      }
+      .mv-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(15,30,53,0.08); }
+      .mv-icon { 
+        font-size: 2rem; margin-bottom: 1.5rem; display: inline-flex; align-items: center; justify-content: center;
+        background: var(--navy-50); width: 72px; height: 72px; border-radius: 50%; color: var(--navy-700); 
+      }
+      .mv-card h3 { font-size: 1.5rem; font-weight: 800; color: var(--navy-900); margin-bottom: 1rem; letter-spacing: -0.02em; }
+      .mv-card p { font-size: 0.95rem; line-height: 1.7; color: var(--gray-500); }
 
       /* ── Quote ── */
       .quote-strip { background: var(--navy-900); color: var(--white); padding: 4rem 2.5rem; text-align: center; }
@@ -161,8 +178,8 @@
       .cta-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 
       /* ══════════════════════════════════════
-         TEAM CHART — themed to design system
-         ══════════════════════════════════════ */
+          TEAM CHART — themed to design system
+          ══════════════════════════════════════ */
       .echo-chart-wrapper {
         max-width: 1200px;
         margin: 0 auto;
@@ -294,12 +311,14 @@
         .features-grid { grid-template-columns: 1fr 1fr; }
         .feature-cell:nth-child(2n) { border-right: none; }
         .feature-cell:nth-child(3n) { border-right: 1px solid var(--gray-200); }
+        .mission-vision { padding: 3rem 1.5rem; }
         .cta-banner { padding: 3rem 1.5rem; flex-direction: column; align-items: flex-start; }
         .hero-nav, .hero-footer { padding: 0 1.5rem; }
         .echo-chart-wrapper { padding: 3rem 1.5rem 2rem; }
         .member-card { width: 260px; padding: 1.25rem 0.85rem; }
       }
       @media (max-width: 768px) {
+        .mv-grid { grid-template-columns: 1fr; gap: 2rem; }
         .tier-2 { flex-direction: column; align-items: center; gap: 2rem; padding-top: 40px; }
         .tier-2::before { display: none; }
         .tier-1::after { top: 100%; left: 50%; transform: translateX(-50%); bottom: auto; }
@@ -321,7 +340,6 @@
     <nav class="hero-nav" id="heroNav">
       <a class="nav-logo" href="/"><img src="img/echo_logo_svg.svg" alt="logo" /></a>
       <div class="nav-actions">
-       
         <a href="/login" class="btn btn-ghost">Log in</a>
         <a href="/register" class="btn btn-primary">Get Started</a>
       </div>
@@ -341,8 +359,8 @@
           <p class="hero-note">Free to join &mdash; no credit card required.</p>
         </div>
         <div class="hero-visual">
-          <div class="chip chip-1">📋 12 responses</div>
-          <div class="chip chip-2">✅ Survey live</div>
+          <div class="chip chip-1"><i class="fa-solid fa-clipboard-list"></i> 12 responses</div>
+          <div class="chip chip-2"><i class="fa-solid fa-circle-check"></i> Survey live</div>
           <div class="visual-frame">
             <span class="visual-tag">Live Preview</span>
             <div class="visual-survey-title">End-of-Week Classroom Check-In</div>
@@ -375,12 +393,53 @@
           <div class="features-header-line"></div>
         </div>
         <div class="features-grid">
-          <div class="feature-cell"><div class="feature-icon">📝</div><h3>Classroom Surveys</h3><p>Pulse-check understanding, gather feedback, and surface insights — all in real time, right from your dashboard.</p></div>
-          <div class="feature-cell"><div class="feature-icon">🚨</div><h3>Disaster Preparedness</h3><p>Structured assessments that help schools measure and improve readiness across multiple emergency categories.</p></div>
-          <div class="feature-cell"><div class="feature-icon">📊</div><h3>Instant Results</h3><p>Teachers see live response summaries the moment students submit. No waiting. No manual tallying.</p></div>
-          <div class="feature-cell"><div class="feature-icon">🎓</div><h3>Role-Based Access</h3><p>Separate teacher and student views — teachers manage and review, students respond with clarity and ease.</p></div>
-          <div class="feature-cell"><div class="feature-icon">🔒</div><h3>Private &amp; Secure</h3><p>Responses stay within your classroom. No data sold, no ads, no noise — just what you need.</p></div>
-          <div class="feature-cell"><div class="feature-icon">⚡</div><h3>Engage Mode</h3><p>Teachers can open a survey live in class and watch participation happen in real time on a shared screen.</p></div>
+          <div class="feature-cell">
+            <div class="feature-icon"><i class="fa-solid fa-file-signature"></i></div>
+            <h3>Classroom Surveys</h3>
+            <p>Pulse-check understanding, gather feedback, and surface insights — all in real time, right from your dashboard.</p>
+          </div>
+          <div class="feature-cell">
+            <div class="feature-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3>Disaster Preparedness</h3>
+            <p>Structured assessments that help schools measure and improve readiness across multiple emergency categories.</p>
+          </div>
+          <div class="feature-cell">
+            <div class="feature-icon"><i class="fa-solid fa-chart-simple"></i></div>
+            <h3>Instant Results</h3>
+            <p>Teachers see live response summaries the moment students submit. No waiting. No manual tallying.</p>
+          </div>
+          <div class="feature-cell">
+            <div class="feature-icon"><i class="fa-solid fa-user-gear"></i></div>
+            <h3>Role-Based Access</h3>
+            <p>Separate teacher and student views — teachers manage and review, students respond with clarity and ease.</p>
+          </div>
+          <div class="feature-cell">
+            <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+            <h3>Private &amp; Secure</h3>
+            <p>Responses stay within your classroom. No data sold, no ads, no noise — just what you need.</p>
+          </div>
+          <div class="feature-cell">
+            <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+            <h3>Engage Mode</h3>
+            <p>Teachers can open a survey live in class and watch participation happen in real time on a shared screen.</p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <section class="mission-vision">
+        <div class="mv-grid">
+          <div class="mv-card">
+            <div class="mv-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <h3>Our Mission</h3>
+            <p>To empower educators and communities with accessible, real-time feedback tools. We aim to bridge the gap between students and teachers, ensuring every individual's insight is captured to foster safer, more responsive learning environments.</p>
+          </div>
+          <div class="mv-card">
+            <div class="mv-icon"><i class="fa-solid fa-compass"></i></div>
+            <h3>Our Vision</h3>
+            <p>A world where seamless communication drives continuous improvement. We envision resilient schools and proactive classrooms where data-driven clarity makes every single voice a catalyst for meaningful change and preparedness.</p>
+          </div>
         </div>
       </section>
 
@@ -396,7 +455,6 @@
         </div>
       </div>
 
-      <!-- ── Team Chart ── -->
       <div class="echo-chart-wrapper">
         <div class="echo-chart-header">
           <h2>Meet the Team</h2>

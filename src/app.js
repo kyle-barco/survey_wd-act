@@ -4,6 +4,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const path = require('path');
+const https = require('https');
 
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
@@ -14,6 +15,12 @@ const prisma = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+setInterval(() => {
+  https.get('https://survey-wd-act.onrender.com', (res) => {
+    console.log(`Self-ping status: ${res.statusCode}`);
+  });
+}, 14 * 60 * 1000);
 
 // View engine
 app.set('view engine', 'ejs');
@@ -53,8 +60,8 @@ app.get('/', (req, res) => {
     if (role === 'teacher') return res.redirect('/teacher');
     if (role === 'student') return res.redirect('/student');
     
-    // Fallback dashboard if role setup is different
-    return res.redirect('/surveys');
+    // // Fallback dashboard if role setup is different
+    // return res.redirect('/surveys');
   }
 
   const teamMembers = [

@@ -26,27 +26,34 @@ enum QuestionType {
   scale
 }
 
+// Added for the student-teacher approval workflow
+enum SurveyStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 // ─────────────────────────────────────────────
 // CORE USER
 // ─────────────────────────────────────────────
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(STUDENT)
-  phone     String?
-  address   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  email                String                 @unique
+  password             String
+  role                 Role                   @default(STUDENT)
+  phone                String?
+  address              String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
 
   resetPasswordToken   String?
   resetPasswordExpires DateTime?
 
   // existing relations
-  classroomFeedbacks ClassroomFeedback[]
-  disasterSurveys    DisasterSurvey[]
+  classroomFeedbacks   ClassroomFeedback[]
+  disasterSurveys      DisasterSurvey[]
 
   // custom survey relations
   customSurveysCreated  CustomSurvey[]
@@ -88,15 +95,19 @@ model DisasterSurvey {
 // ─────────────────────────────────────────────
 
 model CustomSurvey {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   title       String
   description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive    Boolean      @default(true)
+  
+  // Added approval status tracking
+  status      SurveyStatus @default(PENDING)
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   createdBy   Int
-  creator     User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  creator     User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 
   questions   CustomSurveyQuestion[]
   responses   CustomSurveyResponse[]
@@ -117,8 +128,8 @@ model CustomSurveyQuestion {
 }
 
 model CustomSurveyResponse {
-  id          Int      @id @default(autoincrement())
-  submittedAt DateTime @default(now())
+  id          Int          @id @default(autoincrement())
+  submittedAt DateTime     @default(now())
 
   surveyId    Int
   survey      CustomSurvey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
@@ -132,8 +143,8 @@ model CustomSurveyResponse {
 }
 
 model CustomSurveyAnswer {
-  id    Int    @id @default(autoincrement())
-  value String // text, number, or JSON array string for checkboxes
+  id         Int                  @id @default(autoincrement())
+  value      String               // text, number, or JSON array string for checkboxes
 
   responseId Int
   response   CustomSurveyResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)

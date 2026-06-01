@@ -2,7 +2,7 @@
 
 <div class="dashboard-container">
   <div class="page-header">
-    <h1>👤 My Profile</h1>
+    <h1><i class="fa-solid fa-user"></i> My Profile</h1>
     <p>Your account information</p>
   </div>
 
@@ -11,12 +11,30 @@
       <span><%= profileUser.name.charAt(0).toUpperCase() %></span>
     </div>
     <table class="profile-table">
-      <tr><th>Full Name</th><td><%= profileUser.name %></td></tr>
-      <tr><th>Email</th><td><%= profileUser.email %></td></tr>
-      <tr><th>Phone</th><td><%= profileUser.phone || '<span class="muted">Not provided</span>' %></td></tr>
-      <tr><th>Address</th><td><%= profileUser.address || '<span class="muted">Not provided</span>' %></td></tr>
-      <tr><th>Role</th><td><span class="role-badge role-<%= profileUser.role.toLowerCase() %>"><%= profileUser.role %></span></td></tr>
-      <tr><th>Member Since</th><td><%= new Date(profileUser.createdAt).toLocaleDateString('en-PH', { year:'numeric', month:'long', day:'numeric' }) %></td></tr>
+      <tr>
+        <th><i class="fa-solid fa-id-card"></i> Full Name</th>
+        <td><%= profileUser.name %></td>
+      </tr>
+      <tr>
+        <th><i class="fa-solid fa-envelope"></i> Email</th>
+        <td><%= profileUser.email %></td>
+      </tr>
+      <tr>
+        <th><i class="fa-solid fa-phone"></i> Phone</th>
+        <td><%- profileUser.phone || '<span class="muted">Not provided</span>' %></td>
+      </tr>
+      <tr>
+        <th><i class="fa-solid fa-location-dot"></i> Address</th>
+        <td><%- profileUser.address || '<span class="muted">Not provided</span>' %></td>
+      </tr>
+      <tr>
+        <th><i class="fa-solid fa-user-shield"></i> Role</th>
+        <td><span class="role-badge role-<%= profileUser.role.toLowerCase() %>"><%= profileUser.role %></span></td>
+      </tr>
+      <tr>
+        <th><i class="fa-solid fa-calendar-days"></i> Member Since</th>
+        <td><%= new Date(profileUser.createdAt).toLocaleDateString('en-PH', { year:'numeric', month:'long', day:'numeric' }) %></td>
+      </tr>
     </table>
   </div>
 </div>
