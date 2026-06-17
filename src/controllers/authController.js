@@ -157,9 +157,17 @@ const postForgotPassword = async (req, res) => {
       },
     });
 
-    const protocol =
-      process.env.NODE_ENV === "production" ? "https" : req.protocol;
-    const resetUrl = `${protocol}://${req.headers.host}/reset-password/${rawToken}`;
+    // Use an explicit BASE_URL env var instead of req.headers.host.
+    // On Render (and most platforms behind a proxy/load balancer),
+    // req.headers.host can come back as the app's internal bind
+    // address (e.g. localhost:3333) rather than the public URL,
+    // which produces broken links in production emails.
+    // Set BASE_URL in your environment, e.g.:
+    //   Dev:  BASE_URL=http://localhost:3333
+    //   Prod: BASE_URL=https://survey-wd-act.onrender.com
+    const baseUrl =
+      process.env.BASE_URL || `${req.protocol}://${req.headers.host}`;
+    const resetUrl = `${baseUrl}/reset-password/${rawToken}`;
 
     // Dev-only convenience logging - never expose reset links in prod logs.
     if (process.env.NODE_ENV !== "production") {
