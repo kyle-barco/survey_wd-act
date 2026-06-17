@@ -7,6 +7,11 @@ const crypto = require('crypto');
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Hash a token before storing/comparing it.
+// Only the hash ever touches the database; the raw token only ever
+// goes out in the email link, never persisted anywhere.
+const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
+
 // GET /login
 const getLogin = (req, res) => {
   res.render('auth/login', { title: 'Login' });
@@ -93,7 +98,6 @@ const getForgotPassword = (req, res) => {
 
 // POST /forgot-password
 const postForgotPassword = async (req, res) => {
-  // Check validation results
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.flash('error', errors.array().map(e => e.msg).join(', '));
@@ -104,32 +108,42 @@ const postForgotPassword = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({ where: { email } });
 
+    // Always show the same message whether or not the email exists,
+    // so this endpoint can't be used to enumerate registered emails.
     if (!user) {
       req.flash('success', 'If that email exists, a reset link has been sent.');
       return res.redirect('/forgot-password');
     }
 
-    const token = crypto.randomBytes(20).toString('hex');
+    // Raw token goes in the email link sent to the user.
+    const rawToken = crypto.randomBytes(20).toString('hex');
+    // Only the hash of the token is stored in the database.
+    const hashedToken = hashToken(rawToken);
     const expiryDate = new Date(Date.now() + 3600000); // 1 hour expiration
 
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        resetPasswordToken: token,
+        resetPasswordToken: hashedToken,
         resetPasswordExpires: expiryDate
       }
     });
 
-    const resetUrl = `http://${req.headers.host}/reset-password/${token}`;
+    const resetUrl = `http://${req.headers.host}/reset-password/${rawToken}`;
 
-    console.log('\n=============================================');
-    console.log('🚀 ECHO PASSWORD RESET LINK GENERATED:');
-    console.log(resetUrl);
-    console.log('=============================================\n');
+    // Dev-only convenience logging - never expose reset links in prod logs.
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('\n=============================================');
+      console.log('🚀 DEV PASSWORD RESET LINK:');
+      console.log(resetUrl);
+      console.log('=============================================\n');
+    }
 
     try {
       const { data, error } = await resend.emails.send({
-        from: 'ECHO App <send.mail.kylbrc.xyz>', // MUST be this exact address on the free tier
+        // Must be a full email address on your verified Resend domain,
+        // not just the bare domain.
+        from: 'ECHO App <noreply@mail.kylbrc.xyz>',
         to: user.email,
         subject: 'ECHO - Password Reset Request',
         html: `
@@ -139,24 +153,28 @@ const postForgotPassword = async (req, res) => {
             <p>Please click the button below to securely update your password:</p>
             <a href="${resetUrl}" style="padding: 10px 15px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Reset Password</a>
             <br><br>
-            <p style="color: #666; font-size: 12px;">If you did not request this, you can safely ignore this email.</p>
+            <p style="color: #666; font-size: 12px;">This link expires in 1 hour. If you did not request this, you can safely ignore this email.</p>
           </div>
         `
       });
 
       if (error) {
         console.error('❌ Resend API Error:', error);
-        req.flash('success', '[DEV MODE] Resend failed. Check terminal for the link.');
-        return res.redirect('/login');
+        req.flash('error', process.env.NODE_ENV !== 'production'
+          ? '[DEV MODE] Resend failed. Check terminal for the link.'
+          : 'Could not send reset email. Please try again later.');
+        return res.redirect('/forgot-password');
       }
 
-      req.flash('success', 'A dynamic password reset link has been sent to your email.');
+      req.flash('success', 'If that email exists, a reset link has been sent.');
       res.redirect('/login');
 
     } catch (emailErr) {
       console.error('❌ Server Error while calling Resend:', emailErr.message);
-      req.flash('success', '[DEV MODE] Link printed to your backend server terminal console!');
-      res.redirect('/login');
+      req.flash('error', process.env.NODE_ENV !== 'production'
+        ? '[DEV MODE] Resend threw an error. Check terminal for the link.'
+        : 'Could not send reset email. Please try again later.');
+      res.redirect('/forgot-password');
     }
 
   } catch (err) {
@@ -169,9 +187,11 @@ const postForgotPassword = async (req, res) => {
 // GET /reset-password/:token
 const getResetPassword = async (req, res) => {
   try {
+    const hashedToken = hashToken(req.params.token);
+
     const user = await prisma.user.findFirst({
       where: {
-        resetPasswordToken: req.params.token,
+        resetPasswordToken: hashedToken,
         resetPasswordExpires: { gt: new Date() }
       }
     });
@@ -201,9 +221,11 @@ const postResetPassword = async (req, res) => {
   const { token } = req.params;
 
   try {
+    const hashedToken = hashToken(token);
+
     const user = await prisma.user.findFirst({
       where: {
-        resetPasswordToken: token,
+        resetPasswordToken: hashedToken,
         resetPasswordExpires: { gt: new Date() }
       }
     });
