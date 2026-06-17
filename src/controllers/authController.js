@@ -4,7 +4,6 @@ const prisma = require('../config/db');
 const { redirectByRole } = require('../middleware/auth');
 const crypto = require('crypto');
 
-// Initialize Resend with your API key from .env
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -86,9 +85,6 @@ const logout = (req, res) => {
   });
 };
 
-// ==========================================
-// NEW: Forgot Password Methods
-// ==========================================
 
 // GET /forgot-password
 const getForgotPassword = (req, res) => {
@@ -101,14 +97,13 @@ const postForgotPassword = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.flash('error', errors.array().map(e => e.msg).join(', '));
-    return res.redirect(req.originalUrl); 
+    return res.redirect(req.originalUrl);
   }
 
   const { email } = req.body;
   try {
     const user = await prisma.user.findUnique({ where: { email } });
-    
-    // Safety check: if user doesn't exist, redirect gracefully
+
     if (!user) {
       req.flash('success', 'If that email exists, a reset link has been sent.');
       return res.redirect('/forgot-password');
@@ -117,7 +112,6 @@ const postForgotPassword = async (req, res) => {
     const token = crypto.randomBytes(20).toString('hex');
     const expiryDate = new Date(Date.now() + 3600000); // 1 hour expiration
 
-    // Save token to your PostgreSQL user record
     await prisma.user.update({
       where: { id: user.id },
       data: {
@@ -127,18 +121,16 @@ const postForgotPassword = async (req, res) => {
     });
 
     const resetUrl = `http://${req.headers.host}/reset-password/${token}`;
-    
-    // 👇 THIS LOGS IT DIRECTLY TO YOUR VS CODE TERMINAL FOR EASY TESTING
+
     console.log('\n=============================================');
     console.log('🚀 ECHO PASSWORD RESET LINK GENERATED:');
     console.log(resetUrl);
     console.log('=============================================\n');
 
     try {
-      // Send the email using Resend
       const { data, error } = await resend.emails.send({
-        from: 'ECHO App <onboarding@resend.dev>', // MUST be this exact address on the free tier
-        to: user.email, 
+        from: 'ECHO App <send.kylebarco.dpdns.org>', // MUST be this exact address on the free tier
+        to: user.email,
         subject: 'ECHO - Password Reset Request',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -162,8 +154,6 @@ const postForgotPassword = async (req, res) => {
       res.redirect('/login');
 
     } catch (emailErr) {
-      // If email configuration fails, don't crash! 
-      // Inform the developer and let them use the terminal link instead.
       console.error('❌ Server Error while calling Resend:', emailErr.message);
       req.flash('success', '[DEV MODE] Link printed to your backend server terminal console!');
       res.redirect('/login');
@@ -201,11 +191,10 @@ const getResetPassword = async (req, res) => {
 
 // POST /reset-password/:token
 const postResetPassword = async (req, res) => {
-  // 2. Check validation results inside the function
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.flash('error', errors.array().map(e => e.msg).join(', '));
-    return res.redirect(req.originalUrl); 
+    return res.redirect(req.originalUrl);
   }
 
   const { password, confirmPassword } = req.body;
@@ -250,11 +239,11 @@ const postResetPassword = async (req, res) => {
   }
 };
 
-module.exports = { 
-  getLogin, 
-  postLogin, 
-  getRegister, 
-  postRegister, 
+module.exports = {
+  getLogin,
+  postLogin,
+  getRegister,
+  postRegister,
   logout,
   getForgotPassword,
   postForgotPassword,

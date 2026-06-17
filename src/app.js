@@ -11,7 +11,7 @@ const adminRoutes = require("./routes/admin");
 const teacherRoutes = require("./routes/teacher");
 const studentRoutes = require("./routes/student");
 const surveyRoutes = require("./routes/survey");
-const prisma = require("./config/db");
+// const prisma = require("./config/db");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,17 +25,14 @@ setInterval(
   14 * 60 * 1000,
 );
 
-// View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
 
-// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Session
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "fallback-secret",
@@ -45,10 +42,8 @@ app.use(
   }),
 );
 
-// Flash messages
 app.use(flash());
 
-// Global locals
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.success = req.flash("success");
@@ -58,15 +53,10 @@ app.use((req, res, next) => {
 
 app.get("/", (req, res) => {
   if (req.session && req.session.user) {
-    // User IS logged in -> Redirect them to their dashboard based on their role
-    const role = req.session.user.role; // Assuming your user object has a 'role' property
-
+    const role = req.session.user.role;
     if (role === "admin") return res.redirect("/admin");
     if (role === "teacher") return res.redirect("/teacher");
     if (role === "student") return res.redirect("/student");
-
-    // // Fallback dashboard if role setup is different
-    // return res.redirect('/surveys');
   }
 
   const teamMembers = [
@@ -97,12 +87,9 @@ app.get("/", (req, res) => {
     },
   ];
 
-  // User IS NOT logged in -> Render the hero page
-  // 'hero/hero' points to views/hero/hero.ejs based on your folder structure
   res.render("hero/hero", { title: "Welcome to SurveyApp", team: teamMembers });
 });
 
-// Routes
 app.use("/", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/teacher", teacherRoutes);
@@ -110,7 +97,6 @@ app.use("/student", studentRoutes);
 app.use("/surveys", surveyRoutes);
 app.use("/surveys/custom", require("./routes/customSurvey"));
 
-// 404
 app.use((req, res) => {
   res.status(404).render("404", { title: "Page Not Found" });
 });
