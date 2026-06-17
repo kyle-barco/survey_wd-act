@@ -129,7 +129,7 @@ const postForgotPassword = async (req, res) => {
 
     try {
       const { data, error } = await resend.emails.send({
-        from: 'ECHO App <send.kylebarco.dpdns.org>', // MUST be this exact address on the free tier
+        from: 'ECHO App <send.mail.kylbrc.xyz>', // MUST be this exact address on the free tier
         to: user.email,
         subject: 'ECHO - Password Reset Request',
         html: `
